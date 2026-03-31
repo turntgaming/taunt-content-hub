@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TauntLive — Event Intake Converter</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #0f1117; color: #e0e0e0; min-height: 100vh; }
+
+  header {
+    background: #4572FF;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  header .logo {
+    width: 36px; height: 36px;
+    background: white;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; color: #4572FF; font-size: 18px;
+  }
+  header h1 { font-size: 18px; font-weight: 700; color: white; letter-spacing: 0.3px; }
+  header p  { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+
+  .container { max-width: 960px; margin: 36px auto; padding: 0 24px; }
+
+  /* STEP PILLS */
+  .steps { display: flex; gap: 8px; margin-bottom: 28px; }
+  .step {
+    display: flex; align-items: center; gap: 8px;
+    background: #1a1d27; border: 1px solid #2a2d3a;
+    border-radius: 24px; padding: 7px 14px;
+    font-size: 13px; color: #aaa;
+  }
+  .step .num {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #2a2d3a; color: #aaa;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+  }
+  .step.active { border-color: #4572FF; color: white; }
+  .step.active .num { background: #4572FF; color: white; }
+  .step.done { border-color: #22c55e; color: #22c55e; }
+  .step.done .num { background: #22c55e; color: white; }
+  .step-arrow { color: #333; font-size: 16px; display: flex; align-items: center; }
+
+  /* DROP ZONE */
+  .drop-zone {
+    border: 2px dashed #2a2d3a;
+    border-radius: 16px;
+    padding: 48px 32px;
+    text-align: center;
+    background: #1a1d27;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 24px;
+  }
+  .drop-zone:hover, .drop-zone.drag-over {
+    border-color: #4572FF;
+    background: #1a2040;
+  }
+  .drop-zone .icon { font-size: 40px; margin-bottom: 12px; }
+  .drop-zone h2 { font-size: 16px; color: white; margin-bottom: 6px; }
+  .drop-zone p  { font-size: 13px; color: #888; }
+  .drop-zone .btn-upload {
+    display: inline-block; margin-top: 16px;
+    background: #4572FF; color: white;
+    border: none; border-radius: 8px;
+    padding: 10px 24px; font-size: 14px;
+    cursor: pointer; font-family: Arial, sans-serif;
+    font-weight: 600; transition: background 0.15s;
+  }
+  .drop-zone .btn-upload:hover { background: #2b4fcc; }
+  #file-input { display: none; }
+
+  /* STATUS CARD */
+  .status-card {
+    display: none;
+    background: #1a1d27;
+    border: 1px solid #2a2d3a;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: none;
+    align-items: center;
+    gap: 14px;
+  }
+  .status-card.show { display: flex; }
+  .status-card.success { border-color: #22c55e; }
+  .status-card.error   { border-color: #ef4444; }
+  .status-icon { font-size: 24px; }
+  .status-text h3 { font-size: 14px; font-weight: 700; color: white; }
+  .status-text p  { font-size: 12px; color: #888; margin-top: 3px; }
+
+  /* STATS ROW */
+  .stats { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+  .stat {
+    flex: 1; min-width: 120px;
+    background: #1a1d27; border: 1px solid #2a2d3a;
+    border-radius: 10px; padding: 14px 16px;
+    text-align: center;
+  }
+  .stat .val { font-size: 24px; font-weight: 800; color: #4572FF; }
+  .stat .lbl { font-size: 11px; color: #666; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* OUTPUT */
+  .output-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .output-header h3 { font-size: 14px; font-weight: 700; color: white; }
+  .btn-group { display: flex; gap: 8px; }
+  .btn {
+    display: flex; align-items: center; gap: 6px;
+    border: none; border-radius: 8px;
+    padding: 8px 16px; font-size: 13px;
+    cursor: pointer; font-family: Arial, sans-serif;
+    font-weight: 600; transition: all 0.15s;
+  }
+  .btn-primary { background: #4572FF; color: white; }
+  .btn-primary:hover { background: #2b4fcc; }
+  .btn-secondary { background: #2a2d3a; color: #ccc; }
+  .btn-secondary:hover { background: #33374a; color: white; }
+  .btn-success  { background: #22c55e; color: white; }
+
+  #json-output {
+    background: #0d1117;
+    border: 1px solid #2a2d3a;
+    border-radius: 12px;
+    padding: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #c9d1d9;
+    max-height: 480px;
+    overflow-y: auto;
+    white-space: pre;
+    display: none;
+  }
+
+  /* VALIDATION ERRORS */
+  .errors {
+    background: #1a0e0e;
+    border: 1px solid #ef4444;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .errors h4 { color: #ef4444; font-size: 13px; margin-bottom: 8px; }
+  .errors ul { list-style: none; }
+  .errors li { font-size: 12px; color: #fca5a5; padding: 2px 0; }
+  .errors li::before { content: '✗  '; }
+
+  /* QUESTION PREVIEW */
+  .q-preview {
+    display: none;
+    margin-top: 20px;
+  }
+  .q-preview h3 { font-size: 14px; font-weight: 700; color: white; margin-bottom: 12px; }
+  .segment-block { margin-bottom: 16px; }
+  .seg-name {
+    font-size: 11px; font-weight: 700; color: #4572FF;
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 8px; padding-left: 4px;
+  }
+  .q-card {
+    background: #1a1d27; border: 1px solid #2a2d3a;
+    border-radius: 8px; padding: 12px 14px;
+    margin-bottom: 6px;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .q-type-badge {
+    border-radius: 4px; padding: 2px 8px;
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    white-space: nowrap; flex-shrink: 0; margin-top: 1px;
+  }
+  .badge-predict { background: #1e3a5f; color: #60a5fa; }
+  .badge-recall  { background: #2d1f4e; color: #a78bfa; }
+  .badge-trivia  { background: #1a3a2a; color: #4ade80; }
+  .q-text { font-size: 13px; color: #ddd; flex: 1; }
+  .q-meta { font-size: 11px; color: #555; margin-top: 4px; }
+  .rapid-badge { background: #ff6b0033; color: #fb923c; border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 700; }
+
+  .reset-btn {
+    margin-top: 20px;
+    background: none; border: 1px solid #2a2d3a;
+    color: #888; border-radius: 8px; padding: 8px 18px;
+    font-size: 13px; cursor: pointer; font-family: Arial, sans-serif;
+  }
+  .reset-btn:hover { border-color: #555; color: #ccc; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">T</div>
+  <div>
+    <h1>TauntLive — Event Intake Converter</h1>
+    <p>Upload a filled intake form to generate a Firestore-ready JSON event</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="steps">
+    <div class="step active" id="step1"><div class="num">1</div> Upload Excel</div>
+    <div class="step-arrow">›</div>
+    <div class="step" id="step2"><div class="num">2</div> Validate</div>
+    <div class="step-arrow">›</div>
+    <div class="step" id="step3"><div class="num">3</div> Download JSON</div>
+  </div>
+
+  <!-- DROP ZONE -->
+  <div class="drop-zone" id="drop-zone">
+    <div class="icon">📋</div>
+    <h2>Drop your filled intake Excel here</h2>
+    <p>TauntLive_Event_Intake.xlsx · Any filled version</p>
+    <button class="btn-upload" onclick="document.getElementById('file-input').click()">Choose File</button>
+    <input type="file" id="file-input" accept=".xlsx,.xls"/>
+  </div>
+
+  <!-- ERRORS -->
+  <div class="errors" id="errors">
+    <h4>⚠ Fix these before converting:</h4>
+    <ul id="error-list"></ul>
+  </div>
+
+  <!-- STATUS -->
+  <div class="status-card" id="status-card">
+    <div class="status-icon" id="status-icon"></div>
+    <div class="status-text">
+      <h3 id="status-title"></h3>
+      <p id="status-sub"></p>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats" id="stats" style="display:none">
+    <div class="stat"><div class="val" id="stat-segs">-</div><div class="lbl">Segments</div></div>
+    <div class="stat"><div class="val" id="stat-qs">-</div><div class="lbl">Questions</div></div>
+    <div class="stat"><div class="val" id="stat-rapid">-</div><div class="lbl">Rapid</div></div>
+    <div class="stat"><div class="val" id="stat-coins">-</div><div class="lbl">Coins Pool</div></div>
+    <div class="stat"><div class="val" id="stat-streams">-</div><div class="lbl">Streams</div></div>
+  </div>
+
+  <!-- OUTPUT -->
+  <div id="output-section" style="display:none">
+    <div class="output-header">
+      <h3>Generated JSON</h3>
+      <div class="btn-group">
+        <button class="btn btn-secondary" id="btn-copy" onclick="copyJSON()">📋 Copy</button>
+        <button class="btn btn-primary" id="btn-download" onclick="downloadJSON()">⬇ Download JSON</button>
+      </div>
+    </div>
+    <pre id="json-output"></pre>
+  </div>
+
+  <!-- QUESTION PREVIEW -->
+  <div class="q-preview" id="q-preview">
+    <h3>Question Preview</h3>
+    <div id="q-list"></div>
+  </div>
+
+  <button class="reset-btn" id="reset-btn" onclick="resetAll()" style="display:none">↩ Convert another file</button>
+
+</div>
+
+<script>
+let generatedJSON = null;
+let generatedFileName = 'tauntlive_event.json';
+
+// ── DRAG AND DROP ────────────────────────────────────────────────────────────
+const dropZone = document.getElementById('drop-zone');
+const fileInput = document.getElementById('file-input');
+
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) processFile(file);
+});
+fileInput.addEventListener('change', e => {
+  if (e.target.files[0]) processFile(e.target.files[0]);
+});
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+function slugify(text) {
+  return String(text).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function shortId() {
+  return Math.random().toString(36).substr(2, 8);
+}
+
+function toTimestamp(dateStr, timeStr) {
+  const s = `${String(dateStr).trim()} ${String(timeStr).trim()}`;
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})\s+(\d{1,2}):(\d{2})$/);
+  if (!m) throw new Error(`Invalid date/time: "${dateStr}" "${timeStr}". Use YYYY-MM-DD and HH:MM.`);
+  const d = new Date(Date.UTC(+m[1], +m[2]-1, +m[3], +m[4], +m[5]));
+  return { type: 'Date', value: d.toISOString() };
+}
+
+function readEventInfo(ws) {
+  const fields = {};
+  const range = XLSX.utils.decode_range(ws['!ref'] || 'A1');
+  for (let r = range.s.r; r <= range.e.r; r++) {
+    const labelCell = ws[XLSX.utils.encode_cell({r, c: 1})]; // col B
+    const valCell   = ws[XLSX.utils.encode_cell({r, c: 2})]; // col C
+    if (labelCell && labelCell.v) {
+      const key = String(labelCell.v).replace(/\s*\*$/, '').trim();
+      fields[key] = valCell ? valCell.v : null;
+    }
+  }
+  return fields;
+}
+
+function readQuestions(ws) {
+  const questions = [];
+  const range = XLSX.utils.decode_range(ws['!ref'] || 'A1');
+  for (let r = 7; r <= range.e.r; r++) { // data starts row index 7 (row 8)
+    const get = c => { const cell = ws[XLSX.utils.encode_cell({r, c})]; return cell ? cell.v : null; };
+    const text = get(3); // col D
+    if (!text || !String(text).trim()) continue;
+    // Skip example rows (italic style check not reliable, skip note row text)
+    if (String(text).includes('⬆')) continue;
+
+    const segment  = get(0) || 'Segment 1';
+    const qtype    = get(2) || 'predict';
+    const optA     = get(4) ? String(get(4)).trim() : '';
+    const optB     = get(5) ? String(get(5)).trim() : '';
+    const optC     = get(6) ? String(get(6)).trim() : '';
+    const optD     = get(7) ? String(get(7)).trim() : '';
+    const correct  = get(8) ? String(get(8)).trim() : '';
+    const steps    = get(9)  != null ? parseInt(get(9))  : 1;
+    const coins    = get(10) != null ? parseInt(get(10)) : 100;
+    const isRapid  = get(11) ? String(get(11)).trim().toLowerCase() === 'yes' : false;
+    const rapidSec = get(12) != null ? parseInt(get(12)) : null;
+
+    const options = [optA, optB, optC, optD].filter(o => o);
+    const answers = correct.split(',').map(a => a.trim()).filter(Boolean);
+
+    const q = {
+      objectType: 'question',
+      undisplayed: true,
+      active: false,
+      state: 'undisplayed',
+      type: String(qtype).trim(),
+      text: String(text).trim(),
+      options,
+      optionsExtra: [],
+      answers,
+      rewards: { steps: isNaN(steps) ? 1 : steps, coins: isNaN(coins) ? 100 : coins },
+      isRapid,
+      _segment: String(segment).trim()
+    };
+    if (isRapid && rapidSec) q.rapid = { seconds: rapidSec };
+    questions.push(q);
+  }
+  return questions;
+}
+
+function buildSegments(questions) {
+  const map = {};
+  for (const q of questions) {
+    const seg = q._segment;
+    delete q._segment;
+    if (!map[seg]) map[seg] = [];
+    map[seg].push(q);
+  }
+  return Object.entries(map).map(([name, qs]) => ({
+    type: 'question', state: 'incomplete', name, auctionIds: [], questions: qs
+  }));
+}
+
+function validate(info, questions) {
+  const errors = [];
+  if (!info['Event Title'])         errors.push('Event Title is required');
+  if (!info['Category'])            errors.push('Category is required');
+  if (!info['Type'])                errors.push('Type is required (free or paid)');
+  if (!info['Start Date (UTC)'])    errors.push('Start Date (UTC) is required — format YYYY-MM-DD');
+  if (!info['Start Time (UTC)'])    errors.push('Start Time (UTC) is required — format HH:MM');
+  if (!info['Brand Name'])          errors.push('Brand Name is required');
+  if (!info['Primary Platform'])    errors.push('Primary Platform is required');
+  if (!info['Team 1 Name'])         errors.push('Team 1 Name is required');
+  if (questions.length === 0)       errors.push('No questions found in QUESTIONS sheet');
+
+  for (const q of questions) {
+    if (q.options.length < 2)         errors.push(`Question "${q.text.substring(0,40)}…": needs at least 2 options`);
+    if (q.answers.length === 0)       errors.push(`Question "${q.text.substring(0,40)}…": no correct answer set`);
+    if (!['predict','recall','trivia'].includes(q.type))
+      errors.push(`Question "${q.text.substring(0,40)}…": invalid type "${q.type}"`);
+  }
+  return errors;
+}
+
+// ── PROCESS FILE ─────────────────────────────────────────────────────────────
+function processFile(file) {
+  dropZone.style.display = 'none';
+  setStep(2);
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const wb = XLSX.read(e.target.result, { type: 'array' });
+
+      if (!wb.Sheets['EVENT INFO']) throw new Error("Sheet 'EVENT INFO' not found.");
+      if (!wb.Sheets['QUESTIONS'])  throw new Error("Sheet 'QUESTIONS' not found.");
+
+      const info      = readEventInfo(wb.Sheets['EVENT INFO']);
+      const questions = readQuestions(wb.Sheets['QUESTIONS']);
+      const errors    = validate(info, questions);
+
+      if (errors.length > 0) {
+        showErrors(errors);
+        dropZone.style.display = '';
+        setStep(1);
+        return;
+      }
+
+      const event = buildEvent(info, questions);
+      generatedJSON = event;
+      const title = String(info['Event Title']).trim();
+      generatedFileName = slugify(title) + '.json';
+
+      showSuccess(info, buildSegments(JSON.parse(JSON.stringify(questions))));
+      showStats(event);
+      showOutput(event);
+      showQuestionPreview(event.segments);
+      setStep(3);
+      document.getElementById('reset-btn').style.display = 'inline-block';
+    } catch (err) {
+      showErrors([err.message]);
+      dropZone.style.display = '';
+      setStep(1);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function buildEvent(info, rawQuestions) {
+  const questions = JSON.parse(JSON.stringify(rawQuestions));
+  const segments  = buildSegments(questions);
+  const id        = shortId();
+  const title     = String(info['Event Title']).trim();
+  const startsAt  = toTimestamp(info['Start Date (UTC)'], info['Start Time (UTC)']);
+  const totalCoins = parseInt(info['Total Coins Pool']) || 10000;
+  const primary   = String(info['Primary Platform'] || 'youtube').trim().toLowerCase();
+
+  const platformMap = [
+    ['YouTube URL',  'youtube'],
+    ['Twitch URL',   'twitch'],
+    ['Kick URL',     'kick']
+  ];
+  const streams = platformMap
+    .filter(([f]) => info[f] && String(info[f]).trim())
+    .map(([f, p]) => ({ platform: p, url: String(info[f]).trim(), primary: p === primary }));
+
+  const event = {
+    id,
+    urlFriendlyId: slugify(title) + '-' + id,
+    eventType: 'Game',
+    category: String(info['Category'] || 'Just Chatting').trim(),
+    gameName: title,
+    subtitle: String(info['Subtitle'] || '').trim(),
+    type: String(info['Type'] || 'free').trim(),
+    state: 'pending',
+    featured: String(info['Featured?'] || 'No').trim().toLowerCase() === 'yes',
+    startsAt,
+    brand: String(info['Brand Name'] || 'TauntAI').trim(),
+    streams,
+    team1: {
+      name: String(info['Team 1 Name'] || '').trim(),
+      logoUrl: String(info['Team 1 Logo URL'] || '').trim() || null
+    },
+    segments,
+    settleTimes: {},
+    pool: {
+      cash:  { remaining: { amount: 0, currency: 'USD' }, total: { amount: 0, currency: 'USD' } },
+      coins: {
+        remaining: { amount: totalCoins, currency: 'COINS' },
+        total:     { amount: totalCoins, currency: 'COINS' }
+      }
+    },
+    numPlayers: 0,
+    currentHighestStep: 0,
+    steps: {},
+    chaser: '',
+    managementFee: parseFloat(info['Management Fee %']) || 0,
+    closeSettledSeconds: parseInt(info['Close Settled Seconds']) || 10,
+    blockFromListing: String(info['Block From Listing?'] || 'No').trim().toLowerCase() === 'yes',
+    whitelistIds: [],
+    blacklistIds: []
+  };
+
+  if (info['Event Image URL'] && String(info['Event Image URL']).trim())
+    event.imageUrl = String(info['Event Image URL']).trim();
+  if (info['Brand Logo URL'] && String(info['Brand Logo URL']).trim())
+    event.brandImgUrl = String(info['Brand Logo URL']).trim();
+
+  const t2 = String(info['Team 2 Name'] || '').trim();
+  if (t2) event.team2 = { name: t2, logoUrl: String(info['Team 2 Logo URL'] || '').trim() || null };
+
+  const wl = String(info['Whitelist User IDs'] || '').trim();
+  if (wl) event.whitelistIds = wl.split(',').map(s => s.trim()).filter(Boolean);
+
+  // clean nulls
+  Object.keys(event).forEach(k => { if (event[k] === null || event[k] === undefined) delete event[k]; });
+
+  return event;
+}
+
+// ── UI ───────────────────────────────────────────────────────────────────────
+function setStep(n) {
+  for (let i = 1; i <= 3; i++) {
+    const el = document.getElementById(`step${i}`);
+    el.className = 'step' + (i < n ? ' done' : i === n ? ' active' : '');
+  }
+}
+
+function showErrors(errs) {
+  const div = document.getElementById('errors');
+  const ul  = document.getElementById('error-list');
+  ul.innerHTML = errs.map(e => `<li>${e}</li>`).join('');
+  div.style.display = 'block';
+  setTimeout(() => div.style.display = 'none', 8000);
+}
+
+function showSuccess(info, segments) {
+  const card = document.getElementById('status-card');
+  document.getElementById('status-icon').textContent = '✅';
+  document.getElementById('status-title').textContent = String(info['Event Title']).trim();
+  document.getElementById('status-sub').textContent =
+    `${info['Start Date (UTC)']} ${info['Start Time (UTC)']} UTC  ·  ${info['Category']}  ·  ${info['Type']}`;
+  card.className = 'status-card show success';
+}
+
+function showStats(event) {
+  const qs = event.segments.flatMap(s => s.questions);
+  document.getElementById('stat-segs').textContent   = event.segments.length;
+  document.getElementById('stat-qs').textContent     = qs.length;
+  document.getElementById('stat-rapid').textContent  = qs.filter(q => q.isRapid).length;
+  document.getElementById('stat-coins').textContent  = (event.pool.coins.total.amount).toLocaleString();
+  document.getElementById('stat-streams').textContent = event.streams.length;
+  document.getElementById('stats').style.display = 'flex';
+}
+
+function showOutput(event) {
+  const pre = document.getElementById('json-output');
+  pre.textContent = JSON.stringify(event, null, 2);
+  pre.style.display = 'block';
+  document.getElementById('output-section').style.display = 'block';
+}
+
+function showQuestionPreview(segments) {
+  const container = document.getElementById('q-list');
+  container.innerHTML = '';
+  for (const seg of segments) {
+    const block = document.createElement('div');
+    block.className = 'segment-block';
+    block.innerHTML = `<div class="seg-name">${seg.name} — ${seg.questions.length} question${seg.questions.length !== 1 ? 's' : ''}</div>`;
+    for (const q of seg.questions) {
+      const badgeClass = { predict: 'badge-predict', recall: 'badge-recall', trivia: 'badge-trivia' }[q.type] || 'badge-predict';
+      const rapidBadge = q.isRapid ? `<span class="rapid-badge">⚡ ${q.rapid?.seconds}s</span>` : '';
+      const card = document.createElement('div');
+      card.className = 'q-card';
+      card.innerHTML = `
+        <span class="q-type-badge ${badgeClass}">${q.type}</span>
+        <div>
+          <div class="q-text">${q.text}</div>
+          <div class="q-meta">${q.options.join(' · ')}  &nbsp;·&nbsp; ✓ ${q.answers.join(', ')}  &nbsp;·&nbsp; ${q.rewards.steps} step · ${q.rewards.coins} coins  ${rapidBadge}</div>
+        </div>`;
+      block.appendChild(card);
+    }
+    container.appendChild(block);
+  }
+  document.getElementById('q-preview').style.display = 'block';
+}
+
+function copyJSON() {
+  if (!generatedJSON) return;
+  navigator.clipboard.writeText(JSON.stringify(generatedJSON, null, 2));
+  const btn = document.getElementById('btn-copy');
+  btn.textContent = '✅ Copied!';
+  btn.className = 'btn btn-success';
+  setTimeout(() => { btn.textContent = '📋 Copy'; btn.className = 'btn btn-secondary'; }, 2000);
+}
+
+function downloadJSON() {
+  if (!generatedJSON) return;
+  const blob = new Blob([JSON.stringify(generatedJSON, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = generatedFileName;
+  a.click();
+}
+
+function resetAll() {
+  generatedJSON = null;
+  dropZone.style.display = '';
+  document.getElementById('status-card').className = 'status-card';
+  document.getElementById('stats').style.display = 'none';
+  document.getElementById('output-section').style.display = 'none';
+  document.getElementById('q-preview').style.display = 'none';
+  document.getElementById('reset-btn').style.display = 'none';
+  document.getElementById('json-output').style.display = 'none';
+  document.getElementById('errors').style.display = 'none';
+  document.getElementById('file-input').value = '';
+  setStep(1);
+}
+</script>
+</body>
+</html>
