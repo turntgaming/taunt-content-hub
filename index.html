@@ -4,6 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>$TNT Content Calendar - Taunt Live</title>
+    <script>
+        // PASSWORD GATE — runs before anything else renders
+        (function() {
+            const PASS = 'TauntLive2026!';
+            const SESSION_KEY = 'tnt_auth';
+            if (sessionStorage.getItem(SESSION_KEY) === '1') return;
+            document.addEventListener('DOMContentLoaded', function() {
+                const gate = document.getElementById('passwordGate');
+                if (gate) gate.style.display = 'flex';
+                document.getElementById('app').style.display = 'none';
+            });
+            window.__checkPassword = function() {
+                const val = document.getElementById('gateInput').value;
+                const err = document.getElementById('gateError');
+                if (val === PASS) {
+                    sessionStorage.setItem(SESSION_KEY, '1');
+                    document.getElementById('passwordGate').style.display = 'none';
+                    document.getElementById('app').style.display = 'flex';
+                } else {
+                    err.style.display = 'block';
+                    document.getElementById('gateInput').value = '';
+                    document.getElementById('gateInput').focus();
+                }
+            };
+        })();
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -1260,6 +1286,22 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+
+    <!-- PASSWORD GATE -->
+    <div id="passwordGate" style="display:none;position:fixed;inset:0;z-index:99999;background:#12141f;align-items:center;justify-content:center;flex-direction:column;gap:24px;font-family:'Space Mono',monospace;">
+        <div style="color:#4B6EF5;font-size:13px;letter-spacing:4px;text-transform:uppercase;opacity:0.7;">Taunt Network</div>
+        <div style="color:#d8ddf5;font-size:22px;font-weight:700;letter-spacing:2px;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;">$TNT Content Hub</div>
+        <div style="display:flex;flex-direction:column;gap:12px;width:320px;">
+            <input id="gateInput" type="password" placeholder="Enter team password"
+                onkeydown="if(event.key==='Enter')window.__checkPassword()"
+                style="background:#1e2135;border:1px solid #2e3358;color:#d8ddf5;padding:12px 16px;font-family:'Space Mono',monospace;font-size:14px;outline:none;border-radius:4px;width:100%;box-sizing:border-box;">
+            <button onclick="window.__checkPassword()"
+                style="background:#4B6EF5;border:none;color:#fff;padding:12px;font-family:'Space Mono',monospace;font-size:13px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:4px;">
+                Enter
+            </button>
+            <div id="gateError" style="display:none;color:#ff3b5c;font-size:12px;text-align:center;letter-spacing:1px;">Incorrect password. Try again.</div>
+        </div>
+    </div>
     <div id="app">
         <!-- HEADER -->
         <div class="header">
