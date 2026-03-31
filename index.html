@@ -1,0 +1,2913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$TNT Content Calendar - Taunt Live</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:        #12141f;
+            --bg2:       #181b2a;
+            --bg3:       #1e2135;
+            --panel:     #222640;
+            --border:    #2e3358;
+            --cyan:      #4B6EF5;
+            --cyan-dim:  #3d5cd4;
+            --cyan-glow: rgba(75,110,245,0.18);
+            --red:       #ff3b5c;
+            --green:     #00ff94;
+            --yellow:    #ffd040;
+            --purple:    #7c6ef5;
+            --text:      #d8ddf5;
+            --text-dim:  #5e6490;
+            --text-mid:  #8088bb;
+            --mono: 'Space Mono', monospace;
+            --display: 'Barlow Condensed', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 14px;
+            overflow: hidden;
+            background-image:
+                linear-gradient(0deg, transparent 24%, rgba(75,110,245,.07) 25%, rgba(75,110,245,.07) 26%, transparent 27%, transparent 74%, rgba(75,110,245,.07) 75%, rgba(75,110,245,.07) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(75,110,245,.07) 25%, rgba(75,110,245,.07) 26%, transparent 27%, transparent 74%, rgba(75,110,245,.07) 75%, rgba(75,110,245,.07) 76%, transparent 77%, transparent);
+            background-size: 40px 40px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 400px;
+            background: radial-gradient(ellipse at center top, rgba(75,110,245,0.20) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        #app {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* HEADER */
+        .header {
+            height: 64px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 32px;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            height: 36px;
+            width: auto;
+        }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-title {
+            font-family: var(--display);
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .header-subtitle {
+            font-size: 12px;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .countdown {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        .countdown-label {
+            font-size: 11px;
+            color: var(--text-dim);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .countdown-value {
+            font-family: var(--display);
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--cyan);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            border-color: var(--cyan);
+            background: var(--cyan-glow);
+            color: var(--cyan);
+        }
+
+        .btn-cyan {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        .btn-cyan:hover {
+            background: var(--cyan);
+            color: var(--bg);
+        }
+
+        .btn-sync {
+            border-color: var(--green);
+            color: var(--green);
+        }
+        .btn-sync:hover {
+            background: var(--green);
+            color: var(--bg);
+        }
+        .btn-sync.syncing {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .btn-share {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+        .btn-share:hover {
+            background: var(--cyan);
+            color: var(--bg);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn-red {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        .btn-red:hover {
+            background: var(--red);
+            color: white;
+        }
+
+        /* STATS BAR */
+        .stats {
+            display: flex;
+            padding: 16px 32px;
+            gap: 24px;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .stat-value {
+            font-family: var(--display);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--cyan);
+        }
+
+        /* FILTER BAR */
+        .filters {
+            display: flex;
+            padding: 16px 32px;
+            gap: 12px;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 11px;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 6px 0;
+            white-space: nowrap;
+        }
+
+        .filter-pill {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .filter-pill.active {
+            border-color: var(--pill-color, var(--cyan));
+            background: var(--pill-glow, var(--cyan-glow));
+            color: var(--pill-color, var(--cyan));
+        }
+
+        .filter-pill:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        /* MAIN LAYOUT */
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .calendar-section {
+            flex: 1;
+            padding: 24px 32px;
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
+        }
+
+        .detail-panel {
+            width: 360px;
+            padding: 24px;
+            overflow-y: auto;
+            background-color: var(--bg2);
+        }
+
+        /* CALENDAR */
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 12px;
+        }
+
+        .calendar-nav button {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .calendar-nav button:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        .calendar-month {
+            font-family: var(--display);
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .calendar-weekday {
+            display: grid;
+            place-items: center;
+            height: 32px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-mid);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            border: 1px solid var(--border);
+            background-color: var(--panel);
+            padding: 8px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+        }
+
+        .calendar-day:hover {
+            border-color: var(--cyan);
+            background-color: var(--bg3);
+        }
+
+        .calendar-day.selected {
+            border-color: var(--cyan);
+            background-color: var(--cyan-glow);
+        }
+
+        .calendar-day.outside {
+            opacity: 0.3;
+            cursor: default;
+        }
+
+        .calendar-day.tge {
+            border-color: var(--red);
+        }
+
+        .day-number {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .day-badges {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+            margin-top: 4px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .content-pill {
+            font-size: 10px;
+            padding: 2px 4px;
+            border-radius: 2px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .content-pill.tg {
+            border: 1px solid #0088cc;
+            color: #29ABE2;
+            background: rgba(0,136,204,0.12);
+        }
+
+        .content-pill.dc {
+            border: 1px solid #5865F2;
+            color: #7289DA;
+            background: rgba(88,101,242,0.12);
+        }
+
+        .content-pill.live {
+            border: 1px solid #4B6EF5;
+            color: #4B6EF5;
+            background: rgba(75,110,245,0.12);
+        }
+
+        .content-pill.x {
+            border: 1px solid #71767b;
+            color: #e7e9ea;
+            background: rgba(231,233,234,0.08);
+        }
+
+        /* Event type indicators — colored borders on different sides of day cell */
+        .calendar-day.milestone {
+            border-top: 3px solid var(--red) !important;
+        }
+
+        .calendar-day.special-event, .calendar-day.special {
+            border-left: 3px solid var(--yellow) !important;
+        }
+
+        .calendar-day.partner {
+            border-right: 3px solid var(--green) !important;
+        }
+
+        /* Combo: multiple event types on same day */
+        .calendar-day.milestone.special, .calendar-day.milestone.special-event {
+            border-top: 3px solid var(--red) !important;
+            border-left: 3px solid var(--yellow) !important;
+        }
+
+        .calendar-day.milestone.partner {
+            border-top: 3px solid var(--red) !important;
+            border-right: 3px solid var(--green) !important;
+        }
+
+        .calendar-day.special.partner, .calendar-day.special-event.partner {
+            border-left: 3px solid var(--yellow) !important;
+            border-right: 3px solid var(--green) !important;
+        }
+
+        .calendar-day.milestone.special.partner {
+            border-top: 3px solid var(--red) !important;
+            border-left: 3px solid var(--yellow) !important;
+            border-right: 3px solid var(--green) !important;
+        }
+
+        /* LEGEND */
+        .calendar-legend {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 16px;
+            align-items: center;
+        }
+
+        .legend-title {
+            font-size: 11px;
+            color: var(--text-dim);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-mid);
+        }
+
+        .legend-swatch {
+            width: 28px;
+            height: 18px;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            position: relative;
+        }
+
+        .legend-swatch.milestone {
+            border-top: 3px solid var(--red);
+        }
+
+        .legend-swatch.special {
+            border-left: 3px solid var(--yellow);
+        }
+
+        .legend-swatch.partner {
+            border-right: 3px solid var(--green);
+        }
+
+        .event-tag {
+            font-size: 9px;
+            padding: 1px 4px;
+            border-radius: 2px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+            display: inline-block;
+        }
+
+        .event-tag.special { background: rgba(255,208,64,0.2); color: var(--yellow); border: 1px solid rgba(255,208,64,0.4); }
+        .event-tag.milestone { background: rgba(255,59,92,0.2); color: var(--red); border: 1px solid rgba(255,59,92,0.4); }
+        .event-tag.partner { background: rgba(0,255,148,0.15); color: var(--green); border: 1px solid rgba(0,255,148,0.3); }
+
+        .tge-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            padding: 2px 6px;
+            background: var(--red);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 2px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .day-add-btn {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--cyan);
+            background: transparent;
+            color: var(--cyan);
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            opacity: 0;
+        }
+
+        .calendar-day:hover .day-add-btn {
+            opacity: 1;
+        }
+
+        .day-add-btn:hover {
+            background: var(--cyan);
+            color: var(--bg);
+        }
+
+        /* DETAIL PANEL */
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-date {
+            font-family: var(--display);
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .detail-empty {
+            color: var(--text-dim);
+            font-size: 13px;
+            text-align: center;
+            padding: 60px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .detail-empty img {
+            width: 80px;
+            height: auto;
+            opacity: 0.25;
+            filter: grayscale(1);
+        }
+
+        .detail-empty .empty-text {
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .day-event-banner {
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .day-event-banner.milestone {
+            background: rgba(255,59,92,0.1);
+            border-left: 3px solid var(--red);
+        }
+
+        .day-event-banner.special {
+            background: rgba(255,208,64,0.1);
+            border-left: 3px solid var(--yellow);
+        }
+
+        .day-event-banner.partner {
+            background: rgba(0,255,148,0.08);
+            border-left: 3px solid var(--green);
+        }
+
+        .day-event-banner-label {
+            font-family: var(--display);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .day-event-banner.milestone .day-event-banner-label { color: var(--red); }
+        .day-event-banner.special .day-event-banner-label { color: var(--yellow); }
+        .day-event-banner.partner .day-event-banner-label { color: var(--green); }
+
+        .day-event-banner-desc {
+            font-size: 12px;
+            color: var(--text-mid);
+        }
+
+        .queue-item {
+            padding: 14px;
+            border-bottom: 1px solid var(--border);
+            background-color: transparent;
+            transition: all 0.3s;
+        }
+
+        .queue-item:hover {
+            background-color: var(--bg3);
+        }
+
+        .queue-header {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .channel-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 2px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .channel-badge.tg {
+            background: rgba(0,136,204,0.15);
+            color: #29ABE2;
+            border: 1px solid #0088cc;
+        }
+
+        .channel-badge.dc {
+            background: rgba(88,101,242,0.15);
+            color: #7289DA;
+            border: 1px solid #5865F2;
+        }
+
+        .channel-badge.live {
+            background: rgba(75,110,245,0.15);
+            color: #4B6EF5;
+            border: 1px solid #4B6EF5;
+        }
+
+        .channel-badge.x {
+            background: rgba(231,233,234,0.1);
+            color: #e7e9ea;
+            border: 1px solid #71767b;
+        }
+
+        .phase-label {
+            font-size: 10px;
+            padding: 2px 6px;
+            color: var(--text-dim);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+
+        .queue-content {
+            font-size: 13px;
+            line-height: 1.4;
+            margin: 8px 0;
+            color: var(--text);
+            word-break: break-word;
+            cursor: text;
+            border-radius: 4px;
+            padding: 2px 4px;
+            transition: background 0.15s;
+        }
+        .queue-content:hover {
+            background: rgba(255,255,255,0.04);
+            outline: 1px dashed rgba(100,180,255,0.3);
+        }
+        .queue-content.editing {
+            display: none;
+        }
+        .inline-edit-area {
+            width: 100%;
+            background: var(--bg2);
+            border: 1px solid var(--cyan);
+            border-radius: 4px;
+            color: var(--text);
+            font-size: 13px;
+            line-height: 1.4;
+            padding: 6px 8px;
+            resize: vertical;
+            font-family: inherit;
+            margin: 4px 0;
+            box-sizing: border-box;
+            min-height: 60px;
+        }
+        .inline-edit-actions {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+        .inline-edit-hint {
+            margin-left: auto;
+            font-size: 10px;
+            color: var(--text-dim);
+            opacity: 0;
+            transition: opacity 0.2s;
+            letter-spacing: 0.5px;
+        }
+        .queue-item:hover .inline-edit-hint {
+            opacity: 1;
+        }
+
+        .queue-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 6px 10px;
+            font-size: 11px;
+        }
+
+        /* TOURNAMENT CARD */
+        .tournament-card {
+            border: 1px solid var(--border);
+            background-color: var(--bg3);
+            padding: 12px;
+            margin: 12px 0;
+            font-size: 12px;
+            line-height: 1.6;
+            font-family: var(--mono);
+        }
+
+        .tournament-title {
+            font-family: var(--display);
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            color: var(--cyan);
+        }
+
+        .tournament-section {
+            margin-bottom: 10px;
+        }
+
+        .tournament-section-title {
+            font-weight: 700;
+            color: var(--text-mid);
+            margin-bottom: 4px;
+        }
+
+        .tournament-item {
+            margin-left: 12px;
+            color: var(--text);
+        }
+
+        .tournament-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .category-tag {
+            font-size: 10px;
+            padding: 2px 6px;
+            border: 1px solid var(--text-mid);
+            color: var(--text-mid);
+            border-radius: 2px;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(6px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background-color: var(--panel);
+            border: 1px solid var(--border);
+            border-top: 2px solid var(--cyan);
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px;
+            box-shadow: 0 20px 60px rgba(75,110,245,0.3);
+        }
+
+        .modal-title {
+            font-family: var(--display);
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            color: var(--cyan);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-mid);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            background-color: var(--bg3);
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--cyan);
+            background-color: rgba(75,110,245,0.05);
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-checkboxes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .modal-actions .btn {
+            flex: 1;
+        }
+
+        /* IMAGE PREVIEW */
+        .image-preview-small {
+            margin-top: 8px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .image-preview-small img {
+            max-width: 100%;
+            max-height: 80px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .btn-clear-image {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--red);
+            font-size: 14px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-clear-image:hover {
+            background: var(--red);
+            color: white;
+        }
+
+        .queue-image {
+            margin-top: 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            max-width: 100%;
+        }
+
+        .queue-image img {
+            width: 100%;
+            max-height: 160px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .queue-image-label {
+            font-size: 10px;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .queue-image-label a {
+            color: var(--cyan);
+            text-decoration: none;
+            font-size: 10px;
+            word-break: break-all;
+        }
+
+        .queue-image-label a:hover {
+            text-decoration: underline;
+        }
+
+        /* BULK IMPORT */
+        .bulk-instructions {
+            margin-bottom: 20px;
+        }
+
+        .bulk-instructions p {
+            font-size: 13px;
+            color: var(--text-mid);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .bulk-instructions strong {
+            color: var(--cyan);
+        }
+
+        .bulk-format-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--cyan);
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--yellow);
+            letter-spacing: 0.3px;
+        }
+
+        .bulk-format-example {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 12px 16px;
+            margin-bottom: 16px;
+        }
+
+        .bulk-example-label {
+            font-size: 10px;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .bulk-format-example pre {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--text-mid);
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .bulk-field-ref {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 12px 16px;
+        }
+
+        .bulk-ref-title {
+            font-size: 10px;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .bulk-ref-row {
+            font-size: 12px;
+            color: var(--text-mid);
+            margin-bottom: 4px;
+            line-height: 1.5;
+        }
+
+        .bulk-ref-field {
+            display: inline-block;
+            min-width: 90px;
+            color: var(--cyan);
+            font-weight: 700;
+            font-family: var(--mono);
+        }
+
+        .bulk-preview {
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .bulk-preview-title {
+            font-size: 10px;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+            padding: 10px 16px 6px;
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+        }
+
+        .bulk-preview-count {
+            font-size: 12px;
+            color: var(--green);
+            padding: 0 16px 10px;
+            font-weight: 700;
+        }
+
+        .bulk-preview-list {
+            padding: 0 16px 12px;
+        }
+
+        .bulk-preview-item {
+            display: flex;
+            gap: 8px;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
+            align-items: flex-start;
+        }
+
+        .bulk-preview-item:last-child {
+            border-bottom: none;
+        }
+
+        .bulk-preview-item .bp-date {
+            color: var(--text-dim);
+            font-family: var(--mono);
+            min-width: 85px;
+            font-size: 11px;
+        }
+
+        .bulk-preview-item .bp-channel {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            min-width: 28px;
+        }
+
+        .bulk-preview-item .bp-channel.tg { color: #29ABE2; }
+        .bulk-preview-item .bp-channel.dc { color: #7289DA; }
+        .bulk-preview-item .bp-channel.x { color: #e7e9ea; }
+        .bulk-preview-item .bp-channel.live { color: #4B6EF5; }
+
+        .bulk-preview-item .bp-content {
+            color: var(--text);
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .bulk-preview-item.bp-error {
+            color: var(--red);
+        }
+
+        /* PRODUCT SWITCHER */
+        .product-switcher {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: 24px;
+        }
+
+        .product-tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            opacity: 0.5;
+        }
+
+        .product-tab.active {
+            border-color: var(--cyan);
+            background: var(--cyan-glow);
+            opacity: 1;
+        }
+
+        .product-tab:hover {
+            border-color: var(--cyan);
+            opacity: 0.8;
+        }
+
+        .product-tab img {
+            height: 24px;
+            width: auto;
+        }
+
+        .product-tab .product-label {
+            font-family: var(--display);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text);
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+            border: 1px solid var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-dim);
+        }
+
+        /* Firefox scrollbar */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) var(--bg);
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-left">
+                <img class="logo" src="https://playtaunt.io/assets/4c719f34743030a443d95a9532d4ffa8f910b4d4-pDjlQtra.png" alt="TNT Logo">
+                <div class="header-text">
+                    <div class="header-title">$TNT</div>
+                    <div class="header-subtitle" id="headerSubtitle">Content Calendar</div>
+                </div>
+                <div class="product-switcher">
+                    <button class="product-tab active" data-product="tauntlive" onclick="switchProduct('tauntlive')">
+                        <img src="https://playtaunt.io/assets/taunt-live-logo-B89k00tZ.png" alt="Taunt Live">
+                    </button>
+                    <button class="product-tab" data-product="battleworld" onclick="switchProduct('battleworld')">
+                        <img src="https://playtaunt.io/assets/383fdcbe6e27fcff1898a08e146dee67e619fa1d-DXeOMbcZ.png" alt="BattleWorld">
+                        <span class="product-label">BattleWorld</span>
+                    </button>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="countdown">
+                    <div class="countdown-label">TGE COUNTDOWN</div>
+                    <div class="countdown-value" id="countdown">T-29</div>
+                </div>
+                <a class="btn" href="TauntLive_Event_Intake.xlsx" download title="Download the Event Intake spreadsheet">📥 Event Intake</a>
+                <a class="btn" href="TauntLive_Event_Converter.html" target="_blank" title="Open the Event Converter tool">⚙️ Event Converter</a>
+                <button class="btn btn-cyan" id="bulkImportBtn">Bulk Import</button>
+                <button class="btn btn-sync" id="syncTauntLiveBtn" title="Sync streams from Taunt Live scheduler">Sync Taunt Live</button>
+            </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats" id="statsBar">
+            <div class="stat-box">
+                <div class="stat-label">Total Items</div>
+                <div class="stat-value" id="statTotal">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label" style="color: #0088cc;">Telegram</div>
+                <div class="stat-value" style="color: #29ABE2;" id="statTG">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label" style="color: #5865F2;">Discord</div>
+                <div class="stat-value" style="color: #7289DA;" id="statDC">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label" style="color: #71767b;">X</div>
+                <div class="stat-value" style="color: #e7e9ea;" id="statX">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label" style="color: #4B6EF5;"> Taunt Live</div>
+                <div class="stat-value" style="color: #4B6EF5;" id="statTournament">0</div>
+            </div>
+        </div>
+
+        <!-- FILTERS -->
+        <div class="filters">
+            <div class="filter-group">
+                <span class="filter-label">Channel:</span>
+                <button class="filter-pill" data-filter="channel" data-value="telegram" style="--pill-color: #0088cc;">Telegram</button>
+                <button class="filter-pill" data-filter="channel" data-value="discord" style="--pill-color: #5865F2;">Discord</button>
+                <button class="filter-pill" data-filter="channel" data-value="x" style="--pill-color: #e7e9ea;">X</button>
+                <button class="filter-pill" data-filter="channel" data-value="tournament" style="--pill-color: #4B6EF5;"> Taunt Live</button>
+            </div>
+            <div class="filter-group">
+                <span class="filter-label">Phase:</span>
+                <button class="filter-pill" data-filter="phase" data-value="pre-tge-1">Pre-TGE Phase 1</button>
+                <button class="filter-pill" data-filter="phase" data-value="pre-tge-2">Pre-TGE Phase 2</button>
+                <button class="filter-pill" data-filter="phase" data-value="pre-tge-3">Pre-TGE Phase 3</button>
+                <button class="filter-pill" data-filter="phase" data-value="tge-week">TGE Week</button>
+                <button class="filter-pill" data-filter="phase" data-value="tge-day">TGE Day</button>
+                <button class="filter-pill" data-filter="phase" data-value="post-tge">Post-TGE</button>
+            </div>
+        </div>
+
+        <!-- MAIN LAYOUT -->
+        <div class="container">
+            <!-- CALENDAR -->
+            <div class="calendar-section">
+                <div class="calendar-header">
+                    <div class="calendar-nav">
+                        <button id="prevMonth">◀</button>
+                        <button id="nextMonth">▶</button>
+                    </div>
+                    <div class="calendar-month" id="monthDisplay">MARCH 2026</div>
+                </div>
+                <div class="calendar-legend">
+                    <div class="legend-title">Legend:</div>
+                    <div class="legend-item">
+                        <div class="legend-swatch milestone"></div>
+                        Milestone
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-swatch special"></div>
+                        Special Event
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-swatch partner"></div>
+                        Partner Announcement
+                    </div>
+                </div>
+                <div class="calendar-grid" id="calendarGrid"></div>
+            </div>
+
+            <!-- DETAIL PANEL -->
+            <div class="detail-panel">
+                <div class="detail-header">
+                    <div class="detail-date" id="detailDate">Select a day</div>
+                    <button class="btn btn-cyan btn-sm" id="addContentBtn">+ Add</button>
+                </div>
+                <div id="detailContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <div class="modal-title" id="modalTitle">Add Content</div>
+            <form id="contentForm">
+                <div class="form-group">
+                    <label class="form-label">Channel</label>
+                    <select class="form-select" id="formChannel" required>
+                        <option value="">Select Channel</option>
+                        <option value="telegram">Telegram</option>
+                        <option value="discord">Discord</option>
+                        <option value="x">X (Twitter)</option>
+                        <option value="tournament"> Taunt Live</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input type="date" class="form-input" id="formDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Phase</label>
+                    <select class="form-select" id="formPhase" required>
+                        <option value="">Select Phase</option>
+                        <option value="pre-tge-1">Pre-TGE Phase 1</option>
+                        <option value="pre-tge-2">Pre-TGE Phase 2</option>
+                        <option value="pre-tge-3">Pre-TGE Phase 3</option>
+                        <option value="tge-week">TGE Week</option>
+                        <option value="tge-day">TGE Day</option>
+                        <option value="post-tge">Post-TGE</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Event Type (optional)</label>
+                    <select class="form-select" id="formEventType">
+                        <option value="">None</option>
+                        <option value="special">Special Event</option>
+                        <option value="milestone">Big Milestone</option>
+                        <option value="partner">Partner Announcement</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="eventDescGroup" style="display: none;">
+                    <label class="form-label">Event Description</label>
+                    <input type="text" class="form-input" id="formEventDesc" placeholder="e.g. Campaign Kickoff, Coin Terminal IDO Launch...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Content</label>
+                    <textarea class="form-textarea" id="formContent" placeholder="Enter content text..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Image URL (optional)</label>
+                    <input type="url" class="form-input" id="formImageUrl" placeholder="https://example.com/image.png">
+                    <div class="image-preview-small" id="formImagePreview" style="display: none;">
+                        <img id="formImagePreviewImg" src="" alt="Preview">
+                        <button type="button" class="btn-clear-image" id="clearImageBtn" title="Remove image">&times;</button>
+                    </div>
+                </div>
+
+                <!-- Tournament-only fields -->
+                <div id="tournamentFields" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">Categories</label>
+                        <div class="form-checkboxes">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cat-crypto" value="Crypto">
+                                <label for="cat-crypto">Crypto</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cat-sports" value="Sports">
+                                <label for="cat-sports">Sports</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cat-esports" value="Esports">
+                                <label for="cat-esports">Esports</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cat-streaming" value="Streaming">
+                                <label for="cat-streaming">Streaming</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cat-entertainment" value="Entertainment">
+                                <label for="cat-entertainment">Entertainment</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cat-meta" value="Meta">
+                                <label for="cat-meta">Meta</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cat-culture" value="Culture">
+                                <label for="cat-culture">Culture</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cat-world" value="World">
+                                <label for="cat-world">World</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Special Event</label>
+                        <select class="form-select" id="formSpecialEvent">
+                            <option value="none">None</option>
+                            <option value="weekly_mega">Weekly Mega</option>
+                            <option value="partner_pack">Partner Pack</option>
+                            <option value="ama">AMA Predictions</option>
+                            <option value="launch">Launch Week Blitz</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-textarea" id="formNotes" placeholder="Tournament notes..."></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-cyan">Add to Calendar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- BULK IMPORT MODAL -->
+    <div class="modal-overlay" id="bulkModal">
+        <div class="modal" style="max-width: 720px;">
+            <div class="modal-title">Bulk Import Content</div>
+
+            <div class="bulk-instructions">
+                <p>Paste your content below using this format — <strong>one item per line</strong>:</p>
+                <div class="bulk-format-box">
+                    <code>date | channel | content | phase | eventType | eventDescription | imageUrl</code>
+                </div>
+                <div class="bulk-format-example">
+                    <div class="bulk-example-label">EXAMPLE</div>
+<pre>2026-04-05 | telegram | Staking rewards go live tomorrow. Lock in your $TNT.
+2026-04-05 | discord | STAKING ALERT: Rewards activation in 24 hours.
+2026-04-05 | x | Staking goes live tomorrow. 40% APY. $TNT | pre-tge-2 | milestone
+2026-04-06 | telegram | Partner spotlight: Poolz Finance | pre-tge-2 | partner | Poolz Finance IDO Launch | https://example.com/poolz-banner.png</pre>
+                </div>
+                <div class="bulk-field-ref">
+                    <div class="bulk-ref-title">FIELD REFERENCE</div>
+                    <div class="bulk-ref-row"><span class="bulk-ref-field">date</span> YYYY-MM-DD format (required)</div>
+                    <div class="bulk-ref-row"><span class="bulk-ref-field">channel</span> telegram, discord, x, or tournament (required)</div>
+                    <div class="bulk-ref-row"><span class="bulk-ref-field">content</span> The post text (required)</div>
+                    <div class="bulk-ref-row"><span class="bulk-ref-field">phase</span> pre-tge-1, pre-tge-2, pre-tge-3, tge-week, tge-day, post-tge (auto-detected if omitted)</div>
+                    <div class="bulk-ref-row"><span class="bulk-ref-field">eventType</span> special, milestone, partner (optional)</div>
+                    <div class="bulk-ref-row"><span class="bulk-ref-field">eventDesc</span> Description of the event/milestone (optional, shown in banner)</div>
+                    <div class="bulk-ref-row"><span class="bulk-ref-field">imageUrl</span> URL to an image for the post (optional)</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Paste Content</label>
+                <textarea class="form-textarea" id="bulkInput" rows="12" placeholder="2026-04-05 | telegram | Your content here...&#10;2026-04-05 | discord | Discord version here...&#10;2026-04-05 | x | X/Twitter version here..." style="min-height: 200px; font-size: 12px; line-height: 1.6;"></textarea>
+            </div>
+
+            <div class="bulk-preview" id="bulkPreview" style="display: none;">
+                <div class="bulk-preview-title">PREVIEW</div>
+                <div class="bulk-preview-count" id="bulkPreviewCount"></div>
+                <div class="bulk-preview-list" id="bulkPreviewList"></div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn" id="bulkCancelBtn">Cancel</button>
+                <button type="button" class="btn" id="bulkPreviewBtn" style="border-color: var(--yellow); color: var(--yellow);">Preview</button>
+                <button type="button" class="btn btn-cyan" id="bulkConfirmBtn" disabled>Import 0 Items</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SYNC MODAL -->
+    <div class="modal-overlay" id="syncModal">
+        <div class="modal" style="max-width: 640px;">
+            <div class="modal-title" style="color: var(--green);">Sync from Taunt Live</div>
+            <div style="margin-bottom: 16px; color: var(--text-dim); font-size: 13px;">
+                Pulls scheduled streams from the Taunt Live Stream Scheduler and auto-generates promotional content (TG, Discord, X posts) for each stream.
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Taunt Live API URL</label>
+                <input type="text" class="form-input" id="syncApiUrl" value="http://localhost:5000" placeholder="http://localhost:5000">
+            </div>
+
+            <div id="syncStatus" style="margin: 12px 0; font-size: 13px; display: none;"></div>
+
+            <div id="syncPreview" style="display: none; margin: 12px 0;">
+                <div style="font-family: var(--display); font-size: 15px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--green); margin-bottom: 8px;">SYNC PREVIEW</div>
+                <div id="syncPreviewCount" style="color: var(--text-dim); font-size: 12px; margin-bottom: 8px;"></div>
+                <div id="syncPreviewList" style="max-height: 280px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--cyan) var(--bg2);"></div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn" id="syncCancelBtn">Cancel</button>
+                <button type="button" class="btn btn-sync" id="syncFetchBtn">Fetch Streams</button>
+                <button type="button" class="btn btn-cyan" id="syncConfirmBtn" disabled>Import 0 Items</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // SUPABASE CONFIG
+        const SUPABASE_URL = 'https://qdntpgfmpejmyjsiargp.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_md_aytSZCWf0VfIqPkWEMg_Dpah0DmA';
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // DATA STRUCTURE
+        const contentCalendar = {
+            items: [],
+            filters: {
+                channel: [],
+                phase: []
+            }
+        };
+
+        const TGE_DATE = new Date(2026, 4, 5); // May 5, 2026
+        let currentMonth = new Date(2026, 2); // March 2026
+        let selectedDate = null;
+        let editingId = null;
+        let activeProduct = 'tauntlive';
+
+        // INITIALIZE
+        document.addEventListener('DOMContentLoaded', async () => {
+            setupEventListeners();
+
+            // Show loading overlay while Supabase loads
+            const loadingEl = document.createElement('div');
+            loadingEl.id = 'supabaseLoader';
+            loadingEl.style.cssText = 'position:fixed;inset:0;background:rgba(18,20,31,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;font-family:var(--mono);color:var(--cyan);font-size:14px;letter-spacing:2px;';
+            loadingEl.textContent = 'CONNECTING TO DATABASE...';
+            document.body.appendChild(loadingEl);
+
+            const loaded = await loadFromSupabase();
+            if (!loaded) {
+                if (activeProduct === 'tauntlive') {
+                    initializeTauntLiveContent();
+                } else {
+                    initializeBattleWorldContent();
+                }
+                // Push default content to Supabase for first-time setup
+                syncToSupabase();
+            }
+
+            document.getElementById('supabaseLoader').remove();
+            renderCalendar();
+            updateDetailPanel();
+            updateStats();
+        });
+
+        function initializeTauntLiveContent() {
+            const defaultContent = [
+                // PHASE 1: FOUNDATION + FIRST PARTNER (Mar 30 - Apr 6)
+                // Day 1 - March 30
+                { date: '2026-03-30', channel: 'telegram', phase: 'pre-tge-1', content: 'gm. Taunt Live — predict live events, earn $TNT. This isn\'t another token. This is real-time prediction infrastructure for streaming. And we\'re kicking off with our first launchpad partner this week. Stay here.', eventType: 'milestone', eventDescription: 'Campaign Kickoff' },
+                { date: '2026-03-30', channel: 'discord', phase: 'pre-tge-1', content: 'Welcome to Taunt Live. Over the next few weeks, we\'re going to break down everything — the product, the tokenomics, the mechanics, and why Taunt Live changes how prediction markets work. Big news: our first IDO partner announcement is coming THIS WEEK. First up tomorrow: What is Taunt Live? If you\'re new here, drop a reaction below.', eventType: 'milestone', eventDescription: 'Campaign Kickoff' },
+                { date: '2026-03-30', channel: 'x', phase: 'pre-tge-1', content: 'Predict live events. Earn $TNT. Taunt Live is real-time prediction infrastructure for streaming. Follow along — big week ahead. 🧵 #TNT', eventType: 'milestone', eventDescription: 'Campaign Kickoff' },
+
+                // Day 2 - March 31
+                { date: '2026-03-31', channel: 'telegram', phase: 'pre-tge-1', content: 'What is Taunt Live? Predict outcomes on live streaming events. Get it right — get paid in $TNT. Think Polymarket meets Twitch. Except you\'re part of a community, not alone. Prediction pools coming soon. More tomorrow.' },
+                { date: '2026-03-31', channel: 'discord', phase: 'pre-tge-1', content: 'EXPLAINER: Taunt Live is a real-time prediction platform. While you watch a stream, you predict what happens next. Correct predictions earn $TNT rewards. What makes it different? 1) Live streaming integration 2) Community pooled predictions 3) Hold-to-Earn tiers that multiply your winnings. Full breakdown incoming this week.' },
+                { date: '2026-03-31', channel: 'x', phase: 'pre-tge-1', content: 'Think Polymarket meets Twitch. Taunt Live lets you predict what happens next on live streams — and get paid in $TNT when you\'re right. More tomorrow.' },
+
+                // Day 3 - April 1 (Poolz — first IDO partner)
+                { date: '2026-04-01', channel: 'telegram', phase: 'pre-tge-1', content: 'Announcing our first IDO partner: Poolz Finance. 14-day exclusivity window. Early bird price: $0.025. Hardcap $200K. Poolz community = 50K+ active. This is your first path to $TNT at IDO pricing. Link in pinned.', eventType: 'partner', eventDescription: 'Poolz Finance — First IDO Partner' },
+                { date: '2026-04-01', channel: 'discord', phase: 'pre-tge-1', content: 'FIRST PARTNER ANNOUNCEMENT: Poolz Finance. Poolz brings 50K+ active community to the $TNT IDO. Exclusive 14-day allocation window starting now. Early-bird price: $0.025. Hardcap: $200K. Poolz users get no-KYC allocation up to $2.5K. Above $2.5K requires KYC. Allocation is open. Link: [LINK]. This is day 1 of a 14-day window — no rush, but early = better tier.', eventType: 'partner', eventDescription: 'Poolz Finance — First IDO Partner' },
+                { date: '2026-04-01', channel: 'x', phase: 'pre-tge-1', content: 'FIRST IDO PARTNER: @PoolzFinance 🔥\n\n14-day exclusive window. $0.025/token. Hardcap $200K. Your early entry into $TNT starts now. Link in bio. #IDO #TNT', eventType: 'partner', eventDescription: 'Poolz Finance — First IDO Partner' },
+                { date: '2026-04-01', channel: 'tournament', phase: 'pre-tge-1', content: 'Weekly Mega Tournament #1', tournament: { categories: ['Crypto', 'Sports', 'Esports', 'Streaming', 'Entertainment'], specialEvent: 'weekly_mega', notes: 'First partner celebration — double multipliers' } },
+
+                // Day 4 - April 2 (The Pack)
+                { date: '2026-04-02', channel: 'telegram', phase: 'pre-tge-1', content: 'The Pack — every week, the community predicts together. One event. One side. Together. Lock-tier multipliers scale your share up to 2.0x. This isn\'t gambling. This is community conviction.' },
+                { date: '2026-04-02', channel: 'discord', phase: 'pre-tge-1', content: 'DEEP DIVE: The Pack. Every Monday, a prediction event is revealed. Tuesday, the community pools $TNT on one side. Thursday, it resolves. Win together or lose together. Lock-tier multipliers boost both your Farm APY and prediction share: Flexible (1.0x) | 30-Day Lock (1.25x) | 60-Day Lock (1.5x) | 90-Day Lock (1.75x) | 120-Day Lock (2.0x). OGs auto-qualify for maximum 2.0x.' },
+                { date: '2026-04-02', channel: 'x', phase: 'pre-tge-1', content: 'The Pack: every week, the community predicts together. One event. One side. Lock-tier multipliers up to 2.0x. Community conviction — not gambling. $TNT' },
+
+                // Day 5 - April 3 (Poolz IDO deep dive)
+                { date: '2026-04-03', channel: 'telegram', phase: 'pre-tge-1', content: 'Poolz IDO deep dive: 14-day exclusive window. $0.025/token. No-KYC up to $2.5K. Above $2.5K = KYC required. Hardcap $200K. 3 days in — allocation filling. Don\'t sleep.' },
+                { date: '2026-04-03', channel: 'discord', phase: 'pre-tge-1', content: 'POOLZ IDO DEEP DIVE. Allocation: $TNT at $0.025/token (early-bird pricing). Hardcap: $200K. No-KYC: Up to $2.5K per wallet. KYC tier: $2.5K+ for larger allocations. Window: 14 days from April 1. All funds support development and liquidity. Poolz has 50K+ active participants. This is real community distribution. Allocation link: [LINK]' },
+                { date: '2026-04-03', channel: 'x', phase: 'pre-tge-1', content: '$TNT IDO on @PoolzFinance:\n\n✅ $0.025/token\n✅ No-KYC up to $2.5K\n✅ $200K hardcap\n✅ 14-day window\n\nAllocation filling. Don\'t sleep. [LINK]' },
+
+                // Day 6 - April 4 (Staking)
+                { date: '2026-04-04', channel: 'telegram', phase: 'pre-tge-1', content: 'Staking coming at launch. Two income streams: Farm APY (passive yield) + Stables (prediction winnings). Lock-tier multipliers up to 2.0x boost both streams. Freeroll the IDO.' },
+                { date: '2026-04-04', channel: 'discord', phase: 'pre-tge-1', content: 'TOKENOMICS SPOTLIGHT: Staking. At launch, staking goes live immediately with competitive APY and lock-up bonuses. Two income streams: Farm APY (passive) + Stables (prediction share). 5 lock tiers: Flexible (1.0x) | 30-Day (1.25x) | 60-Day (1.5x) | 90-Day (1.75x) | 120-Day (2.0x). 4 Prediction Groups: Apes | Degens | Alphas | OGs. Your lock tier multiplies both streams. Staking removes tokens from circulating supply.' },
+                { date: '2026-04-04', channel: 'x', phase: 'pre-tge-1', content: 'Two income streams at launch: Farm APY + Stables from prediction winnings. Lock multipliers stack up to 2.0x on both. IDO buyers auto-qualify for max tier. The Freeroll. $TNT' },
+
+                // Day 7 - April 5 (Market context)
+                { date: '2026-04-05', channel: 'telegram', phase: 'pre-tge-1', content: 'Prediction markets are a $1B+/month category. Polymarket. Kalshi. Crypto.com. Now Taunt Live enters the space. The market is real. The product is ready. Poolz allocation still open.' },
+                { date: '2026-04-05', channel: 'discord', phase: 'pre-tge-1', content: 'MARKET CONTEXT: Prediction markets crossed $1B in monthly volume in 2025. Polymarket dominates institutions. Kalshi has CFTC regulation. Crypto.com has 100M users. Taunt Live is the first live prediction platform combining streaming with prediction markets. And $TNT powers it all. Poolz allocation is still open — link in pinned.' },
+                { date: '2026-04-05', channel: 'x', phase: 'pre-tge-1', content: 'Prediction markets: $1B+/month category.\n\nPolymarket. Kalshi. Crypto.com.\n\nTaunt Live enters with live streaming integration — a category no one else has touched yet. $TNT' },
+
+                // Day 8 - April 6 (Week 1 recap)
+                { date: '2026-04-06', channel: 'telegram', phase: 'pre-tge-1', content: 'Week 1 recap: Taunt Live = live prediction platform. The Pack = weekly community events. Staking = competitive APY + lock-tier multipliers (up to 2.0x). Poolz = announced, $0.025 early bird. Prediction markets = $1B+ category. Next week: more partners.', eventType: 'milestone', eventDescription: 'Week 1 Recap' },
+                { date: '2026-04-06', channel: 'discord', phase: 'pre-tge-1', content: 'WEEK 1 RECAP + POOLZ STATUS UPDATE. Here\'s what we\'ve covered: What Taunt Live is (live prediction platform), The Pack (weekly community predictions), Staking mechanics (Farm APY + Stables + lock-tier multipliers up to 2.0x), Market context ($1B+ prediction market category), and Poolz IDO ($0.025/token, 14-day window). Next week: Anchor partner announcement, more launchpad partners, tokenomics deep dive. Set your notifications.', eventType: 'milestone', eventDescription: 'Week 1 Recap' },
+                { date: '2026-04-06', channel: 'x', phase: 'pre-tge-1', content: 'Week 1 wrap:\n\n✅ What is Taunt Live\n✅ The Pack\n✅ Staking mechanics\n✅ @PoolzFinance IDO open ($0.025)\n\nNext week: anchor partner reveal + more IDOs + full tokenomics. 🔔 $TNT', eventType: 'milestone', eventDescription: 'Week 1 Recap' },
+
+                // PHASE 2: PARTNERS & TOKENOMICS (Apr 7 - Apr 14)
+                // Day 9 - April 7 (Coin Terminal anchor)
+                { date: '2026-04-07', channel: 'telegram', phase: 'pre-tge-2', content: 'Coin Terminal is our anchor launchpad partner. $500K allocation. 50% of IDO hardcap. They\'ve backed projects like Arbitrum, Optimism, and Polygon. Now they\'re backing $TNT. This matters.', eventType: 'partner', eventDescription: 'Coin Terminal — Anchor Partner' },
+                { date: '2026-04-07', channel: 'discord', phase: 'pre-tge-2', content: 'MAJOR ANNOUNCEMENT: Coin Terminal as Anchor Partner. Coin Terminal is hosting our IDO as the lead launchpad. They bring institutional credibility — Arbitrum, Optimism, Polygon all launched through them. Key details: $500K allocation, 50% of total IDO, 14-day lockup post-IDO, verified KYC required. Coin Terminal holders get allocation priority. More details and LINK tomorrow.', eventType: 'partner', eventDescription: 'Coin Terminal — Anchor Partner' },
+                { date: '2026-04-07', channel: 'x', phase: 'pre-tge-2', content: 'BIG ONE.\n\n@CoinTerminal is our anchor launchpad partner.\n\n$500K allocation. 50% of total IDO hardcap.\n\nThey\'ve backed Arbitrum, Optimism, Polygon.\n\nNow $TNT. 🔥', eventType: 'partner', eventDescription: 'Coin Terminal — Anchor Partner' },
+
+                // Day 10 - April 8 (Coin Terminal IDO details)
+                { date: '2026-04-08', channel: 'telegram', phase: 'pre-tge-2', content: 'Coin Terminal IDO details: 10,000,000 $TNT at $0.03. Hardcap $300K. Whitelist opens Thursday. Non-whitelist allocation live Friday. 14-day lock. Your $TNT stays growing while you wait.' },
+                { date: '2026-04-08', channel: 'discord', phase: 'pre-tge-2', content: 'IDO DEEP DIVE — Coin Terminal. Allocation: 10,000,000 $TNT at $0.03/token = Hardcap $300K. Whitelist Tiers: Tier 1 (early) = $1K-$5K | Tier 2 (main) = $5K-$25K | Tier 3 (pro) = $25K+. 14-day lockup post-IDO. All funds go to development. We\'re not pre-selling. We\'re funded. This is proof. Whitelist form: [LINK]' },
+                { date: '2026-04-08', channel: 'x', phase: 'pre-tge-2', content: '$TNT IDO on @CoinTerminal:\n\n10M $TNT at $0.03. Hardcap $300K.\n\nWhitelist opens Thursday.\n14-day lock post-IDO — your $TNT earns while it locks.\n\nDetails: [LINK]' },
+
+                // Day 11 - April 9 (OpenPad)
+                { date: '2026-04-09', channel: 'telegram', phase: 'pre-tge-2', content: 'OpenPad is here. They focus on crypto-native communities. Exactly us. $150K allocation at $0.03. OpenPad has never missed.', eventType: 'partner', eventDescription: 'OpenPad Partnership' },
+                { date: '2026-04-09', channel: 'discord', phase: 'pre-tge-2', content: 'PARTNER ANNOUNCEMENT: OpenPad. OpenPad specializes in crypto-native projects and this is their first 2026 launch. Community: 30K+ holders. Allocation: $150K worth at $0.03. This is verification that we belong. Allocation live tomorrow. Whitelist here: [LINK]. Check OpenPad\'s track record — 18/18 projects still up post-launch.', eventType: 'partner', eventDescription: 'OpenPad Partnership' },
+                { date: '2026-04-09', channel: 'x', phase: 'pre-tge-2', content: 'THIRD LAUNCHPAD: @OpenPad\n\nFirst 2026 launch. 30K+ community.\n\n$150K allocation at $0.03.\n18/18 projects still up post-launch.\n\nWhitelist: [LINK] $TNT', eventType: 'partner', eventDescription: 'OpenPad Partnership' },
+
+                // Day 12 - April 10 (Cointelegraph)
+                { date: '2026-04-10', channel: 'telegram', phase: 'pre-tge-2', content: 'Cointelegraph is covering the IDO. Full article tomorrow. This is media partnership that matters.', eventType: 'partner', eventDescription: 'Cointelegraph Media Feature' },
+                { date: '2026-04-10', channel: 'discord', phase: 'pre-tge-2', content: 'MEDIA PARTNERSHIP: Cointelegraph. Cointelegraph is running a full feature on the IDO, the product, and the market context. 50M+ monthly readers. Article drops tomorrow morning. They\'re covering us because the story is real. "First Live Prediction Platform for Streaming" — that\'s news.', eventType: 'partner', eventDescription: 'Cointelegraph Media Feature' },
+                { date: '2026-04-10', channel: 'x', phase: 'pre-tge-2', content: '@Cointelegraph is covering $TNT.\n\nFull feature drops tomorrow.\n50M+ monthly readers.\n\n"First Live Prediction Platform for Streaming" — the story writes itself.', eventType: 'partner', eventDescription: 'Cointelegraph Media Feature' },
+                { date: '2026-04-10', channel: 'tournament', phase: 'pre-tge-2', content: 'Weekly Mega Tournament #2', tournament: { categories: ['Crypto', 'Sports', 'Streaming', 'Meta', 'World'], specialEvent: 'weekly_mega', notes: 'Partner week celebration — double multipliers' } },
+
+                // Day 13 - April 11 (Tokenomics)
+                { date: '2026-04-11', channel: 'telegram', phase: 'pre-tge-2', content: '$TNT TOKENOMICS: 1B total supply. $4.76M initial market cap. $50M FDV. Competitive APY staking. 5 lock tiers unlock up to 2.0x multiplier. No VC allocation. No team dump. 40% to community over 4 years. Numbers are transparent.', eventType: 'milestone', eventDescription: 'Tokenomics Reveal' },
+                { date: '2026-04-11', channel: 'discord', phase: 'pre-tge-2', content: 'TOKENOMICS BREAKDOWN: Total Supply: 1,000,000,000 $TNT. Initial Market Cap: $4.76M (at $0.05 per token, ~95M tokens circulating). Fully Diluted Valuation (FDV): $50M. This keeps us small and real. Community Allocation: 40% of tokens over 4 years. Staking starts immediately at launch with competitive APY. Bonus: Every $TNT staked is off the market. Your staking helps price by removing supply. Full breakdown: [LINK]', eventType: 'milestone', eventDescription: 'Tokenomics Reveal' },
+                { date: '2026-04-11', channel: 'x', phase: 'pre-tge-2', content: '$TNT TOKENOMICS:\n\n1B supply | $4.76M initial market cap | $50M FDV\n\n5 lock tiers | Staking live at launch\n\nIDO buyers: auto-qualify for top tier.\n\nFull breakdown: [LINK]', eventType: 'milestone', eventDescription: 'Tokenomics Reveal' },
+
+                // Day 14 - April 12 (Lock-to-Earn)
+                { date: '2026-04-12', channel: 'telegram', phase: 'pre-tge-2', content: 'Lock-to-Earn: Lock $TNT, multiply both your Farm APY and prediction share. 5 lock tiers from 1.0x to 2.0x. 120-Day Lock = maximum boost. IDO buyers auto-qualify. The freeroll.' },
+                { date: '2026-04-12', channel: 'discord', phase: 'pre-tge-2', content: 'FEATURE EXPLAINER: Hold-to-Earn Tiers. Your staked $TNT balance determines your prediction multiplier on EVERY win. Flexible: 1.0x (base Farm APY + standard prediction share). 30-Day Lock: 1.25x. 60-Day Lock: 1.5x. 90-Day Lock: 1.75x. 120-Day Lock (IDO Lock): 2.0x — maximum boost on both streams. OGs auto-qualify on full 120-day vest. Example: $1,000 IDO at 2.0x = $428 total earnings over 120 days. Lock longer, earn bigger.' },
+                { date: '2026-04-12', channel: 'x', phase: 'pre-tge-2', content: 'Lock $TNT → multiply everything.\n\nFlexible: 1.0x | 30-Day: 1.25x | 60-Day: 1.5x | 90-Day: 1.75x | 120-Day: 2.0x\n\nMultiplier applies to Farm APY AND prediction share.\n\nIDO buyers auto-qualify. $TNT' },
+                { date: '2026-04-12', channel: 'tournament', phase: 'pre-tge-2', content: 'Weekly Mega Tournament #3', tournament: { categories: ['Sports', 'Esports', 'Streaming', 'Entertainment', 'Culture'], specialEvent: 'weekly_mega', notes: 'Tokenomics week — partner pack celebration' } },
+
+                // Day 15 - April 13 (TGE date set: April 28)
+                { date: '2026-04-13', channel: 'telegram', phase: 'pre-tge-2', content: 'DATE SET. $TNT launches April 28. Mark it. Everything we\'ve been building — staking, The Pack, prediction markets — all goes live in 15 days. Poolz window closing in 2 days. The countdown starts now.', eventType: 'milestone', eventDescription: 'TGE Date Announced — April 28' },
+                { date: '2026-04-13', channel: 'discord', phase: 'pre-tge-2', content: 'THE DATE IS SET: $TNT TGE — APRIL 28, 2026. This is official. In 15 days, everything goes live: DEX trading, staking pools, Taunt Live predictions, The Pack. Here\'s what dropped this week: Coin Terminal anchor partner, OpenPad community launch, Cointelegraph feature, full tokenomics, Hold-to-Earn explainer. Poolz 14-day window closes April 15. The countdown starts NOW. AMA date incoming.', eventType: 'milestone', eventDescription: 'TGE Date Announced — April 28' },
+                { date: '2026-04-13', channel: 'x', phase: 'pre-tge-2', content: '🚨 DATE SET.\n\n$TNT launches April 28.\n\n15 days.\n\nDEX trading. Staking. Taunt Live predictions. The Pack.\n\nAll live. Poolz window closing in 2 days.\n\nThe countdown starts NOW. $TNT', eventType: 'milestone', eventDescription: 'TGE Date Announced — April 28' },
+
+                // Day 16 (T-12) - April 14 (AMA announced)
+                { date: '2026-04-14', channel: 'telegram', phase: 'pre-tge-2', content: 'AMA ANNOUNCED: April 25, 2 PM UTC. Founders + team. All questions answered. First KOL post goes live tomorrow. 12 days to launch.' },
+                { date: '2026-04-14', channel: 'discord', phase: 'pre-tge-2', content: 'AMA ANNOUNCEMENT: April 25, 2 PM UTC (3 days before launch). YouTube link: [LINK]. Founders, product lead, and community manager. No scripted answers. All questions live. This is your chance to ask: "Why should I believe in this?" and get real answers. KOL ecosystem announcement tomorrow — Taunt Collective drops with 500 ambassadors. 12 days.' },
+                { date: '2026-04-14', channel: 'x', phase: 'pre-tge-2', content: 'AMA: April 25 | 2 PM UTC.\n\nFounders. Full team. No scripts.\n\nAll questions answered live.\n\nMark it — $TNT drops 3 days after.\n\nYouTube: [LINK] $TNT' },
+
+                // PHASE 3: HYPE BUILDING (Apr 15 - Apr 21)
+                // Day 17 (T-11) - April 15 (Poolz closed + Kalshi)
+                { date: '2026-04-15', channel: 'telegram', phase: 'pre-tge-3', content: 'Poolz 14-day window CLOSED. If you got in — you\'re early. Kalshi integration confirmed. Real-world prediction market events flowing into Taunt Live. Elections. Sports. Economics. All live. 11 days.', eventType: 'milestone', eventDescription: 'Poolz Closed + Kalshi Integration' },
+                { date: '2026-04-15', channel: 'discord', phase: 'pre-tge-3', content: 'POOLZ WINDOW CLOSED + INTEGRATION ALERT: Kalshi Partnership. The Poolz 14-day exclusive allocation is now closed. If you secured your bag — congrats. Next: Kalshi (the CFTC-regulated prediction market) is flowing event data to Taunt Live. This means: US Election predictions, sports outcomes, economic data — all LIVE on the platform. You can predict Kalshi outcomes while watching the stream and earn $TNT. This is infrastructure-level integration.', eventType: 'milestone', eventDescription: 'Poolz Closed + Kalshi Integration' },
+                { date: '2026-04-15', channel: 'x', phase: 'pre-tge-3', content: 'Poolz 14-day window: CLOSED. ✅\n\nIf you got in — you\'re early.\n\nKalshi integration confirmed.\nReal-world markets flowing into Taunt Live. Elections. Sports. Economics.\n\n13 days. $TNT', eventType: 'milestone', eventDescription: 'Poolz Closed + Kalshi Integration' },
+
+                // Day 18 (T-10) - April 16 (Product demo)
+                { date: '2026-04-16', channel: 'telegram', phase: 'pre-tge-3', content: 'Taunt Live product demo LIVE. See the interface. See the live predictions updating. See the winnings accumulate. This is not a concept. This is built. Watch the thread.', eventType: 'special', eventDescription: 'Live Product Demo' },
+                { date: '2026-04-16', channel: 'discord', phase: 'pre-tge-3', content: 'PRODUCT PROOF: Taunt Live Live Demo. Watch the live demo thread above. You\'re seeing: 1) Live stream integration (right side panel) 2) Real-time prediction options 3) Staking tier multipliers applied in real-time 4) The Pack pool visualization 5) Winnings tracker. This is what launches in 10 days. It\'s complete. It\'s tested. It\'s ready.', eventType: 'special', eventDescription: 'Live Product Demo' },
+                { date: '2026-04-16', channel: 'x', phase: 'pre-tge-3', content: '$TNT is BUILT.\n\nWatch the live demo — real-time predictions updating, staking multipliers live, winnings tracking.\n\nNot a deck. Not a concept.\n\nA product. 12 days. [LINK]', eventType: 'special', eventDescription: 'Live Product Demo' },
+
+                // Day 19 (T-9) - April 17 (Streamer partnerships)
+                { date: '2026-04-17', channel: 'telegram', phase: 'pre-tge-3', content: 'Streamer partnerships launch Week 1 post-launch. Major names. Live events every day. This is why prediction markets work — the community watches together. Details on April 25 AMA. 9 days.' },
+                { date: '2026-04-17', channel: 'discord', phase: 'pre-tge-3', content: 'PARTNERSHIP TEASER: Streamer Ecosystem. Post-launch, we\'re partnering with 20+ streamers across gaming, sports, and talk categories. They host prediction events on Taunt Live while streaming. Example: Gaming streamer has 10K watching. Streamer + audience both participate in Taunt Live predictions on what happens next. Community pools together. Winner takes proportional share. Details at AMA on April 25.' },
+                { date: '2026-04-17', channel: 'x', phase: 'pre-tge-3', content: 'Post-launch: 20+ streamers hosting prediction events on Taunt Live while they stream.\n\n10K viewers. One event. Community predicts together. Proportional share.\n\nFull details at AMA Apr 25. $TNT' },
+
+                // Day 20 (T-8) - April 18 (Partner Prediction Challenge)
+                { date: '2026-04-18', channel: 'telegram', phase: 'pre-tge-3', content: 'Partner Prediction Challenge incoming. Week 1 post-launch. $50K prize pool. Community vs. streamer prediction battles. First challenge: Sports predictions on opening night. 8 days.' },
+                { date: '2026-04-18', channel: 'discord', phase: 'pre-tge-3', content: 'COMPETITION ALERT: Partner Prediction Challenge (Launches Week 1). $50K prize pool. Community Pool vs. Streamer Pool on each prediction event. Week 1 focuses on opening night sports events. 50% of winnings go to the winning pool. This is our flagship community event post-launch. Sign-ups open April 28. More details soon.' },
+                { date: '2026-04-18', channel: 'x', phase: 'pre-tge-3', content: '$50K PARTNER PREDICTION CHALLENGE.\n\nPredict alongside our launchpad partners.\n\nTop 10 correct predictions win $5K in $TNT each.\n\nDetails: [LINK]\n\n10 days to launch. $TNT' },
+
+                // Day 21 (T-7) - April 19 (First win bonus)
+                { date: '2026-04-19', channel: 'telegram', phase: 'pre-tge-3', content: 'First prediction bonus: 500 $TNT to your first winning prediction. No minimum. Just get one right. This starts at launch. Earn it back immediately. 7 days.' },
+                { date: '2026-04-19', channel: 'discord', phase: 'pre-tge-3', content: 'LAUNCH INCENTIVE: First Win Bonus. Your first winning prediction = 500 $TNT bonus, no minimum prediction size. This covers gas fees, your first prediction cost, and 10% extra. It\'s our way of saying: "Try it risk-free." Bonus available for 7 days post-launch. You get one shot per account. Use it wisely.' },
+                { date: '2026-04-19', channel: 'x', phase: 'pre-tge-3', content: 'KOLs are posting. Community is talking.\n\nTaunt Live — first live prediction platform for streaming — is 9 days from launch.\n\nCheck your feed. $TNT' },
+                { date: '2026-04-19', channel: 'tournament', phase: 'pre-tge-3', content: 'Weekly Mega Tournament #4', tournament: { categories: ['Crypto', 'Sports', 'Entertainment', 'Meta', 'Culture'], specialEvent: 'weekly_mega', notes: 'Hype building — KOL week' } },
+
+                // Day 22 (T-6) - April 20 (Week 3 recap)
+                { date: '2026-04-20', channel: 'telegram', phase: 'pre-tge-3', content: 'THREAD: Everything you need to know before launch. Full recap. KOL deep dives. Share it. 6 days until $TNT.' },
+                { date: '2026-04-20', channel: 'discord', phase: 'pre-tge-3', content: 'WEEK 3 RECAP: Here\'s what dropped: Poolz window closed (fully subscribed), Kalshi integration confirmed, Live product demo, Streamer ecosystem teaser, Partner Prediction Challenge ($50K), First Win Bonus (500 $TNT). And KOL ecosystem is live. Now: Essential Pre-Launch Guide (in thread above). Read, learn, share. 6 days.' },
+                { date: '2026-04-20', channel: 'x', phase: 'pre-tge-3', content: 'LAUNCH INCENTIVE: First winning prediction after TGE = 500 $TNT bonus.\n\nNo minimum. Covers gas + first prediction + 10% extra.\n\nAvailable 7 days post-launch. One shot per account. $TNT' },
+
+                // Day 23 (T-5) - April 21 (5 days)
+                { date: '2026-04-21', channel: 'telegram', phase: 'pre-tge-3', content: '5 DAYS. Staking goes live. DEX goes live. Prediction markets go live. Community pools. Everything. 5 days until $TNT.', eventType: 'milestone', eventDescription: '5-Day Countdown' },
+                { date: '2026-04-21', channel: 'discord', phase: 'pre-tge-3', content: '5 DAYS UNTIL LAUNCH. This is the final straight. What happens next: April 22: IDO step-by-step guide. April 23: Prediction markets deep dive. April 24: KOL final push. April 25: AMA 2 PM UTC. April 26: AMA recap + staking guide. April 27: Final countdown. April 28: LAUNCH DAY. Real-time updates every 2 hours.', eventType: 'milestone', eventDescription: '5-Day Countdown' },
+                { date: '2026-04-21', channel: 'x', phase: 'pre-tge-3', content: 'Week 3 hits:\n\n✅ Poolz closed (filled)\n✅ Kalshi confirmed\n✅ Live demo live\n✅ Streamer ecosystem revealed\n✅ $50K challenge live\n✅ First Win Bonus live\n\n7 days. $TNT 🧵', eventType: 'milestone', eventDescription: '5-Day Countdown' },
+
+                // PHASE 4: FINAL PUSH (Apr 22 - Apr 28)
+                // Day 24 (T-4) - April 22 (IDO step-by-step)
+                { date: '2026-04-22', channel: 'telegram', phase: 'tge-week', content: 'IDO STEP-BY-STEP: 1) Go to Coin Terminal / Poolz / OpenPad. 2) Connect wallet (MetaMask/OKX). 3) Enter $TNT amount. 4) Confirm. 5) Wait 14 days. That\'s it. Full guide with links in thread.' },
+                { date: '2026-04-22', channel: 'discord', phase: 'tge-week', content: 'IDO INSTRUCTIONS (STEP-BY-STEP): Step 1: Choose your launchpad — Coin Terminal (institutional, $300K hardcap), Poolz (community, $200K, 14-day exclusive — closed), OpenPad (native community, $150K). Step 2: Visit launchpad URL. Step 3: Connect compatible wallet. Recommended: MetaMask or OKX wallet. Step 4: Enter allocation amount in USDC. Step 5: Confirm transaction. Gas fee ~$1-2. Step 6: Receive allocation confirmation. Wait 14 days for unlock post-launch. Step 7: Claim $TNT at launch + 14 days. Full links in pinned message.' },
+                { date: '2026-04-22', channel: 'x', phase: 'tge-week', content: 'PRE-LAUNCH GUIDE is live.\n\nWallets. IDO claims. Staking setup. How to enter The Pack on day 1.\n\nEverything you need before April 28.\n\nThread: [LINK] 6 days. $TNT' },
+
+                // Day 25 (T-3) - April 23 (Prediction markets deep dive)
+                { date: '2026-04-23', channel: 'telegram', phase: 'tge-week', content: 'Prediction markets we\'re integrating: Kalshi (CFTC-regulated). Crypto.com (100M users). Limitless (decentralized). Your predictions flow from all three to Taunt Live. More data. More markets. More earnings. 3 days.' },
+                { date: '2026-04-23', channel: 'discord', phase: 'tge-week', content: 'PREDICTION MARKETS DEEP DIVE: Kalshi (US-regulated, politics/sports/economics), Crypto.com (100M users, sports/esports outcomes), Limitless (decentralized autonomous markets). Taunt Live aggregates all three. This means: You get choice. You get diversity. You get better odds by comparing across platforms. Taunt Live is your hub. Launch: April 28.' },
+                { date: '2026-04-23', channel: 'x', phase: 'tge-week', content: 'How to participate in the $TNT IDO:\n\n1. Go to Coin Terminal / Poolz / OpenPad\n2. Connect wallet\n3. Enter $TNT amount\n4. Confirm\n5. Wait 14 days\n\nFull guide: [LINK] 5 days.' },
+
+                // Day 26 (T-2) - April 24 (KOL final push)
+                { date: '2026-04-24', channel: 'telegram', phase: 'tge-week', content: 'KOL FINAL PUSH: 500 ambassadors in Taunt Collective amplifying live. Posts, videos, deep dives. All authentic. All community-first. Follow the Collective. 2 days.' },
+                { date: '2026-04-24', channel: 'discord', phase: 'tge-week', content: 'AMBASSADOR ANNOUNCEMENT: Taunt Collective (500 Ambassadors). 500 community members trained + incentivized to share $TNT. Not paid shills — equity holders who believe. Posts dropping across Twitter, Discord, Telegram, YouTube. Each post is an authentic take on the product. You\'ll see them in replies, retweets, shares. This is organic at scale. Follow Collective members. Build with us. 2 days out.' },
+                { date: '2026-04-24', channel: 'x', phase: 'tge-week', content: '$TNT integrates:\n\n✅ @Kalshi (CFTC-regulated)\n✅ @Cryptocom (100M users)\n✅ Limitless (decentralized)\n\nOne platform. All markets. Streaming layer on top.\n\n4 days. $TNT' },
+
+                // Day 27 (T-1) - April 25 (AMA live)
+                { date: '2026-04-25', channel: 'telegram', phase: 'tge-week', content: 'AMA LIVE NOW. 2 PM UTC. YouTube: [LINK]. All questions answered. No scripts. Just real answers. Watch live. Comment. Ask anything. This is your final chance before launch.', eventType: 'special', eventDescription: 'Community AMA — 2 PM UTC' },
+                { date: '2026-04-25', channel: 'discord', phase: 'tge-week', content: 'AMA DAY. YouTube: [LINK]. 2 PM UTC. Live chat open. Founders + team. Questions in real-time. No pre-recorded answers. No scripts. Just: "Here\'s what we built, here\'s why, here\'s what\'s next." Watch the stream. Participate in chat. Share clips. Tomorrow we start the final sprint.', eventType: 'special', eventDescription: 'Community AMA — 2 PM UTC' },
+                { date: '2026-04-25', channel: 'x', phase: 'tge-week', content: '🎙️ AMA LIVE NOW.\n\nTaunt Live founders + team.\nYouTube: [LINK] | 2 PM UTC\n\nReal questions. Real answers. No scripts.\n\n3 days to launch.\n\nDrop your questions. $TNT', eventType: 'special', eventDescription: 'Community AMA — 2 PM UTC' },
+                { date: '2026-04-25', channel: 'tournament', phase: 'tge-week', content: 'AMA Predictions Tournament', tournament: { categories: ['Crypto', 'Meta', 'Culture', 'Entertainment', 'World'], specialEvent: 'ama', notes: 'Predict AMA outcomes + double multipliers' } },
+
+                // Day 28 - April 26 (AMA recap)
+                { date: '2026-04-26', channel: 'telegram', phase: 'tge-week', content: 'AMA RECAP: Founders confirmed staking pools live at launch. CEX listing targets Day 7-10. Second pass of partnerships (exchanges + prediction markets) Week 2. Build continues. 2 days.' },
+                { date: '2026-04-26', channel: 'discord', phase: 'tge-week', content: 'AMA RECAP + STAKING GUIDE. Key highlights: 1) Staking starts immediately at launch (competitive APY, lock-up bonuses up to 2.0x). 2) CEX listing target: Days 7-10 post-launch. 3) Partnership announcements: Week 2 (exchange listings + market integrations). 4) The Pack Week 1 live. 5) Streamer ecosystem rolls out. STAKING GUIDE: At launch, go to Taunt Live dashboard → Staking tab → Enter amount → Lock duration (30+ days) → Confirm. Your $TNT starts earning APY immediately.' },
+                { date: '2026-04-26', channel: 'x', phase: 'tge-week', content: 'AMA recap:\n\n✅ Staking live at launch\n✅ CEX listing target: Days 7-10\n✅ The Pack Week 1 live\n✅ Streamer ecosystem rolling out\n\nStaking guide pinned.\n\n2 days. $TNT' },
+
+                // Day 29 - April 27 (Final countdown)
+                { date: '2026-04-27', channel: 'telegram', phase: 'tge-week', content: 'Tomorrow. $TNT goes live. Taunt Live launches. Staking launches. The Pack launches. Everything. 1 day.', eventType: 'milestone', eventDescription: 'Final Countdown — 1 Day' },
+                { date: '2026-04-27', channel: 'discord', phase: 'tge-week', content: 'FINAL COUNTDOWN: Tomorrow at 8 AM UTC, $TNT goes live. Here\'s what happens: 8 AM: DEX goes live. Staking pools open. Taunt Live interface goes live. Predictions open. The Pack open. First 24 hours: Real-time updates every 2 hours from official channels. CEX listing target: Days 7-10. AMA recap pinned for new members. Staking guide pinned. Get your wallet ready. See you on the other side.', eventType: 'milestone', eventDescription: 'Final Countdown — 1 Day' },
+                { date: '2026-04-27', channel: 'x', phase: 'tge-week', content: 'Tomorrow at 8 AM UTC — $TNT goes live.\n\nDEX trading. Staking pools. Taunt Live predictions. The Pack.\n\n500 $TNT first win bonus active.\n\nGet your wallet ready.\n\nSee you on the other side. 🚀', eventType: 'milestone', eventDescription: 'Final Countdown — 1 Day' },
+
+                // Day 30 - LAUNCH DAY - April 28
+                { date: '2026-05-05', channel: 'telegram', phase: 'tge-day', content: '$TNT IS LIVE. DEX: [LINK]. Staking: [LINK]. Taunt Live: [LINK]. First prediction: 500 $TNT bonus. Updates every 2 hours. We made it.', eventType: 'milestone', eventDescription: 'TGE Launch Day' },
+                { date: '2026-05-05', channel: 'discord', phase: 'tge-day', content: 'LAUNCH DAY LIVE. 8 AM UTC — All systems go. DEX LIVE: [LINK]. Buy $TNT at market price. Estimated price: ~$0.05. STAKING LIVE: Taunt Live dashboard → Staking. Lock your $TNT, earn competitive APY. PREDICTIONS LIVE: Taunt Live interface open. First prediction bonus: 500 $TNT to winners. Updates: 8 AM, 10 AM, 12 PM, 2 PM, 4 PM, 6 PM, 8 PM UTC. Join The Pack. Welcome home.', eventType: 'milestone', eventDescription: 'TGE Launch Day' },
+                { date: '2026-05-05', channel: 'x', phase: 'tge-day', content: '🚀 $TNT IS LIVE.\n\n8 AM UTC. Now.\n\nTrade on DEX.\nStake now.\nPredict on Taunt Live.\nJoin The Pack.\n\nFirst win = 500 $TNT bonus.\n\nThe prediction era begins.\n\n[DEX LINK] [STAKING LINK] [TAUNTLIVE LINK]', eventType: 'milestone', eventDescription: 'TGE Launch Day' },
+                { date: '2026-05-05', channel: 'tournament', phase: 'tge-day', content: 'Launch Week Blitz Tournament', tournament: { categories: ['Crypto', 'Sports', 'Esports', 'Entertainment', 'Meta'], specialEvent: 'launch', notes: '2x prize multiplier — real $TNT prizes start' } }
+            ];
+
+            contentCalendar.items = defaultContent;
+            saveToLocalStorage();
+        }
+
+        function initializeBattleWorldContent() {
+            const battleWorldContent = [
+                // Pre-Launch Phase 1 (Mar 25-31)
+                { date: '2026-03-25', channel: 'telegram', phase: 'pre-tge-1', content: 'BattleWorld: The ultimate competitive gaming platform is 28 days away.', eventType: 'milestone', eventDescription: 'Campaign Kickoff' },
+                { date: '2026-03-25', channel: 'discord', phase: 'pre-tge-1', content: 'Welcome to BattleWorld. Join the revolution in competitive gaming.' },
+                { date: '2026-03-25', channel: 'x', phase: 'pre-tge-1', content: 'BattleWorld launches in 28 days. Get ready for epic tournaments. 🎮' },
+
+                { date: '2026-03-26', channel: 'telegram', phase: 'pre-tge-1', content: 'What is BattleWorld? A platform where gamers compete for $BWL tokens and real prizes.' },
+                { date: '2026-03-26', channel: 'discord', phase: 'pre-tge-1', content: 'EXPLAINER: BattleWorld connects gamers, tournaments, and rewards.' },
+                { date: '2026-03-26', channel: 'x', phase: 'pre-tge-1', content: '@BattleWorld — Compete. Win. Earn. Built for gamers. 🏆' },
+
+                { date: '2026-03-27', channel: 'telegram', phase: 'pre-tge-1', content: 'Arena System explained: Daily battles, leaderboards, and exclusive rewards.' },
+                { date: '2026-03-27', channel: 'discord', phase: 'pre-tge-1', content: 'DEEP DIVE: How the Arena system works and how to earn.' },
+
+                { date: '2026-03-28', channel: 'telegram', phase: 'pre-tge-1', content: 'PvP Tournaments go live at launch. 50% APY for ranked participants.' },
+                { date: '2026-03-28', channel: 'discord', phase: 'pre-tge-1', content: 'TOURNAMENT STRUCTURE: Rankings, matchmaking, and rewards explained.' },
+
+                { date: '2026-03-29', channel: 'telegram', phase: 'pre-tge-1', content: 'Gaming tournaments did $500M in prizes last year. We\'re disrupting this space.' },
+                { date: '2026-03-29', channel: 'discord', phase: 'pre-tge-1', content: 'MARKET CONTEXT: Gaming is the largest esports market in history.' },
+                { date: '2026-03-29', channel: 'x', phase: 'pre-tge-1', content: 'The gaming market is massive. BattleWorld is built to capture this moment.' },
+
+                { date: '2026-03-30', channel: 'telegram', phase: 'pre-tge-1', content: 'Week 1 recap: Community growing fast. Wallet signups at 50K+.' },
+                { date: '2026-03-30', channel: 'discord', phase: 'pre-tge-1', content: 'WEEK 1 RECAP: Growth milestones and community highlights.' },
+                { date: '2026-03-30', channel: 'tournament', phase: 'pre-tge-1', content: 'Arena Qualifier #1', tournament: { categories: ['Esports', 'Streaming', 'Entertainment'], specialEvent: 'none', notes: 'First qualifier tournament' } },
+
+                { date: '2026-03-31', channel: 'telegram', phase: 'pre-tge-1', content: 'Community spotlight: Meet the top 10 players from the early alpha.' },
+                { date: '2026-03-31', channel: 'discord', phase: 'pre-tge-1', content: 'Sunday Showcase: Featured players and highlights from this week.' },
+                { date: '2026-03-31', channel: 'tournament', phase: 'pre-tge-1', content: 'Weekly Champion Arena', tournament: { categories: ['Esports', 'Entertainment', 'Culture'], specialEvent: 'weekly_mega', notes: '3x multiplier weekend' } },
+
+                // Pre-Launch Phase 2 (Apr 1-8)
+                { date: '2026-04-01', channel: 'telegram', phase: 'pre-tge-2', content: 'Major esports org partnership announced. First exclusive tournament coming.', eventType: 'partner', eventDescription: 'Esports Organization Partnership' },
+                { date: '2026-04-01', channel: 'discord', phase: 'pre-tge-2', content: 'PARTNERSHIP: Top esports organization joins BattleWorld ecosystem.', eventType: 'partner', eventDescription: 'Esports Organization Partnership' },
+                { date: '2026-04-01', channel: 'x', phase: 'pre-tge-2', content: 'Big partnership news: Esports legends coming to BattleWorld. 🤝', eventType: 'partner', eventDescription: 'Esports Organization Partnership' },
+                { date: '2026-04-01', channel: 'tournament', phase: 'pre-tge-2', content: 'Arena Qualifier #2', tournament: { categories: ['Esports', 'Entertainment', 'Culture', 'Meta'], specialEvent: 'none', notes: 'Partner tournament' } },
+
+                { date: '2026-04-02', channel: 'telegram', phase: 'pre-tge-2', content: 'Launch details: 10M $BWL available, $0.10 price, fair launch model.' },
+                { date: '2026-04-02', channel: 'discord', phase: 'pre-tge-2', content: 'LAUNCH SPECS: Token distribution and allocation details.' },
+
+                { date: '2026-04-03', channel: 'telegram', phase: 'pre-tge-2', content: 'Private sale round 2 closes. Institutional backing grows 3x.', eventType: 'milestone', eventDescription: 'Series 2 Funding Complete' },
+                { date: '2026-04-03', channel: 'discord', phase: 'pre-tge-2', content: 'MILESTONE: Private fundraising round 2 successfully closed.', eventType: 'milestone', eventDescription: 'Series 2 Funding Complete' },
+                { date: '2026-04-03', channel: 'x', phase: 'pre-tge-2', content: 'Series 2 funding complete. Institutional backing secured. 🚀', eventType: 'milestone', eventDescription: 'Series 2 Funding Complete' },
+
+                { date: '2026-04-04', channel: 'telegram', phase: 'pre-tge-2', content: 'Streaming integration live. Twitch to BattleWorld direct tournament entry.', eventType: 'partner', eventDescription: 'Twitch Integration' },
+                { date: '2026-04-04', channel: 'discord', phase: 'pre-tge-2', content: 'INTEGRATION: Twitch streamers can now launch BattleWorld tournaments.', eventType: 'partner', eventDescription: 'Twitch Integration' },
+                { date: '2026-04-04', channel: 'x', phase: 'pre-tge-2', content: 'Now live: Stream on Twitch, compete on BattleWorld. Direct integration go live.', eventType: 'partner', eventDescription: 'Twitch Integration' },
+
+                { date: '2026-04-05', channel: 'telegram', phase: 'pre-tge-2', content: 'GamesBeat feature: BattleWorld changing the competitive gaming landscape.', eventType: 'partner', eventDescription: 'GamesBeat Media Feature' },
+                { date: '2026-04-05', channel: 'discord', phase: 'pre-tge-2', content: 'MEDIA: Major gaming publication covers our revolutionary platform.', eventType: 'partner', eventDescription: 'GamesBeat Media Feature' },
+                { date: '2026-04-05', channel: 'x', phase: 'pre-tge-2', content: 'Featured in @GamesBeat. BattleWorld getting mainstream gaming recognition.', eventType: 'partner', eventDescription: 'GamesBeat Media Feature' },
+                { date: '2026-04-05', channel: 'tournament', phase: 'pre-tge-2', content: 'Weekly Champion Arena', tournament: { categories: ['Esports', 'Streaming', 'Entertainment', 'Culture'], specialEvent: 'weekly_mega', notes: 'Media partnership week' } },
+
+                { date: '2026-04-06', channel: 'telegram', phase: 'pre-tge-2', content: '$BWL TOKENOMICS: 1B supply, 30% public allocation, 50% APY staking.' },
+                { date: '2026-04-06', channel: 'discord', phase: 'pre-tge-2', content: 'TOKENOMICS BREAKDOWN: Full economic model and staking structure.' },
+                { date: '2026-04-06', channel: 'x', phase: 'pre-tge-2', content: '$BWL Tokenomics 🧵\n\n1B supply | 30% public | 50% APY rewards\n\nFull details 👇' },
+
+                { date: '2026-04-07', channel: 'telegram', phase: 'pre-tge-2', content: 'Reward pools go live. Early stakers earn 50% APY.' },
+                { date: '2026-04-07', channel: 'discord', phase: 'pre-tge-2', content: 'POOLS LIVE: Staking mechanisms and early bird rewards activated.' },
+
+                { date: '2026-04-08', channel: 'telegram', phase: 'pre-tge-2', content: 'Founder AMA scheduled for April 19. Ask anything about our vision.' },
+                { date: '2026-04-08', channel: 'discord', phase: 'pre-tge-2', content: 'AMA ANNOUNCEMENT: Leadership Q&A session on April 19 at 3 PM UTC.' },
+
+                // Pre-Launch Phase 3 (Apr 9-15)
+                { date: '2026-04-09', channel: 'telegram', phase: 'pre-tge-3', content: 'World championship bracket announced. 1M $BWL prize pool.', eventType: 'milestone', eventDescription: 'World Championship Announced' },
+                { date: '2026-04-09', channel: 'discord', phase: 'pre-tge-3', content: 'WORLD CHAMPIONSHIP: Bracket reveal and tournament details.', eventType: 'milestone', eventDescription: 'World Championship Announced' },
+                { date: '2026-04-09', channel: 'x', phase: 'pre-tge-3', content: 'World Championship bracket live. 1M prize pool. LFG 🏆', eventType: 'milestone', eventDescription: 'World Championship Announced' },
+
+                { date: '2026-04-10', channel: 'telegram', phase: 'pre-tge-3', content: 'Gameplay walkthrough LIVE. See competitive matches in real-time.', eventType: 'special', eventDescription: 'Gameplay Demo' },
+                { date: '2026-04-10', channel: 'discord', phase: 'pre-tge-3', content: 'LIVE DEMO: Competitive gameplay showcase and tournament rules.', eventType: 'special', eventDescription: 'Gameplay Demo' },
+                { date: '2026-04-10', channel: 'x', phase: 'pre-tge-3', content: '🔴 LIVE NOW: Competitive gameplay demo on Spaces. Watch the action.', eventType: 'special', eventDescription: 'Gameplay Demo' },
+
+                { date: '2026-04-11', channel: 'telegram', phase: 'pre-tge-3', content: 'Pro gamer partnerships confirmed. Top players creating content.' },
+                { date: '2026-04-11', channel: 'discord', phase: 'pre-tge-3', content: 'PARTNERSHIP TEASER: World-class competitive players joining platform.' },
+
+                { date: '2026-04-12', channel: 'telegram', phase: 'pre-tge-3', content: 'Creator Royalty Program launches. Earn from tournament creation.' },
+                { date: '2026-04-12', channel: 'discord', phase: 'pre-tge-3', content: 'PROGRAM ALERT: Creators and tournament organizers earn rewards.' },
+                { date: '2026-04-12', channel: 'tournament', phase: 'pre-tge-3', content: 'Weekly Champion Arena', tournament: { categories: ['Esports', 'Streaming', 'Entertainment', 'Culture'], specialEvent: 'weekly_mega', notes: 'Creator program celebration' } },
+
+                { date: '2026-04-13', channel: 'telegram', phase: 'pre-tge-3', content: 'Launch bonus: 1000 $BWL for first tournament participation.' },
+                { date: '2026-04-13', channel: 'discord', phase: 'pre-tge-3', content: 'LAUNCH INCENTIVE: 1000 $BWL reward for first tournament.' },
+
+                { date: '2026-04-14', channel: 'telegram', phase: 'pre-tge-3', content: '5 reasons competitive gamers love BattleWorld. Read our deep dive.' },
+                { date: '2026-04-14', channel: 'discord', phase: 'pre-tge-3', content: 'WEEK 2 RECAP: Platform growth and feature highlights.' },
+
+                { date: '2026-04-15', channel: 'telegram', phase: 'pre-tge-3', content: '1 WEEK. BattleWorld goes live in 7 days.', eventType: 'milestone', eventDescription: '1 Week Countdown' },
+                { date: '2026-04-15', channel: 'discord', phase: 'pre-tge-3', content: '1 WEEK UNTIL LAUNCH: Final preparations underway.', eventType: 'milestone', eventDescription: '1 Week Countdown' },
+                { date: '2026-04-15', channel: 'x', phase: 'pre-tge-3', content: '7 days until BattleWorld. Are you ready to compete? 🎮', eventType: 'milestone', eventDescription: '1 Week Countdown' },
+
+                // Launch Week (Apr 16-21) + Launch Day (Apr 22)
+                { date: '2026-04-16', channel: 'telegram', phase: 'tge-week', content: 'LAUNCH GUIDE: How to create your account and enter your first tournament.' },
+                { date: '2026-04-16', channel: 'discord', phase: 'tge-week', content: 'LAUNCH GUIDE: Complete walkthrough for new players.' },
+
+                { date: '2026-04-17', channel: 'telegram', phase: 'tge-week', content: 'Beta tournament results: Average prize per winner $5,000.' },
+                { date: '2026-04-17', channel: 'discord', phase: 'tge-week', content: 'BETA RESULTS: Tournament statistics and winning strategies.' },
+
+                { date: '2026-04-18', channel: 'telegram', phase: 'tge-week', content: 'KOL SHOWCASE: Join the top tournament organizers on BattleWorld.' },
+                { date: '2026-04-18', channel: 'discord', phase: 'tge-week', content: 'STREAMER PROGRAM: Content creators announced for launch.' },
+
+                { date: '2026-04-19', channel: 'telegram', phase: 'tge-week', content: 'FOUNDER AMA LIVE NOW: Ask anything about the platform.', eventType: 'special', eventDescription: 'Founder AMA' },
+                { date: '2026-04-19', channel: 'discord', phase: 'tge-week', content: 'AMA DAY: Founder Q&A session live.', eventType: 'special', eventDescription: 'Founder AMA' },
+                { date: '2026-04-19', channel: 'x', phase: 'tge-week', content: '🎙️ AMA with BattleWorld founders — LIVE. Get your questions answered.', eventType: 'special', eventDescription: 'Founder AMA' },
+                { date: '2026-04-19', channel: 'tournament', phase: 'tge-week', content: 'AMA Challenge Tournament', tournament: { categories: ['Esports', 'Entertainment', 'Meta', 'Culture'], specialEvent: 'ama', notes: 'Answer questions and compete' } },
+
+                { date: '2026-04-20', channel: 'telegram', phase: 'tge-week', content: 'AMA RECAP: Top questions answered and roadmap details.' },
+                { date: '2026-04-20', channel: 'discord', phase: 'tge-week', content: 'AMA RECAP: Community feedback and next steps.' },
+
+                { date: '2026-04-21', channel: 'telegram', phase: 'tge-week', content: 'Tomorrow. BattleWorld launches. The era of competitive gaming begins.', eventType: 'milestone', eventDescription: 'Final Countdown' },
+                { date: '2026-04-21', channel: 'discord', phase: 'tge-week', content: 'FINAL COUNTDOWN: 24 hours until launch.', eventType: 'milestone', eventDescription: 'Final Countdown' },
+                { date: '2026-04-21', channel: 'x', phase: 'tge-week', content: 'Tomorrow. BattleWorld launches. This is what we built for. 🚀', eventType: 'milestone', eventDescription: 'Final Countdown' },
+
+                // Launch Day (Apr 22-23)
+                { date: '2026-04-22', channel: 'telegram', phase: 'tge-day', content: 'BATTLEWORLD IS LIVE. Tournaments, leaderboards, and rewards are live.', eventType: 'milestone', eventDescription: 'Launch Day' },
+                { date: '2026-04-22', channel: 'discord', phase: 'tge-day', content: 'LAUNCH DAY LIVE: Competition is live across all platforms.', eventType: 'milestone', eventDescription: 'Launch Day' },
+                { date: '2026-04-22', channel: 'x', phase: 'tge-day', content: 'BATTLEWORLD IS LIVE. 🎮\n\nCompete now. The gaming revolution starts here.', eventType: 'milestone', eventDescription: 'Launch Day' },
+                { date: '2026-04-22', channel: 'tournament', phase: 'tge-day', content: 'Launch Week Championship', tournament: { categories: ['Esports', 'Streaming', 'Entertainment', 'Meta'], specialEvent: 'launch', notes: '5x multiplier launch' } },
+
+                { date: '2026-04-23', channel: 'telegram', phase: 'post-tge', content: 'FIRST 24H: 100K+ matches played. Community is incredible.' },
+                { date: '2026-04-23', channel: 'discord', phase: 'post-tge', content: 'LAUNCH DAY RECAP: Game-changing statistics and thank you.' },
+                { date: '2026-04-23', channel: 'x', phase: 'post-tge', content: 'Day 1 done. 100K+ matches. The gaming revolution is here. 🐺' }
+            ];
+
+            contentCalendar.items = battleWorldContent;
+            saveToLocalStorage();
+        }
+
+        function setupEventListeners() {
+            // Calendar navigation
+            document.getElementById('prevMonth').addEventListener('click', () => {
+                currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1);
+                renderCalendar();
+            });
+
+            document.getElementById('nextMonth').addEventListener('click', () => {
+                currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1);
+                renderCalendar();
+            });
+
+            // Modal
+            document.getElementById('addContentBtn').addEventListener('click', openModal);
+            document.getElementById('cancelBtn').addEventListener('click', closeModal);
+            document.getElementById('contentForm').addEventListener('submit', handleSubmit);
+            document.getElementById('modal').addEventListener('click', (e) => {
+                if (e.target.id === 'modal') closeModal();
+            });
+
+            // Channel select to show/hide tournament fields
+            document.getElementById('formChannel').addEventListener('change', (e) => {
+                const tournamentFields = document.getElementById('tournamentFields');
+                tournamentFields.style.display = e.target.value === 'tournament' ? 'block' : 'none';
+            });
+
+            // Event type select to show/hide event description field
+            document.getElementById('formEventType').addEventListener('change', (e) => {
+                document.getElementById('eventDescGroup').style.display = e.target.value ? 'block' : 'none';
+            });
+
+
+            // Bulk Import
+            document.getElementById('bulkImportBtn').addEventListener('click', openBulkModal);
+            document.getElementById('bulkCancelBtn').addEventListener('click', closeBulkModal);
+            document.getElementById('bulkPreviewBtn').addEventListener('click', showBulkPreview);
+            document.getElementById('bulkConfirmBtn').addEventListener('click', confirmBulkImport);
+            document.getElementById('bulkModal').addEventListener('click', (e) => {
+                if (e.target.id === 'bulkModal') closeBulkModal();
+            });
+
+            // TauntLive Sync
+            document.getElementById('syncTauntLiveBtn').addEventListener('click', openSyncModal);
+            document.getElementById('syncCancelBtn').addEventListener('click', closeSyncModal);
+            document.getElementById('syncFetchBtn').addEventListener('click', fetchFromTauntLive);
+            document.getElementById('syncConfirmBtn').addEventListener('click', confirmSync);
+            document.getElementById('syncModal').addEventListener('click', (e) => {
+                if (e.target.id === 'syncModal') closeSyncModal();
+            });
+
+            // Image URL preview in form
+            document.getElementById('formImageUrl').addEventListener('input', updateImagePreview);
+            document.getElementById('clearImageBtn').addEventListener('click', () => {
+                document.getElementById('formImageUrl').value = '';
+                updateImagePreview();
+            });
+
+            // Filters (multi-select toggle)
+            document.querySelectorAll('.filter-pill').forEach(pill => {
+                pill.addEventListener('click', (e) => {
+                    const filterType = e.target.dataset.filter;
+                    const value = e.target.dataset.value;
+
+                    // Toggle this pill
+                    e.target.classList.toggle('active');
+
+                    // Rebuild filter array from active pills
+                    const activeValues = [];
+                    document.querySelectorAll(`.filter-pill[data-filter="${filterType}"].active`).forEach(p => {
+                        activeValues.push(p.dataset.value);
+                    });
+                    contentCalendar.filters[filterType] = activeValues;
+
+                    renderCalendar();
+                    updateStats();
+                });
+            });
+        }
+
+        function renderCalendar() {
+            const year = currentMonth.getFullYear();
+            const month = currentMonth.getMonth();
+
+            // Update month display
+            const monthNames = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+            document.getElementById('monthDisplay').textContent = `${monthNames[month]} ${year}`;
+
+            // Clear grid
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+
+            // Add weekday headers
+            const weekdays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+            weekdays.forEach(day => {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-weekday';
+                dayEl.textContent = day;
+                grid.appendChild(dayEl);
+            });
+
+            // Get first day of month and number of days
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            // Add empty cells before first day
+            for (let i = 0; i < firstDay; i++) {
+                const empty = document.createElement('div');
+                grid.appendChild(empty);
+            }
+
+            // Add day cells
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const dateStr = formatDate(date);
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day';
+
+                // Check if outside target range (Mar 25 - Apr 30)
+                const isOutside = (month === 2 && day < 25) || month < 2 || month > 3;
+                if (isOutside) {
+                    dayEl.classList.add('outside');
+                }
+
+                // Check if TGE day
+                if (dateStr === '2026-05-05') {
+                    dayEl.classList.add('tge');
+                    const tgeBadge = document.createElement('div');
+                    tgeBadge.className = 'tge-badge';
+                    tgeBadge.textContent = 'TGE';
+                    dayEl.appendChild(tgeBadge);
+                }
+
+                // Day number
+                const dayNum = document.createElement('div');
+                dayNum.className = 'day-number';
+                dayNum.textContent = day;
+                dayEl.appendChild(dayNum);
+
+                // Content pills
+                const badges = document.createElement('div');
+                badges.className = 'day-badges';
+
+                const dayItems = contentCalendar.items.filter(item => item.date === dateStr);
+                dayItems.forEach(item => {
+                    if (shouldShowItem(item)) {
+                        // Mark the day cell border for event type (no tag inside cell)
+                        if (item.eventType && !dayEl.classList.contains(item.eventType)) {
+                            dayEl.classList.add(item.eventType);
+                        }
+                        const pill = document.createElement('div');
+                        pill.className = 'content-pill ' + (CHANNEL_CSS[item.channel] || item.channel);
+                        const channel = CHANNEL_BADGES[item.channel] || item.channel.toUpperCase();
+                        const text = item.content.substring(0, 30) + (item.content.length > 30 ? '...' : '');
+                        pill.textContent = `${channel}: ${text}`;
+                        pill.title = item.content;
+                        badges.appendChild(pill);
+                    }
+                });
+
+                if (badges.children.length > 0) {
+                    dayEl.appendChild(badges);
+                }
+
+                // Add button
+                const addBtn = document.createElement('button');
+                addBtn.className = 'day-add-btn';
+                addBtn.textContent = '+';
+                addBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectedDate = dateStr;
+                    openModal();
+                    document.getElementById('formDate').value = dateStr;
+                });
+                dayEl.appendChild(addBtn);
+
+                // Click to select
+                dayEl.addEventListener('click', () => {
+                    document.querySelectorAll('.calendar-day.selected').forEach(d => d.classList.remove('selected'));
+                    if (!isOutside) {
+                        dayEl.classList.add('selected');
+                        selectedDate = dateStr;
+                        updateDetailPanel();
+                    }
+                });
+
+                grid.appendChild(dayEl);
+            }
+
+            updateStats();
+        }
+
+        function updateDetailPanel() {
+            const detailContent = document.getElementById('detailContent');
+            const detailDate = document.getElementById('detailDate');
+
+            if (!selectedDate) {
+                detailContent.innerHTML = `<div class="detail-empty">
+                    <svg width="80" height="80" viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:0.2;">
+                        <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3## 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z" fill="#5865F2"/>
+                    </svg>
+                    <div class="empty-text">Select a day to view content</div>
+                </div>`;
+                detailDate.textContent = 'Select a day';
+                return;
+            }
+
+            const date = new Date(selectedDate);
+            const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            detailDate.textContent = dateStr.toUpperCase();
+
+            const dayItems = contentCalendar.items.filter(item => item.date === selectedDate);
+
+            if (dayItems.length === 0) {
+                detailContent.innerHTML = `<div class="detail-empty">
+                    <svg width="60" height="60" viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:0.15;">
+                        <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.504 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z" fill="#5865F2"/>
+                    </svg>
+                    <div class="empty-text">No content for this day</div>
+                </div>`;
+                return;
+            }
+
+            // Collect unique event types for this day
+            const dayEventTypes = [...new Set(dayItems.filter(i => i.eventType).map(i => i.eventType))];
+            let bannerHtml = '';
+            if (dayEventTypes.length > 0) {
+                bannerHtml = dayEventTypes.map(et => {
+                    const firstItem = dayItems.find(i => i.eventType === et && i.eventDescription);
+                    const desc = firstItem ? firstItem.eventDescription : (EVENT_LABELS[et] || et);
+                    return `
+                        <div class="day-event-banner ${et}">
+                            <div class="day-event-banner-label">${EVENT_LABELS[et] || et}</div>
+                            <div class="day-event-banner-desc">${desc}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            detailContent.innerHTML = bannerHtml + dayItems.map(item => renderQueueItem(item)).join('');
+
+            // Add event listeners to action buttons
+            document.querySelectorAll('[data-copy-id]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.target.dataset.copyId;
+                    const item = contentCalendar.items.find(i => i.id === id);
+                    if (item) {
+                        navigator.clipboard.writeText(item.content);
+                        btn.textContent = 'Copied!';
+                        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+                    }
+                });
+            });
+
+            document.querySelectorAll('[data-edit-id]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.target.dataset.editId;
+                    editItem(id);
+                });
+            });
+
+            document.querySelectorAll('[data-delete-id]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.target.dataset.deleteId;
+                    deleteItem(id);
+                });
+            });
+
+            // Inline double-click editing
+            document.querySelectorAll('[data-inline-edit]').forEach(contentEl => {
+                contentEl.addEventListener('dblclick', () => {
+                    const id = contentEl.dataset.inlineEdit;
+                    const item = contentCalendar.items.find(i => i.id === id);
+                    if (!item) return;
+
+                    // Hide the content div
+                    contentEl.classList.add('editing');
+
+                    // Create textarea + save/cancel buttons
+                    const textarea = document.createElement('textarea');
+                    textarea.className = 'inline-edit-area';
+                    textarea.value = item.content;
+
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.className = 'inline-edit-actions';
+
+                    const saveBtn = document.createElement('button');
+                    saveBtn.className = 'btn btn-sm btn-cyan';
+                    saveBtn.textContent = 'Save';
+                    saveBtn.style.cssText = 'padding: 4px 12px; font-size: 11px;';
+
+                    const cancelBtn = document.createElement('button');
+                    cancelBtn.className = 'btn btn-sm';
+                    cancelBtn.textContent = 'Cancel';
+                    cancelBtn.style.cssText = 'padding: 4px 12px; font-size: 11px;';
+
+                    actionsDiv.appendChild(saveBtn);
+                    actionsDiv.appendChild(cancelBtn);
+
+                    contentEl.parentNode.insertBefore(textarea, contentEl.nextSibling);
+                    contentEl.parentNode.insertBefore(actionsDiv, textarea.nextSibling);
+                    textarea.focus();
+                    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+
+                    const cleanup = () => {
+                        contentEl.classList.remove('editing');
+                        textarea.remove();
+                        actionsDiv.remove();
+                    };
+
+                    saveBtn.addEventListener('click', () => {
+                        const newContent = textarea.value.trim();
+                        if (newContent && newContent !== item.content) {
+                            item.content = newContent;
+                            contentEl.textContent = newContent;
+                            saveToLocalStorage();
+                            renderCalendar();
+                        }
+                        cleanup();
+                    });
+
+                    cancelBtn.addEventListener('click', cleanup);
+
+                    textarea.addEventListener('keydown', (e) => {
+                        if (e.key === 'Escape') cleanup();
+                        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) saveBtn.click();
+                    });
+                });
+            });
+        }
+
+        const PHASE_NAMES = {
+            'pre-tge-1': 'Pre-TGE Phase 1',
+            'pre-tge-2': 'Pre-TGE Phase 2',
+            'pre-tge-3': 'Pre-TGE Phase 3',
+            'tge-week': 'TGE Week',
+            'tge-day': 'TGE Day',
+            'post-tge': 'Post-TGE'
+        };
+
+        const CHANNEL_NAMES = {
+            'telegram': 'TELEGRAM',
+            'discord': 'DISCORD',
+            'tournament': 'TAUNT LIVE'
+        };
+
+        const CHANNEL_BADGES = { telegram: 'TG', discord: 'DC', x: 'X', tournament: 'LIVE' };
+        const CHANNEL_CSS = { telegram: 'tg', discord: 'dc', x: 'x', tournament: 'live' };
+        const EVENT_LABELS = { special: 'SPECIAL EVENT', milestone: 'MILESTONE', partner: 'PARTNER' };
+
+        function renderQueueItem(item) {
+            const channelBadge = CHANNEL_BADGES[item.channel] || item.channel.toUpperCase();
+            const id = item.id || generateId();
+            if (!item.id) item.id = id;
+            const phaseName = PHASE_NAMES[item.phase] || item.phase;
+
+            let html = `
+                <div class="queue-item" data-item-id="${id}">
+                    <div class="queue-header">
+                        <div class="channel-badge ${CHANNEL_CSS[item.channel] || item.channel}">${channelBadge}</div>
+                        <div class="phase-label">${phaseName}</div>
+                        <div class="inline-edit-hint">double-click text to edit</div>
+                    </div>
+                    <div class="queue-content" data-inline-edit="${id}" title="Double-click to edit">${item.content}</div>
+            `;
+
+            if (item.imageUrl) {
+                html += `
+                    <div class="queue-image">
+                        <img src="${item.imageUrl}" alt="Post image" onerror="this.parentElement.style.display='none'">
+                        <div class="queue-image-label">IMAGE <a href="${item.imageUrl}" target="_blank" rel="noopener">${item.imageUrl.length > 45 ? item.imageUrl.substring(0, 45) + '...' : item.imageUrl}</a></div>
+                    </div>
+                `;
+            }
+
+            if (item.tournament) {
+                html += renderTournamentCard(item.tournament);
+            }
+
+            html += `
+                    <div class="queue-actions">
+                        <button class="btn btn-sm btn-action" data-copy-id="${id}">Copy</button>
+                        <button class="btn btn-sm btn-action" data-edit-id="${id}">Edit</button>
+                        <button class="btn btn-sm btn-action btn-red" data-delete-id="${id}">Delete</button>
+                    </div>
+                </div>
+            `;
+
+            return html;
+        }
+
+        function renderTournamentCard(tournament) {
+            const statusTexts = {
+                'none': '',
+                'weekly_mega': ' - WEEKLY MEGA',
+                'partner_pack': ' - PARTNER PACK',
+                'ama': ' - AMA PREDICTIONS',
+                'launch': ' - LAUNCH WEEK BLITZ (2X)'
+            };
+
+            const categories = tournament.categories || [];
+            const categoryHtml = categories.map(cat => `<span class="category-tag">${cat}</span>`).join('');
+
+            return `
+                <div class="tournament-card">
+                    <div class="tournament-title">DAILY TOURNAMENT${statusTexts[tournament.specialEvent]}</div>
+
+                    <div class="tournament-section">
+                        <div class="tournament-section-title">Schedule:</div>
+                        <div class="tournament-item">00:00 UTC  Tournament Opens</div>
+                        <div class="tournament-item">00:00-18:00  Prediction Window</div>
+                        <div class="tournament-item">18:00-20:00  Resolution Period</div>
+                        <div class="tournament-item">20:00-23:59  Results &amp; Rewards</div>
+                    </div>
+
+                    <div class="tournament-section">
+                        <div class="tournament-section-title">Categories:</div>
+                        <div class="tournament-categories">${categoryHtml}</div>
+                    </div>
+
+                    <div class="tournament-section">
+                        <div class="tournament-section-title">Scoring:</div>
+                        <div class="tournament-item">Correct: +100 pts</div>
+                        <div class="tournament-item">Early Bird (first 2h): +150 pts</div>
+                        <div class="tournament-item">3-day streak: +120 pts</div>
+                        <div class="tournament-item">7-day streak: +150 pts</div>
+                        <div class="tournament-item">Wrong: +10 pts</div>
+                    </div>
+
+                    <div class="tournament-section">
+                        <div class="tournament-section-title">Tier Multipliers:</div>
+                        <div class="tournament-item">No stake: 1.0x</div>
+                        <div class="tournament-item">Silver: 1.1x | Gold: 1.25x | Diamond: 1.5x</div>
+                    </div>
+
+                    <div class="tournament-section">
+                        <div class="tournament-section-title">Prizes (Pre-TGE / Skulls):</div>
+                        <div class="tournament-item">1st: 2,000 Skulls + Champion badge</div>
+                        <div class="tournament-item">2nd-3rd: 1,000 each</div>
+                        <div class="tournament-item">4th-10th: 500 each</div>
+                        <div class="tournament-item">11th-25th: 200 each</div>
+                        <div class="tournament-item">All participants: 50 Skulls</div>
+                    </div>
+
+                    <div class="tournament-section">
+                        <div class="tournament-section-title">Prizes (Post-TGE / $TNT):</div>
+                        <div class="tournament-item">1st: 500 $TNT</div>
+                        <div class="tournament-item">2nd-3rd: 250 each</div>
+                        <div class="tournament-item">4th-10th: 100 each</div>
+                        <div class="tournament-item">11th-25th: 50 each</div>
+                        <div class="tournament-item">All participants: 10 $TNT</div>
+                    </div>
+
+                    ${tournament.notes ? `<div class="tournament-section"><div class="tournament-item"><strong>Notes:</strong> ${tournament.notes}</div></div>` : ''}
+                </div>
+            `;
+        }
+
+        function shouldShowItem(item) {
+            const channelFilter = contentCalendar.filters.channel;
+            const phaseFilter = contentCalendar.filters.phase;
+
+            if (channelFilter.length > 0 && !channelFilter.includes(item.channel)) return false;
+            if (phaseFilter.length > 0 && !phaseFilter.includes(item.phase)) return false;
+
+            return true;
+        }
+
+        function openModal() {
+            editingId = null;
+            document.getElementById('contentForm').reset();
+            document.getElementById('formDate').value = selectedDate || new Date().toISOString().split('T')[0];
+            document.getElementById('tournamentFields').style.display = 'none';
+            document.getElementById('eventDescGroup').style.display = 'none';
+            document.getElementById('modalTitle').textContent = 'Add Content';
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        function handleSubmit(e) {
+            e.preventDefault();
+
+            const eventType = document.getElementById('formEventType').value;
+            const eventDesc = document.getElementById('formEventDesc').value.trim();
+            const imageUrl = document.getElementById('formImageUrl').value.trim();
+            const formData = {
+                channel: document.getElementById('formChannel').value,
+                date: document.getElementById('formDate').value,
+                phase: document.getElementById('formPhase').value,
+                content: document.getElementById('formContent').value,
+                eventType: eventType || undefined,
+                eventDescription: eventDesc || undefined,
+                imageUrl: imageUrl || undefined
+            };
+
+            if (formData.channel === 'tournament') {
+                const categories = Array.from(document.querySelectorAll('#tournamentFields input[type="checkbox"]:checked')).map(cb => cb.value);
+                formData.tournament = {
+                    categories: categories.length > 0 ? categories : ['Crypto', 'Sports', 'Esports', 'Streaming', 'Entertainment'],
+                    specialEvent: document.getElementById('formSpecialEvent').value || 'none',
+                    notes: document.getElementById('formNotes').value
+                };
+            }
+
+            if (editingId) {
+                const item = contentCalendar.items.find(i => i.id === editingId);
+                if (item) {
+                    Object.assign(item, formData);
+                }
+            } else {
+                formData.id = generateId();
+                contentCalendar.items.push(formData);
+            }
+
+            saveToLocalStorage();
+            closeModal();
+            renderCalendar();
+            updateDetailPanel();
+            updateStats();
+        }
+
+        function editItem(id) {
+            const item = contentCalendar.items.find(i => i.id === id);
+            if (!item) return;
+
+            editingId = id;
+            document.getElementById('formChannel').value = item.channel;
+            document.getElementById('formDate').value = item.date;
+            document.getElementById('formPhase').value = item.phase;
+            document.getElementById('formContent').value = item.content;
+            document.getElementById('formEventType').value = item.eventType || '';
+            document.getElementById('formEventDesc').value = item.eventDescription || '';
+            document.getElementById('eventDescGroup').style.display = item.eventType ? 'block' : 'none';
+            document.getElementById('formImageUrl').value = item.imageUrl || '';
+            updateImagePreview();
+
+            if (item.tournament) {
+                document.getElementById('tournamentFields').style.display = 'block';
+                item.tournament.categories.forEach(cat => {
+                    const checkbox = document.getElementById(`cat-${cat.toLowerCase()}`);
+                    if (checkbox) checkbox.checked = true;
+                });
+                document.getElementById('formSpecialEvent').value = item.tournament.specialEvent || 'none';
+                document.getElementById('formNotes').value = item.tournament.notes || '';
+            }
+
+            document.getElementById('modalTitle').textContent = 'Edit Content';
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function deleteItem(id) {
+            if (confirm('Delete this content?')) {
+                contentCalendar.items = contentCalendar.items.filter(i => i.id !== id);
+                saveToLocalStorage();
+                updateDetailPanel();
+                renderCalendar();
+                updateStats();
+            }
+        }
+
+        function updateStats() {
+            const filtered = contentCalendar.items.filter(item => shouldShowItem(item));
+
+            document.getElementById('statTotal').textContent = filtered.length;
+            document.getElementById('statTG').textContent = filtered.filter(i => i.channel === 'telegram').length;
+            document.getElementById('statDC').textContent = filtered.filter(i => i.channel === 'discord').length;
+            document.getElementById('statX').textContent = filtered.filter(i => i.channel === 'x').length;
+            document.getElementById('statTournament').textContent = filtered.filter(i => i.channel === 'tournament').length;
+
+            // Update countdown
+            const today = new Date();
+            const daysUntil = Math.ceil((TGE_DATE - today) / (1000 * 60 * 60 * 24));
+            document.getElementById('countdown').textContent = `T-${daysUntil}`;
+        }
+
+
+        // BULK IMPORT
+        let parsedBulkItems = [];
+
+        function autoDetectPhase(dateStr) {
+            const d = new Date(dateStr + 'T00:00:00');
+            const m = d.getMonth(); // 0-indexed
+            const day = d.getDate();
+            if (m === 2 && day >= 25) return 'pre-tge-1';  // Mar 25-31 (Partner Announcements)
+            if (m === 3 && day <= 6) return 'pre-tge-1';   // Apr 1-6 (Partner Announcements)
+            if (m === 3 && day <= 13) return 'pre-tge-2';  // Apr 7-13 (IDO Detail Announcements)
+            if (m === 3 && day <= 22) return 'pre-tge-3';  // Apr 14-22 (Hype Build)
+            if (m === 3 && day >= 23 && day <= 27) return 'tge-week'; // Apr 23-27 (Ignition)
+            if (m === 3 && day === 28) return 'tge-day';   // Apr 28 (TGE Day)
+            if (m === 3 && day >= 29) return 'post-tge';   // Apr 29+
+            return 'pre-tge-1';
+        }
+
+        function parseBulkInput(text) {
+            const lines = text.split('\n').filter(l => l.trim() && !l.trim().startsWith('#'));
+            const items = [];
+            const errors = [];
+
+            lines.forEach((line, idx) => {
+                const parts = line.split('|').map(p => p.trim());
+                if (parts.length < 3) {
+                    errors.push({ line: idx + 1, text: line.trim(), error: 'Need at least: date | channel | content' });
+                    return;
+                }
+
+                const dateStr = parts[0];
+                const channel = parts[1].toLowerCase();
+                const content = parts[2];
+                const phase = parts[3] || autoDetectPhase(dateStr);
+                const eventType = parts[4] || '';
+                const eventDescription = parts[5] || '';
+                const imageUrl = parts[6] || '';
+
+                // Validate date
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+                    errors.push({ line: idx + 1, text: line.trim(), error: 'Invalid date format (use YYYY-MM-DD)' });
+                    return;
+                }
+
+                // Validate channel
+                const validChannels = ['telegram', 'discord', 'x', 'tournament'];
+                if (!validChannels.includes(channel)) {
+                    errors.push({ line: idx + 1, text: line.trim(), error: `Invalid channel "${channel}" (use: ${validChannels.join(', ')})` });
+                    return;
+                }
+
+                const item = {
+                    date: dateStr,
+                    channel: channel,
+                    phase: phase,
+                    content: content
+                };
+
+                if (eventType && ['special', 'milestone', 'partner'].includes(eventType)) {
+                    item.eventType = eventType;
+                }
+
+                if (eventDescription) {
+                    item.eventDescription = eventDescription;
+                }
+
+                if (imageUrl && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
+                    item.imageUrl = imageUrl;
+                }
+
+                items.push(item);
+            });
+
+            return { items, errors };
+        }
+
+        function showBulkPreview() {
+            const text = document.getElementById('bulkInput').value;
+            const { items, errors } = parseBulkInput(text);
+            parsedBulkItems = items;
+
+            const preview = document.getElementById('bulkPreview');
+            const list = document.getElementById('bulkPreviewList');
+            const count = document.getElementById('bulkPreviewCount');
+            const confirmBtn = document.getElementById('bulkConfirmBtn');
+
+            list.innerHTML = '';
+
+            if (items.length === 0 && errors.length === 0) {
+                preview.style.display = 'none';
+                confirmBtn.disabled = true;
+                confirmBtn.textContent = 'Import 0 Items';
+                return;
+            }
+
+            preview.style.display = 'block';
+
+            const CHANNEL_SHORT = { telegram: 'TG', discord: 'DC', x: 'X', tournament: 'LIVE' };
+            const CHANNEL_CLASS = { telegram: 'tg', discord: 'dc', x: 'x', tournament: 'live' };
+
+            errors.forEach(err => {
+                const el = document.createElement('div');
+                el.className = 'bulk-preview-item bp-error';
+                el.innerHTML = `<span class="bp-date">Line ${err.line}</span><span class="bp-content" style="color: var(--red);">${err.error}: ${err.text.substring(0, 60)}</span>`;
+                list.appendChild(el);
+            });
+
+            items.forEach(item => {
+                const el = document.createElement('div');
+                el.className = 'bulk-preview-item';
+                const imgIcon = item.imageUrl ? ' <span style="color: var(--cyan); font-size: 10px;" title="Has image">&#128247;</span>' : '';
+                el.innerHTML = `<span class="bp-date">${item.date}</span><span class="bp-channel ${CHANNEL_CLASS[item.channel]}">${CHANNEL_SHORT[item.channel]}</span><span class="bp-content">${item.content}${imgIcon}</span>`;
+                list.appendChild(el);
+            });
+
+            const errMsg = errors.length > 0 ? ` (${errors.length} error${errors.length > 1 ? 's' : ''})` : '';
+            count.textContent = `${items.length} item${items.length !== 1 ? 's' : ''} ready to import${errMsg}`;
+            count.style.color = errors.length > 0 ? 'var(--yellow)' : 'var(--green)';
+
+            confirmBtn.disabled = items.length === 0;
+            confirmBtn.textContent = `Import ${items.length} Item${items.length !== 1 ? 's' : ''}`;
+        }
+
+        function confirmBulkImport() {
+            if (parsedBulkItems.length === 0) return;
+
+            parsedBulkItems.forEach(item => {
+                item.id = generateId();
+                contentCalendar.items.push(item);
+            });
+
+            saveToLocalStorage();
+            renderCalendar();
+            updateDetailPanel();
+            updateStats();
+
+            const count = parsedBulkItems.length;
+            parsedBulkItems = [];
+            closeBulkModal();
+            alert(`Successfully imported ${count} item${count !== 1 ? 's' : ''}!`);
+        }
+
+        // ── TauntLive Sync ──
+        let syncedItems = [];
+
+        function openSyncModal() {
+            syncedItems = [];
+            document.getElementById('syncStatus').style.display = 'none';
+            document.getElementById('syncPreview').style.display = 'none';
+            document.getElementById('syncConfirmBtn').disabled = true;
+            document.getElementById('syncConfirmBtn').textContent = 'Import 0 Items';
+            document.getElementById('syncModal').classList.add('active');
+        }
+
+        function closeSyncModal() {
+            document.getElementById('syncModal').classList.remove('active');
+            syncedItems = [];
+        }
+
+        function fetchFromTauntLive() {
+            const apiUrl = document.getElementById('syncApiUrl').value.trim();
+            const statusEl = document.getElementById('syncStatus');
+            const fetchBtn = document.getElementById('syncFetchBtn');
+
+            statusEl.style.display = 'block';
+            statusEl.style.color = 'var(--yellow)';
+            statusEl.textContent = 'Connecting to Taunt Live scheduler...';
+            fetchBtn.classList.add('syncing');
+            fetchBtn.textContent = 'Fetching...';
+
+            fetch(`${apiUrl}/api/calendar-sync`)
+                .then(resp => {
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                    return resp.json();
+                })
+                .then(entries => {
+                    // Filter out entries that already exist (by source tag)
+                    const existingSources = new Set(
+                        contentCalendar.items
+                            .filter(i => i.source)
+                            .map(i => i.source + '|' + i.date + '|' + i.channel)
+                    );
+
+                    const newEntries = entries.filter(e => {
+                        const key = (e.source || '') + '|' + e.date + '|' + e.channel;
+                        return !existingSources.has(key);
+                    });
+
+                    // Auto-detect phase for each entry
+                    newEntries.forEach(e => {
+                        if (!e.phase) e.phase = autoDetectPhase(e.date);
+                    });
+
+                    syncedItems = newEntries;
+
+                    if (newEntries.length === 0) {
+                        statusEl.style.color = 'var(--text-dim)';
+                        statusEl.textContent = `Connected. All ${entries.length} entries already synced — nothing new to import.`;
+                        document.getElementById('syncPreview').style.display = 'none';
+                        document.getElementById('syncConfirmBtn').disabled = true;
+                        document.getElementById('syncConfirmBtn').textContent = 'Import 0 Items';
+                    } else {
+                        statusEl.style.color = 'var(--green)';
+                        statusEl.textContent = `Found ${entries.length} total entries, ${newEntries.length} new.`;
+
+                        // Show preview
+                        document.getElementById('syncPreview').style.display = 'block';
+                        document.getElementById('syncPreviewCount').textContent = `${newEntries.length} new item${newEntries.length !== 1 ? 's' : ''} to import`;
+
+                        const CHANNEL_LABELS = { telegram: 'TG', discord: 'DC', x: 'X', tournament: 'LIVE' };
+                        const listHtml = newEntries.map(e => `
+                            <div style="display: flex; gap: 10px; padding: 6px 8px; border-bottom: 1px solid var(--border); font-size: 12px; align-items: center;">
+                                <span style="color: var(--text-dim); min-width: 72px;">${e.date}</span>
+                                <span class="channel-badge ${CHANNEL_CSS[e.channel] || ''}" style="font-size: 10px; padding: 1px 6px;">${CHANNEL_LABELS[e.channel] || e.channel}</span>
+                                <span style="flex: 1; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${e.content}</span>
+                            </div>
+                        `).join('');
+                        document.getElementById('syncPreviewList').innerHTML = listHtml;
+
+                        document.getElementById('syncConfirmBtn').disabled = false;
+                        document.getElementById('syncConfirmBtn').textContent = `Import ${newEntries.length} Items`;
+                    }
+
+                    fetchBtn.classList.remove('syncing');
+                    fetchBtn.textContent = 'Fetch Streams';
+                })
+                .catch(err => {
+                    statusEl.style.color = 'var(--red)';
+                    statusEl.textContent = `Connection failed: ${err.message}. Is the Taunt Live scheduler running?`;
+                    fetchBtn.classList.remove('syncing');
+                    fetchBtn.textContent = 'Fetch Streams';
+                });
+        }
+
+        function confirmSync() {
+            if (syncedItems.length === 0) return;
+
+            syncedItems.forEach(item => {
+                item.id = generateId();
+                contentCalendar.items.push(item);
+            });
+
+            saveToLocalStorage();
+            renderCalendar();
+            updateDetailPanel();
+            updateStats();
+
+            const count = syncedItems.length;
+            syncedItems = [];
+            closeSyncModal();
+            alert(`Synced ${count} content item${count !== 1 ? 's' : ''} from Taunt Live!`);
+        }
+
+        function updateImagePreview() {
+            const url = document.getElementById('formImageUrl').value.trim();
+            const previewDiv = document.getElementById('formImagePreview');
+            const previewImg = document.getElementById('formImagePreviewImg');
+            if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+                previewImg.src = url;
+                previewImg.onerror = () => { previewDiv.style.display = 'none'; };
+                previewDiv.style.display = 'inline-block';
+            } else {
+                previewDiv.style.display = 'none';
+                previewImg.src = '';
+            }
+        }
+
+        function openBulkModal() {
+            document.getElementById('bulkInput').value = '';
+            document.getElementById('bulkPreview').style.display = 'none';
+            document.getElementById('bulkConfirmBtn').disabled = true;
+            document.getElementById('bulkConfirmBtn').textContent = 'Import 0 Items';
+            parsedBulkItems = [];
+            document.getElementById('bulkModal').classList.add('active');
+        }
+
+        function closeBulkModal() {
+            document.getElementById('bulkModal').classList.remove('active');
+        }
+
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function generateId() {
+            return 'id-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // --- SUPABASE PERSISTENCE ---
+
+        function saveToLocalStorage() {
+            // All saves now go to Supabase
+            syncToSupabase();
+        }
+
+        function syncToSupabase() {
+            // Snapshot current state so async closure uses correct values
+            const productSnapshot = activeProduct;
+            const itemsSnapshot = contentCalendar.items.map(item => {
+                // Ensure every item has an ID before uploading
+                if (!item.id) item.id = generateId();
+                return {
+                    id: item.id,
+                    product: productSnapshot,
+                    date: item.date,
+                    channel: item.channel,
+                    phase: item.phase || null,
+                    content: item.content || null,
+                    event_type: item.eventType || null,
+                    event_description: item.eventDescription || null,
+                    image_url: item.imageUrl || null,
+                    tournament: item.tournament || null
+                };
+            });
+
+            (async () => {
+                try {
+                    // Clear existing rows then re-insert (handles deletes cleanly)
+                    await sb.from('calendar_items').delete().eq('product', productSnapshot);
+                    if (itemsSnapshot.length > 0) {
+                        const { error } = await sb.from('calendar_items').insert(itemsSnapshot);
+                        if (error) console.error('Supabase insert error:', error);
+                    }
+                } catch (err) {
+                    console.error('Supabase sync error:', err);
+                }
+            })();
+        }
+
+        async function loadFromSupabase() {
+            try {
+                const { data, error } = await sb
+                    .from('calendar_items')
+                    .select('*')
+                    .eq('product', activeProduct)
+                    .order('date', { ascending: true });
+
+                if (error) throw error;
+
+                if (data && data.length > 0) {
+                    contentCalendar.items = data.map(row => ({
+                        id: row.id,
+                        date: row.date,
+                        channel: row.channel,
+                        phase: row.phase,
+                        content: row.content,
+                        eventType: row.event_type,
+                        eventDescription: row.event_description,
+                        imageUrl: row.image_url,
+                        tournament: row.tournament
+                    }));
+                    return true;
+                }
+                return false;
+            } catch (err) {
+                console.error('Supabase load error:', err);
+                return false;
+            }
+        }
+
+        async function switchProduct(product) {
+            // Save current product data before switching
+            syncToSupabase();
+
+            // Switch product
+            activeProduct = product;
+
+            // Update active tab
+            document.querySelectorAll('.product-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-product="${product}"]`).classList.add('active');
+
+            // Update header subtitle
+            const subtitle = product === 'tauntlive' ? 'Content Calendar' : 'BattleWorld Calendar';
+            document.getElementById('headerSubtitle').textContent = subtitle;
+
+            // Update page title
+            const productName = product === 'tauntlive' ? 'TauntLive' : 'BattleWorld';
+            document.title = `$TNT Content Calendar - ${productName}`;
+
+            // Load product data from Supabase
+            const loaded = await loadFromSupabase();
+            if (!loaded) {
+                if (product === 'tauntlive') {
+                    initializeTauntLiveContent();
+                } else {
+                    initializeBattleWorldContent();
+                }
+                syncToSupabase();
+            }
+
+            // Reset filters and view
+            contentCalendar.filters.channel = [];
+            contentCalendar.filters.phase = [];
+            currentMonth = new Date(2026, 2); // March 2026
+            selectedDate = null;
+
+            // Update UI — deactivate all filter pills
+            document.querySelectorAll('.filter-pill').forEach(pill => {
+                pill.classList.remove('active');
+            });
+
+            renderCalendar();
+            updateDetailPanel();
+            updateStats();
+        }
+    </script>
+</body>
+</html>
