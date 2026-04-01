@@ -2169,7 +2169,7 @@
                 return;
             }
 
-            const date = new Date(selectedDate);
+            const date = new Date(selectedDate + 'T00:00:00');
             const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
             detailDate.textContent = dateStr.toUpperCase();
 
