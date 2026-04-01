@@ -2659,8 +2659,9 @@
             count.textContent = `${items.length} item${items.length !== 1 ? 's' : ''} ready to import${errMsg}`;
             count.style.color = errors.length > 0 ? 'var(--yellow)' : 'var(--green)';
 
+            const productLabel = activeProduct === 'tauntlive' ? 'TAUNT LIVE' : 'BATTLEWORLD';
             confirmBtn.disabled = items.length === 0;
-            confirmBtn.textContent = `Import ${items.length} Item${items.length !== 1 ? 's' : ''}`;
+            confirmBtn.textContent = `Import ${items.length} Item${items.length !== 1 ? 's' : ''} → ${productLabel}`;
         }
 
         function confirmBulkImport() {
@@ -2813,6 +2814,9 @@
             document.getElementById('bulkConfirmBtn').disabled = true;
             document.getElementById('bulkConfirmBtn').textContent = 'Import 0 Items';
             parsedBulkItems = [];
+            // Show which product is active so users know where content will go
+            const productLabel = activeProduct === 'tauntlive' ? 'TAUNT LIVE' : 'BATTLEWORLD';
+            document.querySelector('#bulkModal .modal-title').textContent = `Bulk Import → ${productLabel}`;
             document.getElementById('bulkModal').classList.add('active');
         }
 
