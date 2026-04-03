@@ -145,6 +145,17 @@
             gap: 2px;
         }
 
+        .last-synced {
+            font-size: 10px;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+        .last-synced span {
+            color: var(--green);
+        }
+
         .countdown-label {
             font-size: 11px;
             color: var(--text-dim);
@@ -1325,6 +1336,7 @@
                 <div class="countdown">
                     <div class="countdown-label">TGE COUNTDOWN</div>
                     <div class="countdown-value" id="countdown">T-29</div>
+                    <div class="last-synced">Saved <span id="lastSavedTime">—</span></div>
                 </div>
                 <a class="btn" href="TauntLive_Event_Intake.xlsx" download title="Download the Event Intake spreadsheet">📥 Event Intake</a>
                 <a class="btn" href="TauntLive_Event_Converter.html" target="_blank" title="Open the Event Converter tool">⚙️ Event Converter</a>
@@ -1670,6 +1682,20 @@
             renderCalendar();
             updateDetailPanel();
             updateStats();
+
+            // Poll Supabase every 30 seconds so other users' changes appear automatically.
+            // Skips the refresh if the add/edit modal or bulk import modal is open.
+            setInterval(async () => {
+                const modalOpen = document.getElementById('modal').classList.contains('active');
+                const bulkModal = document.getElementById('bulkModal');
+                const bulkOpen = bulkModal && bulkModal.classList.contains('active');
+                if (!modalOpen && !bulkOpen) {
+                    await loadFromSupabase();
+                    renderCalendar();
+                    updateDetailPanel();
+                    updateStats();
+                }
+            }, 30000);
         });
 
         function initializeTauntLiveContent() {
@@ -2868,7 +2894,15 @@
                     await sb.from('calendar_items').delete().eq('product', productSnapshot);
                     if (itemsSnapshot.length > 0) {
                         const { error } = await sb.from('calendar_items').insert(itemsSnapshot);
-                        if (error) console.error('Supabase insert error:', error);
+                        if (error) {
+                            console.error('Supabase insert error:', error);
+                        } else {
+                            const el = document.getElementById('lastSavedTime');
+                            if (el) el.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        }
+                    } else {
+                        const el = document.getElementById('lastSavedTime');
+                        if (el) el.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                     }
                 } catch (err) {
                     console.error('Supabase sync error:', err);
