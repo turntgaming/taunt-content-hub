@@ -30,17 +30,22 @@
             };
         })();
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Pack brand system — locked 2026-05-13.
+             * Archivo (display) + Geist (body) + Geist Mono + accent #4572FF.
+             * --cyan retained as token name so the 39 existing references
+             * keep working; value rebound to Pack accent. */
             --bg:        #12141f;
             --bg2:       #181b2a;
             --bg3:       #1e2135;
             --panel:     #222640;
             --border:    #2e3358;
-            --cyan:      #4B6EF5;
-            --cyan-dim:  #3d5cd4;
-            --cyan-glow: rgba(75,110,245,0.18);
+            --cyan:      #4572FF;
+            --cyan-dim:  #3a5fdc;
+            --cyan-glow: rgba(69,114,255,0.18);
+            --accent:    #4572FF;
             --red:       #ff3b5c;
             --green:     #00ff94;
             --yellow:    #ffd040;
@@ -48,8 +53,9 @@
             --text:      #d8ddf5;
             --text-dim:  #5e6490;
             --text-mid:  #8088bb;
-            --mono: 'Space Mono', monospace;
-            --display: 'Barlow Condensed', sans-serif;
+            --mono:    'Geist Mono', ui-monospace, monospace;
+            --display: 'Archivo', system-ui, sans-serif;
+            --body:    'Geist', system-ui, sans-serif;
         }
 
         * {
@@ -61,12 +67,12 @@
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: var(--mono);
+            font-family: var(--body);
             font-size: 14px;
             overflow: hidden;
             background-image:
-                linear-gradient(0deg, transparent 24%, rgba(75,110,245,.07) 25%, rgba(75,110,245,.07) 26%, transparent 27%, transparent 74%, rgba(75,110,245,.07) 75%, rgba(75,110,245,.07) 76%, transparent 77%, transparent),
-                linear-gradient(90deg, transparent 24%, rgba(75,110,245,.07) 25%, rgba(75,110,245,.07) 26%, transparent 27%, transparent 74%, rgba(75,110,245,.07) 75%, rgba(75,110,245,.07) 76%, transparent 77%, transparent);
+                linear-gradient(0deg, transparent 24%, rgba(69,114,255,.07) 25%, rgba(69,114,255,.07) 26%, transparent 27%, transparent 74%, rgba(69,114,255,.07) 75%, rgba(69,114,255,.07) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(69,114,255,.07) 25%, rgba(69,114,255,.07) 26%, transparent 27%, transparent 74%, rgba(69,114,255,.07) 75%, rgba(69,114,255,.07) 76%, transparent 77%, transparent);
             background-size: 40px 40px;
             position: relative;
         }
@@ -78,7 +84,7 @@
             left: 0;
             right: 0;
             height: 400px;
-            background: radial-gradient(ellipse at center top, rgba(75,110,245,0.20) 0%, transparent 70%);
+            background: radial-gradient(ellipse at center top, rgba(69,114,255,0.20) 0%, transparent 70%);
             pointer-events: none;
             z-index: 0;
         }
@@ -465,9 +471,9 @@
         }
 
         .content-pill.live {
-            border: 1px solid #4B6EF5;
-            color: #4B6EF5;
-            background: rgba(75,110,245,0.12);
+            border: 1px solid #4572FF;
+            color: #4572FF;
+            background: rgba(69,114,255,0.12);
         }
 
         .content-pill.x {
@@ -742,9 +748,9 @@
         }
 
         .channel-badge.live {
-            background: rgba(75,110,245,0.15);
-            color: #4B6EF5;
-            border: 1px solid #4B6EF5;
+            background: rgba(69,114,255,0.15);
+            color: #4572FF;
+            border: 1px solid #4572FF;
         }
 
         .channel-badge.x {
@@ -903,7 +909,7 @@
             max-height: 90vh;
             overflow-y: auto;
             padding: 24px;
-            box-shadow: 0 20px 60px rgba(75,110,245,0.3);
+            box-shadow: 0 20px 60px rgba(69,114,255,0.3);
         }
 
         .modal-title {
@@ -948,7 +954,7 @@
         .form-textarea:focus {
             outline: none;
             border-color: var(--cyan);
-            background-color: rgba(75,110,245,0.05);
+            background-color: rgba(69,114,255,0.05);
         }
 
         .form-textarea {
@@ -1208,7 +1214,7 @@
         .bulk-preview-item .bp-channel.tg { color: #29ABE2; }
         .bulk-preview-item .bp-channel.dc { color: #7289DA; }
         .bulk-preview-item .bp-channel.x { color: #e7e9ea; }
-        .bulk-preview-item .bp-channel.live { color: #4B6EF5; }
+        .bulk-preview-item .bp-channel.live { color: #4572FF; }
 
         .bulk-preview-item .bp-content {
             color: var(--text);
@@ -1299,15 +1305,15 @@
 <body>
 
     <!-- PASSWORD GATE -->
-    <div id="passwordGate" style="display:none;position:fixed;inset:0;z-index:99999;background:#12141f;align-items:center;justify-content:center;flex-direction:column;gap:24px;font-family:'Space Mono',monospace;">
-        <div style="color:#4B6EF5;font-size:13px;letter-spacing:4px;text-transform:uppercase;opacity:0.7;">Taunt Network</div>
-        <div style="color:#d8ddf5;font-size:22px;font-weight:700;letter-spacing:2px;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;">$TNT Content Hub</div>
+    <div id="passwordGate" style="display:none;position:fixed;inset:0;z-index:99999;background:#12141f;align-items:center;justify-content:center;flex-direction:column;gap:24px;font-family:'Geist Mono',ui-monospace,monospace;">
+        <div style="color:#4572FF;font-size:13px;letter-spacing:4px;text-transform:uppercase;opacity:0.7;">Taunt Network</div>
+        <div style="color:#d8ddf5;font-size:22px;font-weight:700;letter-spacing:2px;text-transform:uppercase;font-family:'Archivo',system-ui,sans-serif;">$TNT Content Hub</div>
         <div style="display:flex;flex-direction:column;gap:12px;width:320px;">
             <input id="gateInput" type="password" placeholder="Enter team password"
                 onkeydown="if(event.key==='Enter')window.__checkPassword()"
-                style="background:#1e2135;border:1px solid #2e3358;color:#d8ddf5;padding:12px 16px;font-family:'Space Mono',monospace;font-size:14px;outline:none;border-radius:4px;width:100%;box-sizing:border-box;">
+                style="background:#1e2135;border:1px solid #2e3358;color:#d8ddf5;padding:12px 16px;font-family:'Geist Mono',ui-monospace,monospace;font-size:14px;outline:none;border-radius:4px;width:100%;box-sizing:border-box;">
             <button onclick="window.__checkPassword()"
-                style="background:#4B6EF5;border:none;color:#fff;padding:12px;font-family:'Space Mono',monospace;font-size:13px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:4px;">
+                style="background:#4572FF;border:none;color:#fff;padding:12px;font-family:'Geist Mono',ui-monospace,monospace;font-size:13px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:4px;">
                 Enter
             </button>
             <div id="gateError" style="display:none;color:#ff3b5c;font-size:12px;text-align:center;letter-spacing:1px;">Incorrect password. Try again.</div>
@@ -1327,7 +1333,7 @@
                         <span class="product-label">@tauntcoin</span>
                     </button>
                     <button class="product-tab" data-product="battleworld" onclick="switchProduct('battleworld')">
-                        <span class="product-label">@playtaunt</span>
+                        <span class="product-label">@battleworld</span>
                     </button>
                 </div>
             </div>
@@ -1361,8 +1367,8 @@
                 <div class="stat-value" style="color: #e7e9ea;" id="statX">0</div>
             </div>
             <div class="stat-box">
-                <div class="stat-label" style="color: #4B6EF5;"> Taunt Live</div>
-                <div class="stat-value" style="color: #4B6EF5;" id="statTournament">0</div>
+                <div class="stat-label" style="color: #4572FF;"> Taunt Live</div>
+                <div class="stat-value" style="color: #4572FF;" id="statTournament">0</div>
             </div>
         </div>
 
@@ -1373,7 +1379,7 @@
                 <button class="filter-pill" data-filter="channel" data-value="telegram" style="--pill-color: #0088cc;">Telegram</button>
                 <button class="filter-pill" data-filter="channel" data-value="discord" style="--pill-color: #5865F2;">Discord</button>
                 <button class="filter-pill" data-filter="channel" data-value="x" style="--pill-color: #e7e9ea;">X</button>
-                <button class="filter-pill" data-filter="channel" data-value="tournament" style="--pill-color: #4B6EF5;"> Taunt Live</button>
+                <button class="filter-pill" data-filter="channel" data-value="tournament" style="--pill-color: #4572FF;"> Taunt Live</button>
             </div>
             <div class="filter-group">
                 <span class="filter-label">Phase:</span>
@@ -2975,7 +2981,7 @@
             contentCalendar.filters.phase = [];
             const __now = new Date();
             currentMonth = new Date(__now.getFullYear(), __now.getMonth(), 1);
-            selectedDate = `${__now.getFullYear()}-${String(__now.getMonth() + 1).padStart(2, '0')}-${String(__now.getDate()).padStart(2, '0')}`;
+            selectedDate = null;
 
             // Update UI — deactivate all filter pills
             document.querySelectorAll('.filter-pill').forEach(pill => {
@@ -2987,5 +2993,298 @@
             updateStats();
         }
     </script>
+
+<!-- ============================================================
+     STREAMS TAB — weekly grid pulling from Taunt Live /api/streams/public
+     Pack brand: Archivo + Geist Mono + #4572FF. Self-contained: adds
+     tab, view, and logic without touching existing calendar code.
+     Configure host via localStorage.TAUNTLIVE_API_BASE if not default.
+     ============================================================ -->
+<style>
+  .streams-view { display: none; flex: 1; flex-direction: column; min-height: 0; padding: 16px 24px 24px; overflow-y: auto; }
+  .streams-view.active { display: flex; }
+  .streams-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .streams-title { font-family: var(--display); font-size: 22px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; color: var(--text); }
+  .streams-nav { display: flex; align-items: center; gap: 10px; }
+  .streams-nav button { background: var(--bg2); border: 1px solid var(--border); color: var(--text); font-family: var(--mono); font-size: 12px; letter-spacing: 1.4px; text-transform: uppercase; padding: 8px 14px; cursor: pointer; border-radius: 4px; transition: all 160ms ease; }
+  .streams-nav button:hover { border-color: var(--cyan); color: var(--cyan); background: var(--cyan-glow); }
+  .streams-week-label { font-family: var(--mono); font-size: 12px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--text-mid); padding: 0 8px; }
+  .streams-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; min-height: 0; }
+  .streams-day { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 10px; display: flex; flex-direction: column; gap: 8px; min-height: 280px; }
+  .streams-day.today { border-color: var(--cyan); box-shadow: 0 0 0 1px var(--cyan-glow); }
+  .streams-day-head { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .streams-day-name { font-family: var(--display); font-size: 13px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; color: var(--text); }
+  .streams-day-date { font-family: var(--mono); font-size: 11px; color: var(--text-dim); }
+  .streams-card { background: var(--bg3); border: 1px solid var(--border); border-left: 3px solid var(--cyan); border-radius: 4px; padding: 8px 10px; display: flex; flex-direction: column; gap: 4px; }
+  .streams-card.live { border-left-color: var(--green); background: rgba(0,255,148,0.06); }
+  .streams-card.resolved { border-left-color: var(--text-dim); opacity: 0.7; }
+  .streams-card-time { font-family: var(--mono); font-size: 10px; letter-spacing: 0.8px; color: var(--cyan); text-transform: uppercase; }
+  .streams-card-title { font-family: var(--display); font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.25; letter-spacing: 0.4px; }
+  .streams-card-meta { display: flex; flex-wrap: wrap; gap: 4px 8px; font-family: var(--mono); font-size: 10px; color: var(--text-mid); margin-top: 2px; }
+  .streams-card-meta span { white-space: nowrap; }
+  .streams-card-meta .pill { background: rgba(69,114,255,0.10); border: 1px solid rgba(69,114,255,0.35); color: var(--cyan); padding: 1px 6px; border-radius: 3px; font-weight: 600; }
+  .streams-card-meta .pill-prize { background: rgba(255,208,64,0.10); border-color: rgba(255,208,64,0.40); color: var(--yellow); }
+  .streams-card-meta .pill-mult { background: rgba(124,110,245,0.10); border-color: rgba(124,110,245,0.40); color: var(--purple); }
+  .streams-card-meta .pill-pack { background: rgba(255,59,92,0.10); border-color: rgba(255,59,92,0.40); color: var(--red); }
+  .streams-card-streamer a { color: var(--text); text-decoration: none; border-bottom: 1px dotted var(--text-dim); font-family: var(--mono); font-size: 10px; }
+  .streams-card-streamer a:hover { color: var(--cyan); border-bottom-color: var(--cyan); }
+  .streams-day-empty { font-family: var(--mono); font-size: 11px; color: var(--text-dim); text-align: center; padding: 20px 4px; letter-spacing: 1px; text-transform: uppercase; }
+  .streams-day-posts { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border); display: flex; flex-direction: column; gap: 3px; }
+  .streams-day-post { font-family: var(--mono); font-size: 10px; color: var(--text-dim); display: flex; gap: 6px; align-items: center; }
+  .streams-day-post .post-badge { font-size: 9px; padding: 1px 4px; border-radius: 2px; font-weight: 700; letter-spacing: 0.4px; }
+  .streams-day-post .post-badge.tg { background: rgba(0,136,204,0.18); color: #29ABE2; }
+  .streams-day-post .post-badge.dc { background: rgba(88,101,242,0.18); color: #7289DA; }
+  .streams-day-post .post-badge.x  { background: rgba(231,233,234,0.15); color: #e7e9ea; }
+  .streams-status { font-family: var(--mono); font-size: 11px; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; padding: 4px 0; }
+  .streams-status.err { color: var(--red); }
+  .streams-host { font-family: var(--mono); font-size: 10px; color: var(--text-dim); }
+  .streams-host input { background: var(--bg3); border: 1px solid var(--border); color: var(--text); font-family: var(--mono); font-size: 11px; padding: 4px 8px; border-radius: 3px; width: 280px; }
+</style>
+
+<script>
+(function () {
+  // ----- Config -----
+  const LS_HOST = 'TAUNTLIVE_API_BASE';
+  function getApiBase() {
+    try {
+      const stored = localStorage.getItem(LS_HOST);
+      if (stored) return stored.replace(/\/+$/, '');
+    } catch (_) {}
+    return 'https://taunt-live-app.vercel.app';
+  }
+
+  // ----- State -----
+  let weekAnchor = startOfWeek(new Date());
+  let streamsCache = [];
+  let calendarItemsByDate = {};
+
+  function startOfWeek(d) {
+    const dt = new Date(d);
+    dt.setHours(0, 0, 0, 0);
+    const dow = dt.getDay(); // 0 Sun .. 6 Sat
+    const diff = (dow === 0 ? -6 : 1 - dow); // anchor to Monday
+    dt.setDate(dt.getDate() + diff);
+    return dt;
+  }
+  function fmtDateISO(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function fmtWeekLabel(start) {
+    const end = new Date(start);
+    end.setDate(end.getDate() + 6);
+    const fmt = (d) => d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    return fmt(start) + ' — ' + fmt(end) + ' ' + end.getFullYear();
+  }
+
+  // ----- DOM injection -----
+  function injectTabButton() {
+    const switcher = document.querySelector('.product-switcher');
+    if (!switcher || switcher.querySelector('[data-product="streams"]')) return;
+    const btn = document.createElement('button');
+    btn.className = 'product-tab';
+    btn.setAttribute('data-product', 'streams');
+    btn.innerHTML = '<span class="product-label">Streams</span>';
+    btn.addEventListener('click', () => switchToStreams());
+    switcher.appendChild(btn);
+
+    // Hook existing tab buttons so switching back hides the streams view.
+    switcher.querySelectorAll('[data-product="tauntlive"], [data-product="battleworld"]').forEach((tab) => {
+      tab.addEventListener('click', () => hideStreams());
+    });
+  }
+
+  function injectView() {
+    if (document.getElementById('streamsView')) return;
+    const container = document.querySelector('.container');
+    if (!container) return;
+    const view = document.createElement('div');
+    view.id = 'streamsView';
+    view.className = 'streams-view';
+    view.innerHTML = `
+      <div class="streams-header">
+        <div class="streams-title">Stream Schedule</div>
+        <div class="streams-nav">
+          <button id="streamsPrevWeek">◀ Prev week</button>
+          <button id="streamsToday">Today</button>
+          <button id="streamsNextWeek">Next week ▶</button>
+          <span class="streams-week-label" id="streamsWeekLabel">—</span>
+          <button id="streamsRefresh" title="Refetch from Taunt Live">↻ Refresh</button>
+        </div>
+      </div>
+      <div class="streams-host">
+        Source: <input id="streamsHost" type="text" />
+        <button id="streamsSaveHost">Save</button>
+        <span id="streamsStatus" class="streams-status">—</span>
+      </div>
+      <div class="streams-grid" id="streamsGrid"></div>
+    `;
+    container.appendChild(view);
+
+    document.getElementById('streamsPrevWeek').addEventListener('click', () => navWeek(-7));
+    document.getElementById('streamsNextWeek').addEventListener('click', () => navWeek(7));
+    document.getElementById('streamsToday').addEventListener('click', () => { weekAnchor = startOfWeek(new Date()); render(); });
+    document.getElementById('streamsRefresh').addEventListener('click', () => fetchAndRender(true));
+    document.getElementById('streamsSaveHost').addEventListener('click', () => {
+      const val = document.getElementById('streamsHost').value.trim();
+      if (val) {
+        try { localStorage.setItem(LS_HOST, val); } catch (_) {}
+        fetchAndRender(true);
+      }
+    });
+    document.getElementById('streamsHost').value = getApiBase();
+  }
+
+  function switchToStreams() {
+    // Mark streams tab active, deactivate others.
+    document.querySelectorAll('.product-tab').forEach((t) => t.classList.remove('active'));
+    const me = document.querySelector('.product-tab[data-product="streams"]');
+    if (me) me.classList.add('active');
+    // Hide existing calendar UI.
+    const cal = document.querySelector('.container');
+    if (cal) {
+      Array.from(cal.children).forEach((c) => {
+        if (c.id !== 'streamsView') c.style.display = 'none';
+      });
+    }
+    document.getElementById('streamsView').classList.add('active');
+    fetchAndRender(false);
+  }
+  function hideStreams() {
+    document.getElementById('streamsView')?.classList.remove('active');
+    const cal = document.querySelector('.container');
+    if (cal) {
+      Array.from(cal.children).forEach((c) => {
+        if (c.id !== 'streamsView') c.style.display = '';
+      });
+    }
+  }
+  function navWeek(deltaDays) {
+    const next = new Date(weekAnchor);
+    next.setDate(next.getDate() + deltaDays);
+    weekAnchor = startOfWeek(next);
+    render();
+  }
+
+  // ----- Fetch -----
+  async function fetchAndRender(force) {
+    const statusEl = document.getElementById('streamsStatus');
+    statusEl.classList.remove('err');
+    statusEl.textContent = 'Loading…';
+    try {
+      const base = getApiBase();
+      const resp = await fetch(base + '/api/streams/public', { cache: force ? 'reload' : 'default' });
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const j = await resp.json();
+      streamsCache = j.streams || [];
+      statusEl.textContent = streamsCache.length + ' streams in window';
+    } catch (e) {
+      statusEl.classList.add('err');
+      statusEl.textContent = 'Failed: ' + e.message;
+      streamsCache = [];
+    }
+    // Index calendar_items by date for overlay (uses existing contentCalendar global).
+    calendarItemsByDate = {};
+    try {
+      const items = (window.contentCalendar && window.contentCalendar.items) || [];
+      items.forEach((it) => {
+        if (it.channel === 'tournament') return; // skip — already represented by stream cards
+        (calendarItemsByDate[it.date] = calendarItemsByDate[it.date] || []).push(it);
+      });
+    } catch (_) {}
+    render();
+  }
+
+  // ----- Render -----
+  function render() {
+    document.getElementById('streamsWeekLabel').textContent = fmtWeekLabel(weekAnchor);
+    const grid = document.getElementById('streamsGrid');
+    grid.innerHTML = '';
+    const todayISO = fmtDateISO(new Date());
+    const DAY_NAMES = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
+    for (let i = 0; i < 7; i++) {
+      const dayDate = new Date(weekAnchor); dayDate.setDate(dayDate.getDate() + i);
+      const iso = fmtDateISO(dayDate);
+      const cell = document.createElement('div');
+      cell.className = 'streams-day' + (iso === todayISO ? ' today' : '');
+      const head = document.createElement('div');
+      head.className = 'streams-day-head';
+      head.innerHTML = `<span class="streams-day-name">${DAY_NAMES[i]}</span>
+                       <span class="streams-day-date">${dayDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>`;
+      cell.appendChild(head);
+
+      const streamsOnDay = streamsCache.filter((s) => fmtDateISO(new Date(s.scheduled_for)) === iso);
+      if (streamsOnDay.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'streams-day-empty';
+        empty.textContent = '— No streams —';
+        cell.appendChild(empty);
+      } else {
+        streamsOnDay.forEach((s) => cell.appendChild(renderStreamCard(s)));
+      }
+
+      const posts = calendarItemsByDate[iso] || [];
+      if (posts.length > 0) {
+        const wrap = document.createElement('div');
+        wrap.className = 'streams-day-posts';
+        const CH_LABEL = { telegram: 'TG', discord: 'DC', x: 'X' };
+        const CH_CLASS = { telegram: 'tg', discord: 'dc', x: 'x' };
+        posts.forEach((p) => {
+          const row = document.createElement('div');
+          row.className = 'streams-day-post';
+          const badge = `<span class="post-badge ${CH_CLASS[p.channel] || ''}">${CH_LABEL[p.channel] || (p.channel||'').slice(0,2).toUpperCase()}</span>`;
+          const text = (p.content || '').slice(0, 70) + ((p.content||'').length > 70 ? '…' : '');
+          row.innerHTML = badge + '<span>' + escapeHTML(text) + '</span>';
+          wrap.appendChild(row);
+        });
+        cell.appendChild(wrap);
+      }
+      grid.appendChild(cell);
+    }
+  }
+
+  function renderStreamCard(s) {
+    const start = new Date(s.scheduled_for);
+    const timeStr = start.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+    const card = document.createElement('div');
+    const statusClass = s.status === 'live' ? 'live' : (s.status === 'resolved' ? 'resolved' : '');
+    card.className = 'streams-card ' + statusClass;
+    const platformLabel = (s.primary_platform || '').toUpperCase();
+    const streamerLink = s.primary_url
+      ? `<a href="${escapeAttr(s.primary_url)}" target="_blank" rel="noopener">${escapeHTML(s.primary_streamer || 'streamer')} · ${escapeHTML(platformLabel)}</a>`
+      : `<span>${escapeHTML(s.primary_streamer || 'streamer')} · ${escapeHTML(platformLabel)}</span>`;
+    const mins = s.duration_min || 90;
+    const slots = s.slot_count || 0;
+    const prize = Number(s.prize_pool_skulls || 0).toLocaleString();
+    const mult = Number(s.payout_multiplier || 1);
+    card.innerHTML = `
+      <div class="streams-card-time">${timeStr} · ${escapeHTML(s.status.toUpperCase())} · ${mins}m</div>
+      <div class="streams-card-title">${escapeHTML(s.title || 'Untitled')}</div>
+      <div class="streams-card-meta">
+        <span class="pill">${escapeHTML(s.vertical || '—')}</span>
+        ${prize !== '0' ? `<span class="pill pill-prize">${prize} skulls</span>` : ''}
+        ${mult > 1 ? `<span class="pill pill-mult">${mult}× payout</span>` : ''}
+        ${s.pack_affiliation ? `<span class="pill pill-pack">Pack: ${escapeHTML(s.pack_affiliation)}</span>` : ''}
+        <span>${slots} ${slots === 1 ? 'slot' : 'slots'}</span>
+        ${s.expected_enrolled ? `<span>${s.expected_enrolled.toLocaleString()} expected</span>` : ''}
+        ${s.ai_enabled ? `<span>AI on</span>` : ''}
+      </div>
+      <div class="streams-card-streamer">${streamerLink}</div>
+    `;
+    return card;
+  }
+
+  function escapeHTML(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function escapeAttr(s) { return escapeHTML(s); }
+
+  // ----- Boot -----
+  function boot() {
+    injectTabButton();
+    injectView();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+
 </body>
 </html>
