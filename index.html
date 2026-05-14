@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$TNT Content Calendar - Taunt Live</title>
+    <title>Taunt Live — Every Moment</title>
     <script>
         // PASSWORD GATE — runs before anything else renders
         (function() {
@@ -1325,15 +1325,15 @@
             <div class="header-left">
                 <img class="logo" src="https://playtaunt.io/assets/4c719f34743030a443d95a9532d4ffa8f910b4d4-pDjlQtra.png" alt="TNT Logo">
                 <div class="header-text">
-                    <div class="header-title">$TNT</div>
-                    <div class="header-subtitle" id="headerSubtitle">Content Calendar</div>
+                    <div class="header-title">TAUNT LIVE</div>
+                    <div class="header-subtitle" id="headerSubtitle">EVERY MOMENT</div>
                 </div>
                 <div class="product-switcher">
                     <button class="product-tab active" data-product="tauntlive" onclick="switchProduct('tauntlive')">
                         <span class="product-label">@tauntcoin</span>
                     </button>
                     <button class="product-tab" data-product="battleworld" onclick="switchProduct('battleworld')">
-                        <span class="product-label">@battleworld</span>
+                        <span class="product-label">@playtaunt</span>
                     </button>
                 </div>
             </div>
@@ -2118,14 +2118,8 @@
                     dayEl.classList.add('selected');
                 }
 
-                // Check if TGE day
-                if (dateStr === '2026-05-05') {
-                    dayEl.classList.add('tge');
-                    const tgeBadge = document.createElement('div');
-                    tgeBadge.className = 'tge-badge';
-                    tgeBadge.textContent = 'TGE';
-                    dayEl.appendChild(tgeBadge);
-                }
+                // (TGE day badge removed 2026-05-14 — Jefe asked to drop the red box.
+                // CSS rules .calendar-day.tge / .tge-badge retained but no longer triggered.)
 
                 // Day number
                 const dayNum = document.createElement('div');
@@ -2957,13 +2951,13 @@
             });
             document.querySelector(`[data-product="${product}"]`).classList.add('active');
 
-            // Update header subtitle
-            const subtitle = product === 'tauntlive' ? 'Content Calendar' : 'BattleWorld Calendar';
-            document.getElementById('headerSubtitle').textContent = subtitle;
+            // Header subtitle is the brand tagline "EVERY MOMENT" — keep it
+            // constant regardless of tab so the lockup stays intact.
+            document.getElementById('headerSubtitle').textContent = 'EVERY MOMENT';
 
             // Update page title
-            const productName = product === 'tauntlive' ? 'TauntLive' : 'BattleWorld';
-            document.title = `$TNT Content Calendar - ${productName}`;
+            const productName = product === 'tauntlive' ? 'TauntLive' : 'PlayTaunt';
+            document.title = `Taunt Live — Every Moment · ${productName}`;
 
             // Load product data from Supabase
             const loaded = await loadFromSupabase();
@@ -3083,7 +3077,7 @@
     const btn = document.createElement('button');
     btn.className = 'product-tab';
     btn.setAttribute('data-product', 'streams');
-    btn.innerHTML = '<span class="product-label">Streams</span>';
+    btn.innerHTML = '<span class="product-label">Stream Royale Schedule</span>';
     btn.addEventListener('click', () => switchToStreams());
     switcher.appendChild(btn);
 
@@ -3102,7 +3096,7 @@
     view.className = 'streams-view';
     view.innerHTML = `
       <div class="streams-header">
-        <div class="streams-title">Stream Schedule</div>
+        <div class="streams-title">Stream Royale Schedule</div>
         <div class="streams-nav">
           <button id="streamsPrevWeek">◀ Prev week</button>
           <button id="streamsToday">Today</button>
