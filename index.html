@@ -1262,8 +1262,8 @@
             font-family: var(--display);
             font-size: 14px;
             font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-transform: none;
             color: var(--text);
         }
 
@@ -1324,18 +1324,15 @@
                 </div>
                 <div class="product-switcher">
                     <button class="product-tab active" data-product="tauntlive" onclick="switchProduct('tauntlive')">
-                        <img src="https://playtaunt.io/assets/taunt-live-logo-B89k00tZ.png" alt="Taunt Live">
+                        <span class="product-label">@tauntcoin</span>
                     </button>
                     <button class="product-tab" data-product="battleworld" onclick="switchProduct('battleworld')">
-                        <img src="https://playtaunt.io/assets/383fdcbe6e27fcff1898a08e146dee67e619fa1d-DXeOMbcZ.png" alt="BattleWorld">
-                        <span class="product-label">BattleWorld</span>
+                        <span class="product-label">@battleworld</span>
                     </button>
                 </div>
             </div>
             <div class="header-right">
                 <div class="countdown">
-                    <div class="countdown-label">TGE COUNTDOWN</div>
-                    <div class="countdown-value" id="countdown">T-29</div>
                     <div class="last-synced">Saved <span id="lastSavedTime">—</span></div>
                 </div>
                 <a class="btn" href="TauntLive_Event_Intake.xlsx" download title="Download the Event Intake spreadsheet">📥 Event Intake</a>
@@ -1650,9 +1647,10 @@
             }
         };
 
-        const TGE_DATE = new Date(2026, 4, 5); // May 5, 2026
-        let currentMonth = new Date(2026, 2); // March 2026
-        let selectedDate = null;
+        const TGE_DATE = new Date(2026, 4, 5); // May 5, 2026 (countdown UI hidden, constant retained)
+        const __today = new Date();
+        let currentMonth = new Date(__today.getFullYear(), __today.getMonth(), 1);
+        let selectedDate = `${__today.getFullYear()}-${String(__today.getMonth() + 1).padStart(2, '0')}-${String(__today.getDate()).padStart(2, '0')}`;
         let editingId = null;
         let activeProduct = 'tauntlive';
 
@@ -2106,10 +2104,12 @@
                 const dayEl = document.createElement('div');
                 dayEl.className = 'calendar-day';
 
-                // Check if outside target range (Mar 25 - Apr 30)
-                const isOutside = (month === 2 && day < 25) || month < 2 || month > 3;
-                if (isOutside) {
-                    dayEl.classList.add('outside');
+                // Campaign moved past Mar 25–Apr 30, so all days are now selectable.
+                const isOutside = false;
+
+                // Highlight the currently-selected date on render
+                if (dateStr === selectedDate) {
+                    dayEl.classList.add('selected');
                 }
 
                 // Check if TGE day
@@ -2560,10 +2560,7 @@
             document.getElementById('statX').textContent = filtered.filter(i => i.channel === 'x').length;
             document.getElementById('statTournament').textContent = filtered.filter(i => i.channel === 'tournament').length;
 
-            // Update countdown
-            const today = new Date();
-            const daysUntil = Math.ceil((TGE_DATE - today) / (1000 * 60 * 60 * 24));
-            document.getElementById('countdown').textContent = `T-${daysUntil}`;
+            // TGE countdown UI removed — leaving TGE_DATE constant in place for future re-enable.
         }
 
 
@@ -2976,8 +2973,9 @@
             // Reset filters and view
             contentCalendar.filters.channel = [];
             contentCalendar.filters.phase = [];
-            currentMonth = new Date(2026, 2); // March 2026
-            selectedDate = null;
+            const __now = new Date();
+            currentMonth = new Date(__now.getFullYear(), __now.getMonth(), 1);
+            selectedDate = `${__now.getFullYear()}-${String(__now.getMonth() + 1).padStart(2, '0')}-${String(__now.getDate()).padStart(2, '0')}`;
 
             // Update UI — deactivate all filter pills
             document.querySelectorAll('.filter-pill').forEach(pill => {
