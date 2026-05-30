@@ -1345,10 +1345,10 @@
                     <div class="header-subtitle" id="headerSubtitle" style="margin-left: 28px;">EVERY MOMENT</div>
                 </div>
                 <div class="product-switcher">
-                    <button class="product-tab active" data-product="tauntlive" onclick="switchProduct('tauntlive')">
+                    <button class="product-tab active" data-product="tauntcoin" onclick="switchProduct('tauntcoin')">
                         <span class="product-label">@tauntcoin</span>
                     </button>
-                    <button class="product-tab" data-product="battleworld" onclick="switchProduct('battleworld')">
+                    <button class="product-tab" data-product="playtaunt" onclick="switchProduct('playtaunt')">
                         <span class="product-label">@playtaunt</span>
                     </button>
                 </div>
@@ -1674,7 +1674,7 @@
         let currentMonth = new Date(__today.getFullYear(), __today.getMonth(), 1);
         let selectedDate = `${__today.getFullYear()}-${String(__today.getMonth() + 1).padStart(2, '0')}-${String(__today.getDate()).padStart(2, '0')}`;
         let editingId = null;
-        let activeProduct = 'tauntlive';
+        let activeProduct = 'tauntcoin';
 
         // INITIALIZE
         document.addEventListener('DOMContentLoaded', async () => {
@@ -1689,7 +1689,7 @@
 
             const loaded = await loadFromSupabase();
             if (!loaded) {
-                if (activeProduct === 'tauntlive') {
+                if (activeProduct === 'tauntcoin') {
                     initializeTauntLiveContent();
                 } else {
                     initializeBattleWorldContent();
@@ -2698,7 +2698,7 @@
             count.textContent = `${items.length} item${items.length !== 1 ? 's' : ''} ready to import${errMsg}`;
             count.style.color = errors.length > 0 ? 'var(--yellow)' : 'var(--green)';
 
-            const productLabel = activeProduct === 'tauntlive' ? 'TAUNT LIVE' : 'BATTLEWORLD';
+            const productLabel = activeProduct === 'tauntcoin' ? '@TAUNTCOIN' : '@PLAYTAUNT';
             confirmBtn.disabled = items.length === 0;
             confirmBtn.textContent = `Import ${items.length} Item${items.length !== 1 ? 's' : ''} → ${productLabel}`;
         }
@@ -2854,7 +2854,7 @@
             document.getElementById('bulkConfirmBtn').textContent = 'Import 0 Items';
             parsedBulkItems = [];
             // Show which product is active so users know where content will go
-            const productLabel = activeProduct === 'tauntlive' ? 'TAUNT LIVE' : 'BATTLEWORLD';
+            const productLabel = activeProduct === 'tauntcoin' ? '@TAUNTCOIN' : '@PLAYTAUNT';
             document.querySelector('#bulkModal .modal-title').textContent = `Bulk Import → ${productLabel}`;
             document.getElementById('bulkModal').classList.add('active');
         }
@@ -2972,13 +2972,13 @@
             document.getElementById('headerSubtitle').textContent = 'EVERY MOMENT';
 
             // Update page title
-            const productName = product === 'tauntlive' ? 'TauntLive' : 'PlayTaunt';
+            const productName = product === 'tauntcoin' ? 'TauntCoin' : 'PlayTaunt';
             document.title = `Taunt Live — Every Moment · ${productName}`;
 
             // Load product data from Supabase
             const loaded = await loadFromSupabase();
             if (!loaded) {
-                if (product === 'tauntlive') {
+                if (product === 'tauntcoin') {
                     initializeTauntLiveContent();
                 } else {
                     initializeBattleWorldContent();
@@ -3098,7 +3098,7 @@
     switcher.appendChild(btn);
 
     // Hook existing tab buttons so switching back hides the streams view.
-    switcher.querySelectorAll('[data-product="tauntlive"], [data-product="battleworld"]').forEach((tab) => {
+    switcher.querySelectorAll('[data-product="tauntcoin"], [data-product="playtaunt"]').forEach((tab) => {
       tab.addEventListener('click', () => hideStreams());
     });
   }
@@ -3298,3 +3298,4 @@
 
 </body>
 </html>
+        
