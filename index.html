@@ -2925,13 +2925,25 @@
 
         async function loadFromSupabase() {
             try {
-                const { data, error } = await sb
-                    .from('calendar_items')
-                    .select('*')
-                    .eq('product', activeProduct)
-                    .order('date', { ascending: true });
-
-                if (error) throw error;
+                // Supabase/PostgREST caps each response at 1000 rows. Page through
+                // with .range() so products with >1000 items load completely.
+                const PAGE = 1000;
+                let from = 0;
+                let data = [];
+                while (true) {
+                    const { data: chunk, error } = await sb
+                        .from('calendar_items')
+                        .select('*')
+                        .eq('product', activeProduct)
+                        .order('date', { ascending: true })
+                        .order('id', { ascending: true })
+                        .range(from, from + PAGE - 1);
+                    if (error) throw error;
+                    if (!chunk || chunk.length === 0) break;
+                    data = data.concat(chunk);
+                    if (chunk.length < PAGE) break;
+                    from += PAGE;
+                }
 
                 if (data && data.length > 0) {
                     contentCalendar.items = data.map(row => ({
@@ -3298,4 +3310,3 @@
 
 </body>
 </html>
-        
