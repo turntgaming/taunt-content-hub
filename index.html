@@ -1689,13 +1689,11 @@
 
             const loaded = await loadFromSupabase();
             if (!loaded) {
-                if (activeProduct === 'tauntcoin') {
-                    initializeTauntLiveContent();
-                } else {
-                    initializeBattleWorldContent();
-                }
-                // Push default content to Supabase for first-time setup
-                syncToSupabase();
+                // Hardening (2026-06-02): NEVER auto-seed default content into the
+                // DB on an empty/failed load — that path used to overwrite real
+                // data with stale March defaults. Just render an empty calendar;
+                // a transient load error then self-heals on the next 30s poll.
+                contentCalendar.items = [];
             }
 
             document.getElementById('supabaseLoader').remove();
@@ -2967,8 +2965,11 @@
         }
 
         async function switchProduct(product) {
-            // Save current product data before switching
-            syncToSupabase();
+            // Hardening (2026-06-02): do NOT syncToSupabase() on tab switch.
+            // Mutations already persist immediately via saveToLocalStorage(), so
+            // there is nothing unsaved to flush here — and a blind sync deletes +
+            // re-inserts the product from this tab's in-memory copy, which WIPES a
+            // product if that copy was stale or empty. Navigation must be read-only.
 
             // Switch product
             activeProduct = product;
@@ -2987,15 +2988,13 @@
             const productName = product === 'tauntcoin' ? 'TauntCoin' : 'PlayTaunt';
             document.title = `Taunt Live — Every Moment · ${productName}`;
 
-            // Load product data from Supabase
+            // Load product data from Supabase. If it returns nothing (empty
+            // product OR a transient error), render an EMPTY calendar — never
+            // auto-seed default content and never write to the DB here. The old
+            // seed-on-empty path could overwrite a real product with stale defaults.
             const loaded = await loadFromSupabase();
             if (!loaded) {
-                if (product === 'tauntcoin') {
-                    initializeTauntLiveContent();
-                } else {
-                    initializeBattleWorldContent();
-                }
-                syncToSupabase();
+                contentCalendar.items = [];
             }
 
             // Reset filters and view
