@@ -2148,9 +2148,14 @@
                 const dayItems = contentCalendar.items.filter(item => item.date === dateStr);
                 dayItems.forEach(item => {
                     if (shouldShowItem(item)) {
-                        // Mark the day cell border for event type (no tag inside cell)
-                        if (item.eventType && !dayEl.classList.contains(item.eventType)) {
-                            dayEl.classList.add(item.eventType);
+                        // Mark the day cell border for event type (no tag inside cell).
+                        // Sanitize: classList.add() THROWS on any token with a space
+                        // (e.g. a free-text event_type like "How to Play"), which would
+                        // crash the ENTIRE render and blank the calendar. Slugify to a
+                        // safe CSS token before adding. (2026-06-02 fix)
+                        const evtClass = item.eventType ? String(item.eventType).trim().replace(/\s+/g, '-') : '';
+                        if (evtClass && !dayEl.classList.contains(evtClass)) {
+                            dayEl.classList.add(evtClass);
                         }
                         const pill = document.createElement('div');
                         pill.className = 'content-pill ' + (CHANNEL_CSS[item.channel] || item.channel);
