@@ -3090,6 +3090,11 @@
   .sr-tier b { color: var(--yellow); font-weight: 600; }
   .sr-tier-extra { color: var(--text-dim); }
   .sr-empty { padding: 16px 20px 20px; font-family: var(--mono); font-size: 11px; color: var(--text-dim); line-height: 1.5; }
+  /* Theme legend on the Stream Royale page */
+  .streams-legend { display: flex; flex-wrap: wrap; gap: 7px 16px; padding: 4px 2px 16px; }
+  .streams-legend-item { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.9px; text-transform: uppercase; color: var(--text-mid); }
+  .streams-legend-item i { width: 11px; height: 11px; border-radius: 2px; display: inline-block; flex: none; }
+  .streams-card-meta .streams-vert { color: var(--text-dim); }
 </style>
 
 <script>
@@ -3108,6 +3113,34 @@
   let weekAnchor = startOfWeek(new Date());
   let streamsCache = [];
   let calendarItemsByDate = {};
+
+  // ----- Programming theme blocks (daypart colors + tournament / special) -----
+  const THEME_BLOCKS = {
+    'WC 2026':       '#4572FF',
+    'THE OPEN':      '#F5A623',
+    'THE SLATE':     '#22C55E',
+    'PLAYER TWO':    '#A855F7',
+    'AFTER DARK':    '#6366F1',
+    'THE MATINÉE':   '#EC4899',
+    'OFF THE GRID':  '#7B8598',
+    'SPECIAL EVENT': '#FFD24A',
+  };
+  const VERTICAL_BLOCK = {
+    Crypto: 'THE OPEN', Tech: 'THE OPEN',
+    Soccer: 'THE SLATE', NBA: 'THE SLATE', NFL: 'THE SLATE', MLB: 'THE SLATE',
+    Boxing: 'THE SLATE', MMA: 'THE SLATE', Golf: 'THE SLATE', Tennis: 'THE SLATE',
+    Esports: 'PLAYER TWO', Poker: 'AFTER DARK',
+    TV: 'THE MATINÉE', Movies: 'THE MATINÉE',
+  };
+  const LEGEND_ORDER = ['WC 2026', 'THE OPEN', 'THE SLATE', 'PLAYER TWO', 'AFTER DARK', 'THE MATINÉE', 'OFF THE GRID', 'SPECIAL EVENT'];
+  function themeForStream(s) {
+    // Prefer the block declared in the title prefix ("BLOCK · name"); else map
+    // the vertical; else the OFF THE GRID catch-all.
+    const prefix = String(s.title || '').split('·')[0].trim().toUpperCase();
+    let block = Object.keys(THEME_BLOCKS).find((b) => b.toUpperCase() === prefix);
+    if (!block) block = VERTICAL_BLOCK[s.vertical] || 'OFF THE GRID';
+    return { block, color: THEME_BLOCKS[block] || '#7B8598' };
+  }
 
   function startOfWeek(d) {
     const dt = new Date(d);
@@ -3167,9 +3200,17 @@
         <button id="streamsSaveHost">Save</button>
         <span id="streamsStatus" class="streams-status">—</span>
       </div>
+      <div class="streams-legend" id="streamsLegend"></div>
       <div class="streams-grid" id="streamsGrid"></div>
     `;
     container.appendChild(view);
+
+    const legend = document.getElementById('streamsLegend');
+    if (legend) {
+      legend.innerHTML = LEGEND_ORDER.map((b) =>
+        '<span class="streams-legend-item"><i style="background:' + THEME_BLOCKS[b] + '"></i>' + b + '</span>'
+      ).join('');
+    }
 
     document.getElementById('streamsPrevWeek').addEventListener('click', () => navWeek(-7));
     document.getElementById('streamsNextWeek').addEventListener('click', () => navWeek(7));
@@ -3299,6 +3340,8 @@
     const card = document.createElement('div');
     const statusClass = s.status === 'live' ? 'live' : (s.status === 'resolved' ? 'resolved' : '');
     card.className = 'streams-card ' + statusClass;
+    const theme = themeForStream(s);
+    if (s.status !== 'live') card.style.borderLeftColor = theme.color;
     const platformLabel = (s.primary_platform || '').toUpperCase();
     const streamerLink = s.primary_url
       ? `<a href="${escapeAttr(s.primary_url)}" target="_blank" rel="noopener">${escapeHTML(s.primary_streamer || 'streamer')} · ${escapeHTML(platformLabel)}</a>`
@@ -3311,7 +3354,8 @@
       <div class="streams-card-time">${timeStr} · ${escapeHTML(s.status.toUpperCase())} · ${mins}m</div>
       <div class="streams-card-title">${escapeHTML(s.title || 'Untitled')}</div>
       <div class="streams-card-meta">
-        <span class="pill">${escapeHTML(s.vertical || '—')}</span>
+        <span class="pill" style="background:${theme.color}1f;border-color:${theme.color}66;color:${theme.color}">${escapeHTML(theme.block)}</span>
+        <span class="streams-vert">${escapeHTML(s.vertical || '—')}</span>
         ${prize !== '0' ? `<span class="pill pill-prize">${prize} skulls</span>` : ''}
         ${mult > 1 ? `<span class="pill pill-mult">${mult}× payout</span>` : ''}
         ${s.pack_affiliation ? `<span class="pill pill-pack">Pack: ${escapeHTML(s.pack_affiliation)}</span>` : ''}
