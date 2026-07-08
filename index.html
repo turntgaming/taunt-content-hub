@@ -3065,6 +3065,31 @@
   .streams-status.err { color: var(--red); }
   .streams-host { font-family: var(--mono); font-size: 10px; color: var(--text-dim); }
   .streams-host input { background: var(--bg3); border: 1px solid var(--border); color: var(--text); font-family: var(--mono); font-size: 11px; padding: 4px 8px; border-radius: 3px; width: 280px; }
+  /* Clickable cards + Stream Royale rules modal */
+  .streams-card { cursor: pointer; transition: border-color .12s ease; }
+  .streams-card:hover { border-color: var(--cyan); }
+  .sr-modal-overlay { position: fixed; inset: 0; background: rgba(6,8,16,0.72); backdrop-filter: blur(3px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 24px; }
+  .sr-modal-overlay.open { display: flex; }
+  .sr-modal { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; width: 100%; max-width: 460px; max-height: 88vh; overflow-y: auto; box-shadow: 0 24px 60px rgba(0,0,0,0.55); position: relative; }
+  .sr-modal-close { position: absolute; top: 10px; right: 12px; background: transparent; border: none; color: var(--text-dim); font-size: 22px; line-height: 1; cursor: pointer; padding: 4px; }
+  .sr-modal-close:hover { color: var(--text); }
+  .sr-modal-head { padding: 18px 20px 14px; border-bottom: 1px solid var(--border); }
+  .sr-modal-block { font-family: var(--mono); font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--cyan); font-weight: 700; }
+  .sr-modal-title { font-family: var(--display); font-size: 18px; font-weight: 800; color: var(--text); margin-top: 3px; line-height: 1.2; }
+  .sr-modal-sub { font-family: var(--mono); font-size: 11px; color: var(--text-mid); margin-top: 5px; }
+  .sr-modal-label { font-family: var(--mono); font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--text-dim); padding: 14px 20px 6px; }
+  .sr-rules { padding: 0 20px 6px; display: flex; flex-direction: column; }
+  .sr-rule { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 12px; }
+  .sr-rule:last-child { border-bottom: none; }
+  .sr-rule-k { color: var(--text-mid); }
+  .sr-rule-v { color: var(--text); font-weight: 600; text-align: right; }
+  .sr-rule-v.contest { color: var(--yellow); }
+  .sr-rule-v.casual { color: var(--text-dim); }
+  .sr-tiers { padding: 4px 20px 18px; }
+  .sr-tier { display: flex; justify-content: space-between; gap: 12px; font-family: var(--mono); font-size: 11px; padding: 4px 0; color: var(--text-mid); }
+  .sr-tier b { color: var(--yellow); font-weight: 600; }
+  .sr-tier-extra { color: var(--text-dim); }
+  .sr-empty { padding: 16px 20px 20px; font-family: var(--mono); font-size: 11px; color: var(--text-dim); line-height: 1.5; }
 </style>
 
 <script>
@@ -3296,7 +3321,83 @@
       </div>
       <div class="streams-card-streamer">${streamerLink}</div>
     `;
+    card.addEventListener('click', (e) => { if (e.target.closest('a')) return; openStreamModal(s); });
     return card;
+  }
+
+  // ----- Stream Royale rules modal (read-only mirror of admin config) -----
+  function ensureStreamModal() {
+    let ov = document.getElementById('srModalOverlay');
+    if (ov) return ov;
+    ov = document.createElement('div');
+    ov.id = 'srModalOverlay';
+    ov.className = 'sr-modal-overlay';
+    ov.innerHTML = '<div class="sr-modal" role="dialog" aria-modal="true"><button class="sr-modal-close" aria-label="Close">×</button><div id="srModalBody"></div></div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click', (e) => { if (e.target === ov) closeStreamModal(); });
+    ov.querySelector('.sr-modal-close').addEventListener('click', closeStreamModal);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeStreamModal(); });
+    return ov;
+  }
+  function closeStreamModal() {
+    const ov = document.getElementById('srModalOverlay');
+    if (ov) ov.classList.remove('open');
+  }
+  function blockFromTitle(t) {
+    const parts = String(t || '').split('·');
+    return parts.length > 1 ? parts[0].trim() : '';
+  }
+  function ruleRow(k, v, cls) {
+    return '<div class="sr-rule"><span class="sr-rule-k">' + k + '</span><span class="sr-rule-v ' + (cls || '') + '">' + v + '</span></div>';
+  }
+  function openStreamModal(s) {
+    const ov = ensureStreamModal();
+    const body = ov.querySelector('#srModalBody');
+    const block = blockFromTitle(s.title);
+    const start = new Date(s.scheduled_for);
+    const when = start.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }) + ' · ' +
+                 start.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+    const platform = (s.primary_platform || '').toUpperCase();
+    const hasRules = s.stream_kind != null || s.payout_multiplier != null || s.prize_pool_skulls != null;
+    const kind = s.stream_kind || null;
+    const isContest = kind && kind !== 'casual';
+    const mult = s.payout_multiplier != null ? (Number(s.payout_multiplier) + '×') : '—';
+    const pool = s.prize_pool_skulls ? Number(s.prize_pool_skulls).toLocaleString() + ' skulls' : '—';
+    const slots = (s.slot_count != null) ? (s.slot_count + ' ' + (s.slot_count === 1 ? 'question' : 'questions')) : '—';
+    const enrolled = s.expected_enrolled ? Number(s.expected_enrolled).toLocaleString() : '—';
+    const market = s.sport_fixture_id ? 'Linked fixture' : 'Auto / unlinked';
+
+    let rules = '';
+    if (hasRules) {
+      rules += '<div class="sr-modal-label">Stream Royale Rules</div><div class="sr-rules">';
+      rules += ruleRow('Type', isContest ? kind.toUpperCase() : 'CASUAL', isContest ? 'contest' : 'casual');
+      rules += ruleRow('Payout multiplier', mult);
+      rules += ruleRow('Prize pool', pool);
+      rules += ruleRow('Questions', slots);
+      rules += ruleRow('Expected players', enrolled);
+      rules += ruleRow('Market', market);
+      rules += ruleRow('Duration', (s.duration_min || 90) + ' min');
+      rules += '</div>';
+      const tiers = Array.isArray(s.prize_tiers) ? s.prize_tiers : [];
+      if (tiers.length) {
+        rules += '<div class="sr-modal-label">Prize Tiers</div><div class="sr-tiers">';
+        tiers.forEach((t) => {
+          const extra = t.extras && t.extras !== '—' ? ' <span class="sr-tier-extra">· ' + escapeHTML(t.extras) + '</span>' : '';
+          rules += '<div class="sr-tier"><span>' + escapeHTML(t.rank || '') + '</span><span><b>' + Number(t.skulls || 0).toLocaleString() + '</b> skulls' + extra + '</span></div>';
+        });
+        rules += '</div>';
+      }
+    } else {
+      rules = '<div class="sr-empty">Stream Royale rules will appear here once the streams feed includes them. They mirror whatever the admin has configured for this stream.</div>';
+    }
+
+    body.innerHTML =
+      '<div class="sr-modal-head">' +
+        (block ? '<div class="sr-modal-block">' + escapeHTML(block) + '</div>' : '') +
+        '<div class="sr-modal-title">' + escapeHTML(s.title || 'Untitled') + '</div>' +
+        '<div class="sr-modal-sub">' + escapeHTML(when) + ' · ' + escapeHTML(s.primary_streamer || 'streamer') + ' · ' + escapeHTML(platform) + '</div>' +
+      '</div>' + rules;
+    ov.classList.add('open');
   }
 
   function escapeHTML(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
