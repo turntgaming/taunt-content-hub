@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Season 1 — Content Calendar</title>
+<script>
+(function() {
+  const PASS = 'TauntLive2026!';
+  const SESSION_KEY = 'tnt_auth';
+  if (sessionStorage.getItem(SESSION_KEY) === '1') return;
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('passwordGate').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+  });
+  window.__checkPassword = function() {
+    const val = document.getElementById('gateInput').value;
+    if (val === PASS) {
+      sessionStorage.setItem(SESSION_KEY, '1');
+      document.getElementById('passwordGate').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+    } else {
+      document.getElementById('gateError').style.display = 'block';
+      document.getElementById('gateInput').value = '';
+    }
+  };
+})();
+</script>
+<style>
+  body { background:#0b1220; color:#dbe3f0; font-family: Inter, system-ui, sans-serif; margin:0; }
+  #app { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
+  h1 { font-size: 26px; color:#fff; }
+  h2 { font-size: 21px; color:#7ea6ff; border-bottom:1px solid #23304a; padding-bottom:6px; margin-top:40px; }
+  h3 { font-size: 17px; color:#ffd166; margin-top:28px; }
+  h4 { font-size: 14px; color:#9fb3d1; text-transform: uppercase; letter-spacing:.05em; }
+  blockquote { background:#121c30; border-left:3px solid #4572FF; margin:10px 0; padding:10px 14px; border-radius:6px; position:relative; }
+  blockquote:hover { background:#16223a; cursor:pointer; }
+  table { border-collapse: collapse; width:100%; font-size:13px; }
+  th { background:#1F3864; color:#fff; padding:6px 8px; text-align:left; }
+  td { border:1px solid #2a3a5c; padding:6px 8px; vertical-align:top; }
+  strong { color:#fff; }
+  a { color:#7ea6ff; }
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#4572FF; color:#fff; padding:8px 18px; border-radius:20px; display:none; }
+  #passwordGate { position:fixed; inset:0; background:#0b1220; display:none; align-items:center; justify-content:center; flex-direction:column; gap:12px; z-index:99; }
+  #passwordGate input { padding:10px 14px; border-radius:8px; border:1px solid #2a3a5c; background:#121c30; color:#fff; }
+  #passwordGate button { padding:10px 18px; border-radius:8px; border:0; background:#4572FF; color:#fff; cursor:pointer; }
+  .backlink { display:inline-block; margin-bottom:16px; }
+</style>
+</head>
+<body>
+<div id="passwordGate"><div style="font-weight:700;color:#fff">Taunt Live — team access</div><input id="gateInput" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')__checkPassword()"><button onclick="__checkPassword()">Enter</button><div id="gateError" style="display:none;color:#ff6b6b">Wrong password</div></div>
+<div id="app">
+<a class="backlink" href="index.html">← Back to the Hub</a>
+<h1>Season 1 — Content Calendar (draft copy, Saba edits before send)</h1>
+<p style="color:#9fb3d1">Click any quoted post to copy it. Placeholders like [PLACEHOLDER: …] get filled with live data at send time. Source of truth: <code>tauntAI/content-calendar/Season1_Social_Content_2026-07-29.md</code>.</p>
+<h1 id="taunt-live-season-1-first-howl-social-content-drafts">Taunt Live Season 1 (“First Howl”) — Social Content Drafts</h1>
+<p><strong>Range:</strong> Wed 7/29/26 → Sun 8/30/26 • <strong>Primary channel:</strong> X (<span class="citation" data-cites="playtaunt">@playtaunt</span>) • <strong>Owner:</strong> Saba (edit/approve/schedule) • Source: Season1_Content_Guide_2026-07-29.md</p>
+<p><strong>How to use this doc:</strong> Every post below is a draft, ready to edit and schedule. Anything tied to live data is marked <code>[PLACEHOLDER: ...]</code> — never fill these from memory, pull real numbers/links at send time. Season name “First Howl” is pending final ✅ from Jefe — find/replace if it changes.</p>
+<p><strong>Compliance checklist (apply to every post before it goes out):</strong> - “prediction” only — never bet / wager / odds / gamble / casino - Skulls = earned only, never “buy Skulls” / never for sale - Gold Coins = purchased, the only purchasable item - No token / airdrop / TGE / crypto-coin talk - Never promise anyone will win or earn - Results posts = real numbers only, never invented - The Pack = the rewards hub; its two products are <strong>Community Syndicates</strong> and <strong>Rips</strong> - Never mention: Buy Taunts, tiers (Ape/Degen/Alpha), The Hunt, Money Mansion, Lane 3, KGeN, or any internal tooling</p>
+<hr />
+<h1 id="week-0-reset-week-fresh-start-wed-729-sun-82">WEEK 0 — RESET WEEK: FRESH START (Wed 7/29 → Sun 8/2)</h1>
+<p><strong>Note: streams are in internal test mode until Mon 8/3 — no stream promotion this week. All posts point at the board and quests.</strong></p>
+<h2 id="wed-729-announcement-day">Wed 7/29 — Announcement Day</h2>
+<p><strong>Reset Announcement Thread (X, morning anchor post):</strong></p>
+<p>1/ Season 1 starts Monday. Before we run, we reset — one time, right now.</p>
+<p>2/ Friday 7/31: every Skull balance goes back to zero. Same starting line, for everyone. No exceptions, no head starts bought — just a clean board. This is a ONE-TIME reset to launch Season 1. It won’t happen again — not at the end of this season, not in any season after it. Your balance carries forward from here on.</p>
+<p>3/ Here’s what does NOT reset: your trophies, your badges, your status. Everything you’ve earned becomes a permanent Legacy badge on your profile. What you built stays built.</p>
+<p>4/ So what makes a “season,” then? Special rewards and trophies you can only earn while it’s live — this season’s badges, prizes, and the Championship. That’s what’s limited. Your Skulls never are.</p>
+<p>5/ Every referral you’ve ever made gets re-credited at launch — plus a bonus. This week is the best week to bring your crew in before the season opens.</p>
+<p>6/ Sat 8/1: Head Start opens. Earning goes live 2 days before Season 1 officially starts — first ones in get the jump.</p>
+<p>7/ Mon 8/3: Season 1 — First Howl — is live. Play now for the exclusive trophies and prizes only this season pays out. Questions? Drop them below, we’re answering all week. 🐺</p>
+<p><strong>Midday — open question:</strong> &gt; Season 1 starts Monday. What’s your first call going to be — sports, crypto, or culture? Tell us below.</p>
+<p><strong>Afternoon — featured board call:</strong> &gt; Today’s featured call on the board: [PLACEHOLDER: market]. Get your read in before Friday’s reset — Skulls zero out, but the call still counts toward your Legacy badge history. 🐺</p>
+<p><strong>Evening — countdown post:</strong> &gt; 2 days to the reset. 5 days to Season 1. The board goes back to zero, the hunt starts together. See you Friday. 🐺</p>
+<p><strong>Discord/TG — Announcement (major moment, cross-post):</strong> &gt; <strong>📢 SEASON 1 IS COMING — READ THIS</strong> &gt; Fri 7/31: Skull reset. Everyone back to zero, together. <strong>This is a one-time reset to launch Season 1 — it doesn’t happen again, not at season end, not in future seasons. Balances carry forward from here.</strong> &gt; What stays: trophies, badges, status — permanent Legacy badge on your profile. &gt; What a “season” actually is: a limited-time run with its own exclusive trophies and rewards — that’s what’s limited, not your Skulls. &gt; Referrals: every one you’ve ever made gets re-credited at launch, plus a bonus. &gt; Sat 8/1: Head Start opens — earning starts early. &gt; Mon 8/3: Season 1 — First Howl — officially opens. &gt; <strong>Pinned FAQ + Q&amp;A thread below. Ask us anything.</strong></p>
+<hr />
+<h2 id="thu-730-qa-day">Thu 7/30 — Q&amp;A Day</h2>
+<p><strong>Early (5:00a) — board check-in:</strong> &gt; Board’s open early. Today’s featured call: [PLACEHOLDER: market]. Last full day before the reset — get your read in.</p>
+<p><strong>Morning (8:15a) — quest + featured market:</strong> &gt; Today’s featured call: [PLACEHOLDER: market]. Quest board’s still live too — one more day to bank progress before the reset. Lock is [PLACEHOLDER: time].</p>
+<p><strong>Midday — poll:</strong> &gt; Season 1 opens Monday. What are you grinding first? &gt; 🎯 Quests &gt; 🏆 Tournaments &gt; 🐺 Syndicates &gt; Vote below — we’re building the week around what you pick.</p>
+<p><strong>Afternoon (2:45p) — Legacy badge reminder:</strong> &gt; FAQ’s live all day — ask us anything about the reset. Reminder: your Legacy badge locks in everything you’ve earned, permanently, before Friday’s zero-out.</p>
+<p><strong>FAQ Corner (Education beat — “what’s a season, is this a new game?”):</strong> &gt; FAQ corner: “Is Season 1 a whole new game?” No — same game, same account. A season’s just a timed window (4 weeks) with its own exclusive trophies and rewards, ending in a Championship. That’s what’s limited about a season — not your Skulls. Friday’s reset was a one-time event to launch Season 1; it doesn’t happen again. Your Legacy badge, and your balance going forward, are both permanent.</p>
+<p><strong>Evening — FAQ-highlights + Legacy badge explainer:</strong> &gt; Today’s most-asked question: “does my trophy count reset?” No. Never. Trophies, badges, status — all permanent. Your Legacy badge locks in everything you built before Friday. Full FAQ pinned below. 🐺</p>
+<p><strong>Discord/TG:</strong> &gt; Team Q&amp;A running all day — team + Jefe answering everything about the reset, Legacy badges, and what Season 1 looks like. Drop questions in the thread.</p>
+<hr />
+<h2 id="fri-731-reset-day">Fri 7/31 — RESET DAY</h2>
+<p><strong>Early (5:00a) — board check-in:</strong> &gt; Last morning on the old board. Today’s featured call: [PLACEHOLDER: market]. Reset lands later today.</p>
+<p><strong>Morning (8:15a) — “today’s the day”:</strong> &gt; Today’s the day. Skulls go to zero, Legacy badges go live, Season 1 opens Monday. Last call on the old board: [PLACEHOLDER: featured market].</p>
+<p><strong>Midday — open question:</strong> &gt; Last call before the reset: what’s the one thing you want carried into Season 1? (Spoiler: your trophies already are.)</p>
+<p><strong>Afternoon (2:45p) — referral last-call:</strong> &gt; Last hours before the reset. Referrals re-credit at launch, plus a bonus — get your crew’s invites in now, before the board goes to zero tonight.</p>
+<p><strong>Evening — RESET-COMPLETE post:</strong> &gt; 🐺 <strong>THE RESET IS DONE.</strong> &gt; Every Skull balance: zero. Same line, for everyone. &gt; Every trophy, every badge, every bit of status: untouched. Check your profile — your Legacy badge is live. &gt; Head Start opens tomorrow. Season 1 opens Monday. Let’s hunt. 🐺</p>
+<p><strong>Discord/TG — RESET-COMPLETE (major moment):</strong> &gt; <strong>🐺 RESET COMPLETE</strong> &gt; Balances: zero, for everyone. &gt; Trophies + badges + status: fully intact — your <strong>Legacy badge</strong> is live on your profile right now. &gt; Post a screenshot of your Legacy badge below 👇 — let’s see what Season 0 built. &gt; Head Start opens tomorrow 8am. Season 1 opens Monday.</p>
+<hr />
+<h2 id="sat-81-head-start-day-1">Sat 8/1 — Head Start Day 1</h2>
+<p><strong>Early (5:00a) — board check-in:</strong> &gt; Head Start is open. Today’s featured call: [PLACEHOLDER: market]. Earning’s live — get on the board early.</p>
+<p><strong>Morning (8:15a) — quest highlight:</strong> &gt; Doors are open EARLY. Season 1 doesn’t start till Monday — but earning starts NOW. Today’s featured call: [PLACEHOLDER: market]. Quest board’s live too.</p>
+<p><strong>Midday — poll:</strong> &gt; Head Start weekend — what are you doing with the early window? &gt; ⚡ Stacking quests &gt; 🎯 Getting reps on the market clock &gt; 👀 Just watching the board &gt; Vote below.</p>
+<p><strong>Afternoon (2:45p) — Head Start leaderboard tease:</strong> &gt; Head Start day 1 leaderboard is filling in fast. [PLACEHOLDER: early standout name/count]. Quests and the board are both open — go add to it.</p>
+<p><strong>Evening — first head-start leaderboard + referral last-call:</strong> &gt; First Head Start leaderboard is up: [PLACEHOLDER: top names/Skull counts]. Referrals re-credit at launch Monday, plus a bonus — last call to get your crew in before Season 1 opens. 🐺</p>
+<p><strong>Discord/TG:</strong> &gt; Taunt 101 Episode 1 just dropped in #taunt-101 — 3 minutes, teaches you the whole board. New here? Start there.</p>
+<p><strong>Medium (long-form, Sat cadence):</strong> &gt; Article 1 — “Season 1: Why We Reset Everything” is live. [PLACEHOLDER: link]</p>
+<p><strong>X — Medium thread summary:</strong></p>
+<p>1/ New on Medium: “Season 1: Why We Reset Everything.” Why we zero the board, why it’s fair, and what actually carries over.</p>
+<p>2/ Short version: trophies and status are earned forever. Skulls are earned this season. The reset makes week 1 the same race for every single player.</p>
+<p>3/ Full piece here: [PLACEHOLDER: Medium link]. Head Start is open right now — go make your first move.</p>
+<hr />
+<h2 id="sun-82-head-start-day-2">Sun 8/2 — Head Start Day 2</h2>
+<p><strong>Early (5:00a) — board check-in:</strong> &gt; Head Start day 2. One more sleep till Season 1. Today’s featured call: [PLACEHOLDER: market] — get your last early moves in.</p>
+<p><strong>Morning (8:15a) — quest highlight:</strong> &gt; Last full day of Head Start. Today’s featured call: [PLACEHOLDER: market]. Tomorrow this counts toward Season 1 — today it’s just free reps on the board and quests.</p>
+<p><strong>Midday — hot take:</strong> &gt; Hot take: the players grinding Head Start quietly this weekend are the ones topping week 1’s board. Screenshots don’t lie — check who’s already climbing. [PLACEHOLDER: leaderboard name/count]</p>
+<p><strong>Afternoon (2:45p) — countdown + referral last call:</strong> &gt; Last hours of Head Start. Referrals re-credit at launch tomorrow, plus a bonus — final call to bring your crew in before Season 1 opens. [PLACEHOLDER: current leaderboard leader]</p>
+<p><strong>FAQ Corner (Education beat — “do I lose Season 1 progress when it ends?”):</strong> &gt; FAQ corner: “Do I lose my progress when Season 1 ends?” No. Your Skulls and progress carry into what’s next. The one-time reset was to launch Season 1 with everyone on the same starting line — balances don’t reset again. What ends with the season: the chance to earn its exclusive trophies and season prizes.</p>
+<p><strong>Evening — “one more sleep” + Monday preview:</strong> &gt; One more sleep. 🐺 Season 1 — First Howl — opens tomorrow 8am. Head Start Skulls count. Monday’s featured call: [PLACEHOLDER: market]. See you at the start line.</p>
+<p><strong>Discord/TG:</strong> &gt; Taunt 101 Episode 2 is up. Weekend leaderboard pinned above — go find your name (or go make one).</p>
+<hr />
+<h1 id="week-1-welcome-learn-the-game-mon-83-sun-89">WEEK 1 — WELCOME: LEARN THE GAME (Mon 8/3 → Sun 8/9)</h1>
+<h2 id="mon-83-season-opens">Mon 8/3 — SEASON OPENS</h2>
+<p><strong>Week-Open Thread (X):</strong></p>
+<p>1/ 🐺 <strong>SEASON 1 — FIRST HOWL — IS LIVE.</strong></p>
+<p>2/ Head Start Skulls are counted. The board is real now. Same starting line everyone reset to Friday — the hunt is officially on.</p>
+<p>3/ Syndicate #1 entries are open. Buy in with Skulls this week, the group picks its play Saturday, it goes LIVE Sunday 9am. Winners split the pool.</p>
+<p>4/ Gold Rush starts today — play this week and earn FREE entries into Friday’s Gold Tournament. Zero purchase required, ever. Details in the pinned post.</p>
+<p>5/ New here? One Taunt 101 video drops every day this week — by Sunday you’ll know the whole game. Ep3 is up now.</p>
+<p>6/ Today’s featured call: [PLACEHOLDER: market]. 9am and 3pm streams both live. Let’s go. 🐺</p>
+<p><strong>Midday — open question:</strong> &gt; Season 1 is officially live. What’s the first thing you’re doing today — quest, tournament prep, or Syndicate entry?</p>
+<p><strong>Afternoon (2:45p) — 3pm flagship stream promo:</strong> &gt; 3pm flagship — Season 1’s first real stream. Syndicate #1 entries are open right now. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — receipts:</strong> &gt; Day 1 of Season 1 in the books. [PLACEHOLDER: correct-call count / top leaderboard name+Skulls / Syndicate #1 entry count]. One down, 27 to go. 🐺</p>
+<p><strong>Discord/TG (major moment):</strong> &gt; <strong>🐺 SEASON 1 IS LIVE — FIRST HOWL HAS BEGUN</strong> &gt; Head Start Skulls: counted. Syndicate #1: entries open. Gold Rush: live. Taunt 101 Ep3: up now. &gt; Today’s featured market pinned above. See you on stream.</p>
+<hr />
+<h2 id="tue-84-first-full-day">Tue 8/4 — First Full Day</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live — Season 1, day 2. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a):</strong> &gt; 9am stream is up. Today’s featured call: [PLACEHOLDER: market]. Syndicate #1 entries still open.</p>
+<p><strong>Midday — poll:</strong> &gt; Two days into Season 1 — which stream is hitting hardest so far? &gt; 🌅 India Prime &gt; ☀️ Morning &gt; 🔥 3pm flagship &gt; Vote below.</p>
+<p><strong>Afternoon (2:45p):</strong> &gt; 3pm flagship, live now. Syndicate #1 pool is growing — get your entry in before Friday’s lock. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — receipts + first leaderboard callout:</strong> &gt; Tonight’s board: [PLACEHOLDER: results/correct calls]. First real leaderboard name of Season 1 to watch: [PLACEHOLDER: name + Skulls]. Who’s catching them?</p>
+<p><strong>Gold Rush Explainer Thread (Education beat — free-earn framing only):</strong></p>
+<p>1/ Friday’s Gold Tournament — here’s how you get in for free this week.</p>
+<p>2/ Gold Rush is live: play the normal loop (predictions, quests, streams) and you earn Gold Coins for free. No purchase, no store, no spend — this week only.</p>
+<p>3/ Every single Friday entry this week comes from Gold Rush. No store, no spending, just play.</p>
+<p>4/ Gold Rush wraps with Sunday’s recap — track your progress daily in the pinned Discord post. Countdown reminder later this week: how much you’ve earned so far.</p>
+<p><strong>Discord/TG:</strong> &gt; Taunt 101 Ep4 is up. Morning board pinned, evening results dropping in a few hours.</p>
+<hr />
+<h2 id="wed-85-first-buy-in-tournament">Wed 8/5 — First Buy-In Tournament</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live — Buy-In Tournament day. [PLACEHOLDER: stream link]</p>
+<p><strong>Tournament Classes + Freezeout Deep-Dive Thread (Education beat, X, morning anchor):</strong></p>
+<p>1/ Today’s the first Buy-In tournament of Season 1 — a Freezeout. Here’s exactly how it works.</p>
+<p>2/ Three tournament flavors run on streams: free daily Casuals (no entry needed), Wednesday’s Buy-In Freezeout (entry in Skulls), and Friday’s Gold tournament (entry in Gold Coins). Today’s about Wednesday.</p>
+<p>3/ Entry is paid once, in Skulls you’ve earned. Then the twist: everyone — no exceptions — gets an equal 5,000-Point starting stack.</p>
+<p>4/ Inside the tournament, every prediction plays with those Points, not your real Skulls. Your account balance isn’t touched again until it’s over.</p>
+<p>5/ Your final Point stack decides your rank. The prize pool comes from everyone’s entries and pays out top-heavy — the best stacks take the biggest share.</p>
+<p>6/ The #1 question we know is coming: “Do I lose my real Skulls making calls in the tournament?” No — only the entry and the final prize (if you place) ever touch your real balance. Tutorial Ep7 walks the whole thing before the 9am stream.</p>
+<p><strong>Midday — open question:</strong> &gt; Buy-In Tournament #1 is today. Are you playing safe stack-building or going aggressive early? Tell us your strategy.</p>
+<p><strong>Afternoon (2:45p) — tournament last-call:</strong> &gt; ⏰ Buy-In Tournament #1 — last call. Entries close soon, 3pm flagship is where it plays out. Get in now. [PLACEHOLDER: stream link / entry deadline]</p>
+<p><strong>Evening — tournament results:</strong> &gt; 🏆 Buy-In Tournament #1 results are in: [PLACEHOLDER: winner names + Skull payouts / entrant count]. First tournament of the season, real winners, real numbers.</p>
+<p><strong>Discord/TG:</strong> &gt; Tutorial Ep7 (tournaments) up in #taunt-101 this morning — watch it before entries close. Results dropping in #results tonight.</p>
+<hr />
+<h2 id="thu-86-receipts-day">Thu 8/6 — Receipts Day</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a):</strong> &gt; 9am stream is up. Today’s featured call: [PLACEHOLDER: market].</p>
+<p><strong>Midday — open question:</strong> &gt; What did yesterday’s Buy-In Tournament teach you? Drop your one lesson below — we’re reading all of them.</p>
+<p><strong>Afternoon (2:45p):</strong> &gt; 3pm flagship, live now. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — receipts:</strong> &gt; Day 4 receipts: [PLACEHOLDER: correct-call count / standout leaderboard move]. The board keeps moving. 🐺</p>
+<p><strong>Syndicate Week-Flow Explainer Thread (Education beat, X):</strong></p>
+<p>1/ Syndicate #1 entries are open — here’s the whole week, start to finish.</p>
+<p>2/ Monday-Friday: entries are open, buy in with Skulls you’ve earned, the pool grows all week.</p>
+<p>3/ Friday 11:59pm PT: entries lock — no new entries after that.</p>
+<p>4/ Saturday: pick day. The pool works out its play together before it goes live.</p>
+<p>5/ Sunday 9am PT: it goes LIVE — the pool’s pick plays out in real time, the whole community watching together. That’s the moment everything this week built toward. We’re covering it all day.</p>
+<p><strong>Discord/TG:</strong> &gt; Taunt 101 Ep5 is up. Full Syndicate week-flow breakdown pinned in #syndicate-hq — entries → pick day Saturday → LIVE Sunday 9am.</p>
+<hr />
+<h2 id="fri-87-gold-debut-entries-lock">Fri 8/7 — Gold Debut + Entries Lock</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live — Gold Tournament day. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a) — Gold Tournament promo (free-earned framing):</strong> &gt; The first Gold Tournament runs today — the showcase bracket of the week, and every entry in it was earned FREE this week through Gold Rush. Zero spend required. 9am stream is live, today’s featured call: [PLACEHOLDER: market].</p>
+<p><strong>Midday — Syndicate entries last-call (AM):</strong> &gt; ⏰ Syndicate #1 entries lock TONIGHT at 11:59p. If you’re getting in, today’s the day.</p>
+<p><strong>Afternoon (2:45p) — Gold Tournament last-call + PM lock reminder:</strong> &gt; 🔥 Gold Tournament #1 — every entry earned FREE this week, showcase plays out on 3pm flagship. Syndicate #1 entries lock at 11:59p tonight — last call. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — Gold Tournament results:</strong> &gt; 🏆 Gold Tournament #1 results: [PLACEHOLDER: winner names + payouts]. Syndicate #1 entries lock in a few hours — get in before midnight.</p>
+<p><strong>FAQ Corner (Education beat — “is Friday the same mechanic as Wednesday?”):</strong> &gt; FAQ corner: “Is the Gold tournament the same as Wednesday’s?” Same structure — equal stack, ranked, top-heavy payout. The only difference is how you get in: Wednesday’s entry is Skulls, Friday’s is Gold Coins — and this week, every Friday entry was earned FREE via Gold Rush. No purchase needed.</p>
+<p><strong>Discord/TG:</strong> &gt; Taunt 101 Ep6 is up. Syndicate #1 entries lock tonight 11:59p PT — last call pinned above.</p>
+<hr />
+<h2 id="sat-88-pick-day-weekend-streak">Sat 8/8 — Pick Day + Weekend Streak</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a) — Weekend Streak explainer:</strong> &gt; Weekend Streak is on — stack correct calls across today and tomorrow for the bonus. Syndicate #1 entries are locked, the group’s pool is set: [PLACEHOLDER: pool size].</p>
+<p><strong>Midday — poll:</strong> &gt; Syndicate #1’s pool is set. What’s the play? &gt; 🐂 Take the favorite &gt; 🐻 Fade it &gt; 🤷 Still deciding &gt; Vote below — pick gets made today.</p>
+<p><strong>Afternoon (2:45p):</strong> &gt; 3pm flagship, live now. Weekend Streak in progress. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — receipts:</strong> &gt; Pick day receipts: [PLACEHOLDER: correct-call count]. Syndicate #1’s play is locked in — going live tomorrow 9am. Set your alarm. 🐺</p>
+<p><strong>FAQ Corner (Education beat — “what happens if my Points hit zero?”):</strong> &gt; FAQ corner: “What happens to my Points if I run out mid-tournament?” If your Point stack hits zero, you’re done for that tournament — final rank locks at whatever your stack was. No topping up mid-tournament. Same equal shot for everyone, every time.</p>
+<p><strong>Discord/TG:</strong> &gt; Taunt 101 Ep8 is up — library complete, index pinned in #taunt-101. Syndicate #1 pick is locked, going live tomorrow 9am.</p>
+<hr />
+<h2 id="sun-89-syndicate-1-live">Sun 8/9 — SYNDICATE #1 LIVE</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning — Syndicate going-live post:</strong> &gt; 🐺 <strong>SYNDICATE #1 IS LIVE — 9AM PT.</strong> The pool’s set, the pick’s locked, the group goes together. Watch it play out live. [PLACEHOLDER: stream link]</p>
+<p><strong>Midday — hot take:</strong> &gt; Hot take: week 1’s real story isn’t the tournaments — it’s [PLACEHOLDER: standout stat/leaderboard name]. Screenshots below.</p>
+<p><strong>Afternoon (2:45p):</strong> &gt; Syndicate #1 coverage continues — [PLACEHOLDER: live status update]. Follow along. [PLACEHOLDER: stream link]</p>
+<p><strong>Sunday Recap Thread (replaces evening receipts):</strong></p>
+<p>1/ 🐺 Week 1 of Season 1 is in the books. Here’s what actually happened.</p>
+<p>2/ Syndicate #1 went LIVE this morning: [PLACEHOLDER: outcome, pool size, winner count/split].</p>
+<p>3/ Buy-In Tournament #1 (Wed): [PLACEHOLDER: winner + payout]. Gold Tournament #1 (Fri): [PLACEHOLDER: winner + payout].</p>
+<p>4/ Gold Rush closed out: [PLACEHOLDER: total claimed/participants]. Taunt 101 library is complete — 8 episodes, all pinned in #taunt-101.</p>
+<p>5/ Top leaderboard names this week: [PLACEHOLDER: names + Skulls].</p>
+<p>6/ Week 2 opens tomorrow with Syndicate #1’s payouts, the Mega Rip, and the first Blitz. See you at the start. 🐺</p>
+<p><strong>Discord/TG — recap (major moment):</strong> &gt; <strong>🐺 SYNDICATE #1 RESULTS</strong> &gt; [PLACEHOLDER: pool size / winning side / split amount / winner count] &gt; Real numbers, real winners — that’s the Pack. Week 2 opens tomorrow.</p>
+<hr />
+<h1 id="week-2-the-rhythm-make-it-a-habit-mon-810-sun-816">WEEK 2 — THE RHYTHM: MAKE IT A HABIT (Mon 8/10 → Sun 8/16)</h1>
+<h2 id="mon-810-mega-rip-ships-1-results-2-entries-open">Mon 8/10 — Mega Rip Ships + #1 Results + #2 Entries Open</h2>
+<p><strong>Week-Open Thread (X):</strong></p>
+<p>1/ 🐺 Syndicate #1 paid out. Here’s who won and what they took.</p>
+<p>2/ [PLACEHOLDER: winning side / total pool / per-winner split / standout winner handle]. Real winners, real numbers — every single week.</p>
+<p>3/ The Rips prize program launches today — 10 packs this week, ~$10 in predictions each, growing every week to $100 packs by the finale. The Mega Rip ships alongside it — biggest reward table we’ve published yet, full list pinned.</p>
+<p>4/ Syndicate #2 entries are open right now. Same loop: buy in this week, pick Saturday, LIVE Sunday 9am.</p>
+<p>5/ Today’s featured call: [PLACEHOLDER: market]. Let’s run week 2. 🐺</p>
+<p><strong>Midday — open question:</strong> &gt; Syndicate #1 paid out — did the result match your read going in? Tell us where you had it.</p>
+<p><strong>Afternoon (2:45p):</strong> &gt; 3pm flagship — Mega Rip table is live, come see the pulls. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — receipts:</strong> &gt; Day 1 of week 2: [PLACEHOLDER: correct-call count / notable Mega Rip pull]. Syndicate #2 entries open all week.</p>
+<p><strong>Rips Ladder LAUNCH + Mega Rip Explainer Thread (Education beat, X):</strong></p>
+<p>1/ 🐺 The Rips prize program starts today: 10 packs this week, growing to $100 packs by finale week.</p>
+<p>2/ Rips: spend Skulls, open a pack, something comes back every time. You’ve been able to play it since day one — starting today, it’s also part of the season’s weekly prize ladder.</p>
+<p>3/ Also new this week: the Mega Rip. A bigger, higher-stakes tier on top of the regular ladder — same format, its own published table.</p>
+<p>4/ The one rule, repeated: the table’s published before you pull. Always. No surprises, no odds language — you see every possible outcome up front.</p>
+<p>5/ The ladder steps up week by week from here — 10 packs worth ~$10 each this week, building to 10 packs worth $100 each by finale week.</p>
+<p>6/ Read the table in #pack-talk before anyone pulls today. Real pulls, real numbers post in #receipts.</p>
+<p><strong>Discord/TG:</strong> &gt; Mega Rip table pinned above — biggest reward list of the season so far, read it before you pull. Syndicate #2 entries open.</p>
+<hr />
+<h2 id="tue-811-first-blitz">Tue 8/11 — First Blitz</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a):</strong> &gt; 9am stream is up. First BLITZ event runs today — short, fast prediction windows, extra Skulls on the line. Today’s featured call: [PLACEHOLDER: market].</p>
+<p><strong>Midday — poll:</strong> &gt; Blitz #1 is running today. You in? &gt; ⚡ Every window &gt; 🎯 Picking my spots &gt; 👀 Watching first &gt; Vote below.</p>
+<p><strong>Afternoon (2:45p) — Blitz live-reaction:</strong> &gt; 🔥 Blitz window is OPEN right now. [PLACEHOLDER: current window details/leaderboard]. 3pm flagship live. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — receipts:</strong> &gt; Blitz #1 wrapped: [PLACEHOLDER: total windows run / top performer]. First one’s in the books.</p>
+<p><strong>Gold Coins + Boosts + Store Explainer Thread (Education beat, X — pairs with Ep3 debut):</strong></p>
+<p>1/ New this week: the store. Here’s what Gold actually does.</p>
+<p>2/ Gold Coins are the one thing you can buy in Taunt Live, purchased with USDC. That’s it — Skulls stay earned-only, never for sale, with anything.</p>
+<p>3/ The one rule, stated flatly: Gold buys boosts. It never buys wins. A boost makes a play count for more if you’re right — it never changes whether you’re right.</p>
+<p>4/ What a boost actually changes on screen: a play counting for more. What it doesn’t: accuracy, odds, or outcome.</p>
+<p>5/ Reminder: everything core to the game — predictions, quests, Casuals, Syndicates — still plays fully on Skulls you earn. Gold is optional. Full walkthrough: Ep3, dropping today.</p>
+<p><strong>Discord/TG:</strong> &gt; Blitz #1 pings went out all day — full recap in #results. Taunt 101 Ep3 (Gold Coins &amp; boosts) just dropped — the plain-language explainer, no pressure, just how it works. Ask-anything-about-Gold thread live in #pack-talk today.</p>
+<hr />
+<h2 id="wed-812-tournament-2-giveaway-rip-wave-1">Wed 8/12 — Tournament #2 + Giveaway Rip Wave 1</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a):</strong> &gt; Buy-In Tournament #2 today. Same format — equal stack, top stacks win. Today’s featured call: [PLACEHOLDER: market].</p>
+<p><strong>Midday — open question:</strong> &gt; Tournament #2 is today. What’s your stack strategy after watching #1 play out?</p>
+<p><strong>Afternoon (2:45p) — tournament last-call:</strong> &gt; ⏰ Buy-In Tournament #2 — last call. 3pm flagship is where it plays out. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — tournament + Giveaway Rip results:</strong> &gt; 🏆 Tournament #2: [PLACEHOLDER: winner + payout]. Giveaway Rip wave 1 winners: [PLACEHOLDER: names]. Free packs, real pulls — no entry required.</p>
+<p><strong>FAQ Corner (Education beat — “can I buy Skulls with Gold?”):</strong> &gt; FAQ corner: “Can I buy Skulls with Gold?” No — Skulls are earned only, never bought, with anything. Gold is a completely separate purchasable currency that buys boosts, full stop.</p>
+<p><strong>Discord/TG:</strong> &gt; Giveaway Rip wave 1 winners announced above 🎉 — wave 2 lands week 3.</p>
+<hr />
+<h2 id="thu-813-receipts-ama-1">Thu 8/13 — Receipts + AMA #1</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a) — AMA day-of reminder:</strong> &gt; 🎙️ AMA #1 today, 12p PT — X Spaces + Discord stage. Two weeks in, real numbers, ask us anything. 9am stream live now, featured call: [PLACEHOLDER: market].</p>
+<p><strong>Midday — AMA promo (pre-event):</strong> &gt; Starting soon: AMA #1, 12p PT. Bring your questions — Jefe’s answering live, Collective gets reserved questions. [PLACEHOLDER: Spaces/Discord link]</p>
+<p><strong>Afternoon (2:45p) — AMA wrap + 3pm stream:</strong> &gt; That’s a wrap on AMA #1 — thanks for showing up. Clips coming tomorrow. 3pm flagship live now. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — receipts:</strong> &gt; Day 4 of week 2 receipts: [PLACEHOLDER: correct-call count / AMA attendance note].</p>
+<p><strong>FAQ Corner (Education beat — “do I need Gold to play?”):</strong> &gt; FAQ corner: “Do I need Gold to play the game?” No — every core loop (predictions, quests, Casuals tournaments, Syndicates) plays fully with Skulls you earn. Gold is optional, always.</p>
+<p><strong>First-Purchase Offer (mentioned once this week):</strong> &gt; If you’ve been curious about boosts since Ep3: there’s a first-purchase offer live for new Gold buyers this week. [PLACEHOLDER: offer terms]. No pressure — Skulls stay earned-only either way, this is just for players who want to try a boost.</p>
+<p><strong>Discord/TG (major moment — AMA):</strong> &gt; <strong>🎙️ AMA #1 — LIVE NOW, 12P PT</strong> &gt; Two weeks into Season 1 — real numbers, what’s next, teasing something big for week 3. Jefe answering live, Collective questions get priority. Join: [PLACEHOLDER: Discord stage link]</p>
+<p><strong>X — AMA promo (posted since Monday, 3-day lead):</strong> &gt; Mon 8/10: Mark it — AMA #1 is Thursday 8/13, 12p PT. Two weeks of real numbers, live answers. Drop your questions now, we’re pulling from replies. &gt; &gt; Wed 8/12 (day-before): Tomorrow, 12p PT — AMA #1. Real numbers, no script. See you there. [PLACEHOLDER: link]</p>
+<hr />
+<h2 id="fri-814-gold-2-entries-lock">Fri 8/14 — Gold #2 + Entries Lock</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a):</strong> &gt; Gold Tournament #2 today. 9am stream live, featured call: [PLACEHOLDER: market].</p>
+<p><strong>Midday — entries last-call (AM):</strong> &gt; ⏰ Syndicate #2 entries lock tonight 11:59p. Get in before the pool closes.</p>
+<p><strong>Afternoon (2:45p) — Gold last-call + PM lock reminder:</strong> &gt; 🔥 Gold Tournament #2 — last call, 3pm flagship. Syndicate #2 entries lock at midnight — final hours. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — Gold results:</strong> &gt; 🏆 Gold Tournament #2 results: [PLACEHOLDER: winner + payout]. Syndicate #2 pool locks in a few hours.</p>
+<p><strong>Discord/TG:</strong> &gt; Final call — Syndicate #2 entries close 11:59p tonight.</p>
+<hr />
+<h2 id="sat-815-community-goal-day-pick-day">Sat 8/15 — Community Goal Day + Pick Day</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live — Community Goal day. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a) — Community Goal kickoff:</strong> &gt; 🎯 Community Goal is on: 10,000 correct calls today, and everyone with 3+ gets the drop. Team effort. Board’s at [PLACEHOLDER: running count] and counting.</p>
+<p><strong>Midday — Community Goal tracker (every 2-3h beat):</strong> &gt; Community Goal update: [PLACEHOLDER: running count] / 10,000. Keep the calls coming. 🐺</p>
+<p><strong>Afternoon (2:45p) — Community Goal tracker + stream:</strong> &gt; Community Goal update: [PLACEHOLDER: running count] / 10,000. 3pm flagship live now — Syndicate #2’s pick gets made today too. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — Community Goal result + Syndicate pick:</strong> &gt; 🎯 Community Goal final: [PLACEHOLDER: final count — hit or miss, real number either way]. Syndicate #2’s pool is set, pick’s locked — LIVE tomorrow 9am.</p>
+<p><strong>FAQ Corner (Education beat — “is Rips gambling, do I know the odds?”):</strong> &gt; FAQ corner: “Is Rips gambling — do I know the odds?” There’s no odds language here — the full reward table is published before you spend a Skull, so you see every possible outcome up front, every time. And you always get something back on every pull.</p>
+<p><strong>Discord/TG:</strong> &gt; Community Goal tracker pinned above all day. Syndicate #2 pick locked — going live tomorrow.</p>
+<p><strong>Medium (Sat cadence):</strong> &gt; Article 3 — “Two Weeks In: The Numbers” is live. [PLACEHOLDER: link]</p>
+<p><strong>X — Medium thread summary:</strong></p>
+<p>1/ New on Medium: “Two Weeks In: The Numbers.” Everything the Pack has paid out since Season 1 opened, in one place.</p>
+<p>2/ Syndicate #1’s full payout, both tournament winners, the Mega Rip pulls, AMA #1 takeaways — all with real figures.</p>
+<p>3/ Full breakdown: [PLACEHOLDER: Medium link]. Community Goal is running today — go add to the count.</p>
+<hr />
+<h2 id="sun-816-syndicate-2-live">Sun 8/16 — SYNDICATE #2 LIVE</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning — Syndicate going-live post:</strong> &gt; 🐺 <strong>SYNDICATE #2 IS LIVE — 9AM PT.</strong> Pool’s set, pick’s locked, watch it go together. [PLACEHOLDER: stream link]</p>
+<p><strong>Midday — hot take:</strong> &gt; Hot take: the Community Goal proved something — this Pack moves as one when it wants to. [PLACEHOLDER: final count callback].</p>
+<p><strong>Afternoon (2:45p):</strong> &gt; Syndicate #2 coverage — [PLACEHOLDER: live status update]. [PLACEHOLDER: stream link]</p>
+<p><strong>Sunday Recap Thread:</strong></p>
+<p>1/ 🐺 Week 2 is in the books. Here’s the full picture.</p>
+<p>2/ Syndicate #2 went LIVE this morning: [PLACEHOLDER: outcome, pool size, split].</p>
+<p>3/ Tournament #2 (Wed): [PLACEHOLDER: winner]. Gold #2 (Fri): [PLACEHOLDER: winner]. Blitz #1: [PLACEHOLDER: top performer].</p>
+<p>4/ Community Goal Saturday: [PLACEHOLDER: final tally]. Giveaway Rip wave 1: [PLACEHOLDER: winners]. AMA #1: two weeks of real numbers, out loud, live.</p>
+<p>5/ New quests drop tomorrow for the day-ones, plus the Referral Drive opens — referrals pay double all week.</p>
+<p>6/ Two payouts down. The game works. Week 3 is about bringing your crew in for the finale. 🐺</p>
+<p><strong>Discord/TG — recap:</strong> &gt; <strong>🐺 SYNDICATE #2 RESULTS</strong> &gt; [PLACEHOLDER: pool / winning side / split / winner count] &gt; Week 3 opens tomorrow — veteran quests + Referral Drive (2x referral rewards all week).</p>
+<hr />
+<h1 id="week-3-the-pack-play-together-bring-your-crew-mon-817-sun-823">WEEK 3 — THE PACK: PLAY TOGETHER, BRING YOUR CREW (Mon 8/17 → Sun 8/23)</h1>
+<h2 id="mon-817-veteran-quests-referral-drive-opens-2-results3-entries">Mon 8/17 — Veteran Quests + REFERRAL DRIVE OPENS + #2 Results/#3 Entries</h2>
+<p><strong>Week-Open Thread (X):</strong></p>
+<p>1/ 🐺 Syndicate #2 paid out. [PLACEHOLDER: winning side / pool / split / standout winner].</p>
+<p>2/ New veteran quests are live — built for the day-ones who’ve been here since the reset. Check your quest board.</p>
+<p>3/ 📣 <strong>The Referral Drive is ON — referrals pay DOUBLE all week.</strong> Bring your crew in before the finale.</p>
+<p>4/ How it works: standard referral reward, doubled, all week. Top-10 recruiter leaderboard with escalating prizes. Every referral is also an entry into a finale-week Giveaway Rip — for both sides.</p>
+<p>5/ Syndicate #3 entries are open. Same loop, bigger crowd this time.</p>
+<p>6/ The Rips ladder steps up again this week too — bigger packs than last week, building to $100 packs in finale week.</p>
+<p>7/ Two weeks of real payouts. Now’s the time to bring the people you already told about this. 🐺</p>
+<p><strong>Midday — open question:</strong> &gt; Referral Drive is live — who’s the first person you’re bringing into the Pack this week?</p>
+<p><strong>Afternoon (2:45p):</strong> &gt; 3pm flagship — Referral Drive day 1. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — receipts:</strong> &gt; Day 1 of the drive: [PLACEHOLDER: referral count so far]. Veteran quest board is live — go check yours.</p>
+<p><strong>Discord/TG (major moment):</strong> &gt; <strong>📣 REFERRAL DRIVE IS LIVE — 2X ALL WEEK</strong> &gt; Standard referral reward, doubled, through Sunday. Top-10 recruiter leaderboard with escalating prizes. Every referral = an entry into a finale-week Giveaway Rip for both of you. &gt; Veteran quests also live for day-ones. Syndicate #2 results + Syndicate #3 entries pinned above.</p>
+<p><strong>Referral Drive daily beat — Mon:</strong> &gt; Launch graphic: “Referrals pay DOUBLE this week.” How it works, in one image: [PLACEHOLDER: graphic]. Standard reward → 2x, all week, no cap on how many you bring.</p>
+<hr />
+<h2 id="tue-818-last-blitz">Tue 8/18 — Last Blitz</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a):</strong> &gt; 9am stream live. Blitz #2 (last one this season) runs today. Featured call: [PLACEHOLDER: market].</p>
+<p><strong>Midday — poll:</strong> &gt; Last Blitz of the season is today. How are you playing it? &gt; ⚡ Every window, all in &gt; 🎯 Save it for the big one &gt; Vote below.</p>
+<p><strong>Afternoon (2:45p) — Blitz live-reaction:</strong> &gt; 🔥 Blitz window OPEN. [PLACEHOLDER: leaderboard/window detail]. 3pm flagship live. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — receipts:</strong> &gt; Blitz #2 wrapped: [PLACEHOLDER: top performer / total windows]. That’s the last one this season — leave it all out there.</p>
+<p><strong>Discord/TG:</strong> &gt; Blitz #2 recap in #results.</p>
+<p><strong>Referral Drive daily beat — Tue:</strong> &gt; What your friend actually gets when you bring them in: their own bonus, plus a head start heading into finale week. Worth the message.</p>
+<hr />
+<h2 id="wed-819-tournament-3-giveaway-wave-2">Wed 8/19 — Tournament #3 + Giveaway Wave 2</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a):</strong> &gt; Buy-In Tournament #3 today. Same format, same stakes — equal stack, top stacks win. Featured call: [PLACEHOLDER: market].</p>
+<p><strong>Midday — open question:</strong> &gt; Tournament #3 today — three tournaments in, what’s the one lesson that’s actually worked for you?</p>
+<p><strong>Afternoon (2:45p) — tournament last-call:</strong> &gt; ⏰ Buy-In Tournament #3 — last call. 3pm flagship, where it plays out. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — tournament + Giveaway results:</strong> &gt; 🏆 Tournament #3: [PLACEHOLDER: winner + payout]. Giveaway Rip wave 2 winners: [PLACEHOLDER: names]. Free packs, real pulls.</p>
+<p><strong>Discord/TG:</strong> &gt; Giveaway wave 2 winners pinned above.</p>
+<p><strong>Referral Drive daily beat — Wed:</strong> &gt; First leaderboard reveal — top 5 recruiters so far: [PLACEHOLDER: handles + referral counts]. Halfway through the week, still time to climb it.</p>
+<hr />
+<h2 id="thu-820-receipts-day">Thu 8/20 — Receipts Day</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a):</strong> &gt; 9am stream live. Featured call: [PLACEHOLDER: market].</p>
+<p><strong>Midday — open question:</strong> &gt; Half the week left in the Referral Drive. What did Wednesday’s tournament teach you?</p>
+<p><strong>Afternoon (2:45p):</strong> &gt; 3pm flagship, live now. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — receipts:</strong> &gt; Day 4 receipts: [PLACEHOLDER: correct-call count]. Drive standings: [PLACEHOLDER: current leader + count].</p>
+<p><strong>Discord/TG:</strong> &gt; Referral Drive — half the week left. Easiest script: send them your invite link and tell them the 9am stream is 10 seconds to play. That’s it.</p>
+<p><strong>Referral Drive daily beat — Thu:</strong> &gt; Half the week left. The easiest referral script: “Two sides, one clock, pick — takes 10 seconds. Here’s my link: [PLACEHOLDER: referral link].” Send it to three people right now.</p>
+<hr />
+<h2 id="fri-821-gold-3-entries-lock">Fri 8/21 — Gold #3 + Entries Lock</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a):</strong> &gt; Gold Tournament #3 today. 9am stream live, featured call: [PLACEHOLDER: market].</p>
+<p><strong>Midday — entries last-call (AM):</strong> &gt; ⏰ Syndicate #3 entries lock tonight 11:59p. Last call.</p>
+<p><strong>Afternoon (2:45p) — Gold last-call + PM lock reminder:</strong> &gt; 🔥 Gold Tournament #3 — last call, 3pm flagship. Syndicate #3 entries lock at midnight. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — Gold results:</strong> &gt; 🏆 Gold Tournament #3 results: [PLACEHOLDER: winner + payout]. Syndicate #3 pool locks in a few hours.</p>
+<p><strong>Discord/TG:</strong> &gt; Final call — Syndicate #3 entries close 11:59p tonight.</p>
+<p><strong>Referral Drive daily beat — Fri:</strong> &gt; Race is tight: #1 and #2 recruiter spots are separated by ONE referral. [PLACEHOLDER: names/counts]. Weekend’s your window to move up.</p>
+<hr />
+<h2 id="sat-822-rivalry-weekend-pick-day">Sat 8/22 — RIVALRY WEEKEND + Pick Day</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live — Rivalry Weekend kicks off. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a) — Rivalry Weekend explainer:</strong> &gt; ⚔️ Rivalry Weekend is here — sports vs crypto vs culture, category vs category, for weekend bragging rights. Featured call: [PLACEHOLDER: market].</p>
+<p><strong>Midday — poll:</strong> &gt; Rivalry Weekend — pick your side. &gt; 🏀 Sports &gt; ₿ Crypto &gt; 🎬 Culture &gt; Vote below, we’re tracking correct calls by category all weekend.</p>
+<p><strong>Afternoon (2:45p) — stream + Syndicate pick day:</strong> &gt; 3pm flagship — Rivalry Weekend + Syndicate #3’s pick gets made today. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — Rivalry standings + pick locked:</strong> &gt; Rivalry Weekend standings after day 1: [PLACEHOLDER: category leaderboard]. Syndicate #3’s pool is set, pick’s locked — LIVE tomorrow 9am.</p>
+<p><strong>Discord/TG:</strong> &gt; Rivalry Weekend tracker pinned above. Collective missions point at the drive this weekend too — check #collective.</p>
+<p><strong>Referral Drive daily beat — Sat:</strong> &gt; Weekend surge — Collective missions all point here this weekend. Bring your crew in before the final 24 hours start tomorrow.</p>
+<p><strong>Medium (Sat cadence):</strong> &gt; Article 4 — “The Collective: Building a Founding Crew” is live. [PLACEHOLDER: link]</p>
+<p><strong>X — Medium thread summary:</strong></p>
+<p>1/ New on Medium: “The Collective: Building a Founding Crew.” How the ambassador program works and who’s in it.</p>
+<p>2/ Earned, never bought — the Collective is the Pack’s founding crew, and they get first eyes on everything.</p>
+<p>3/ Full piece: [PLACEHOLDER: link]. Rivalry Weekend is live right now — pick your side.</p>
+<hr />
+<h2 id="sun-823-syndicate-3-live-drive-final-24h">Sun 8/23 — SYNDICATE #3 LIVE + Drive Final 24h</h2>
+<p><strong>Early (5:00a) — Drive final countdown (morning):</strong> &gt; ⏰ FINAL 24 HOURS on the Referral Drive — 2x rewards end tonight. India Prime is live. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning — Syndicate going-live post:</strong> &gt; 🐺 <strong>SYNDICATE #3 IS LIVE — 9AM PT.</strong> Biggest crowd of the season so far. [PLACEHOLDER: stream link]</p>
+<p><strong>Midday — hot take:</strong> &gt; Hot take: Rivalry Weekend proved it — [PLACEHOLDER: winning category] is running this Pack right now. [PLACEHOLDER: final standings].</p>
+<p><strong>Afternoon (2:45p) — Drive final countdown (evening):</strong> &gt; ⏰ A few hours left on 2x referrals. Last call to climb the recruiter board before it locks tonight. [PLACEHOLDER: current top 3]</p>
+<p><strong>Sunday Recap Thread:</strong></p>
+<p>1/ 🐺 Week 3 is in the books — the recruit week.</p>
+<p>2/ Syndicate #3 went LIVE this morning: [PLACEHOLDER: outcome, pool, split].</p>
+<p>3/ Tournament #3 (Wed): [PLACEHOLDER: winner]. Gold #3 (Fri): [PLACEHOLDER: winner]. Rivalry Weekend champion category: [PLACEHOLDER: category].</p>
+<p>4/ The Referral Drive just closed: [PLACEHOLDER: total referrals for the week / top recruiter]. Winners get named in tomorrow’s finale-week thread.</p>
+<p>5/ Three payouts down. Everyone who came in this week arrives just in time for finale week.</p>
+<p>6/ Mon 8/24: finale Syndicate opens, drive winners announced, Championship format drops. Biggest week of the season starts tomorrow. 🐺</p>
+<p><strong>Discord/TG — recap:</strong> &gt; <strong>🐺 SYNDICATE #3 RESULTS + DRIVE CLOSED</strong> &gt; [PLACEHOLDER: pool / split / winner count]. Referral Drive final tally: [PLACEHOLDER: total referrals / top recruiter]. Winners named in tomorrow’s finale-week thread.</p>
+<hr />
+<h1 id="week-4-the-finale-prove-it-mon-824-sun-830">WEEK 4 — THE FINALE: PROVE IT (Mon 8/24 → Sun 8/30)</h1>
+<h2 id="mon-824-finale-week-opens">Mon 8/24 — FINALE WEEK OPENS</h2>
+<p><strong>Week-Open / Finale Thread (X):</strong></p>
+<p>1/ 🐺 <strong>FINALE WEEK. Four weeks built to this.</strong></p>
+<p>2/ Syndicate #3 paid out: [PLACEHOLDER: winning side / pool / split]. Three for three — real winners, every single week.</p>
+<p>3/ 📣 Referral Drive winners: [PLACEHOLDER: top recruiter handles + prizes]. You brought the Pack’s biggest crowd yet — thank you.</p>
+<p>4/ The finale Syndicate is open right now — the deepest pool of the season. Entries run through Friday.</p>
+<p>5/ Championship format: two brackets, Thursday through Sunday. Free bracket open to everyone, Gold bracket for the bold.</p>
+<p>6/ The Rips ladder hits its top step this week — 10 packs at $100 each, the biggest of the season.</p>
+<p>7/ Friday through Sunday: Final Grind — everything pays +50%. Sunday: the Syndicate goes live 9am, the Championship settles, the Season Pool pays out. Let’s finish this. 🐺</p>
+<p><strong>Midday — open question:</strong> &gt; Finale week is here. What’s the one thing you’re chasing before Sunday — a tournament win, the Syndicate pool, or the Season Pool number?</p>
+<p><strong>Afternoon (2:45p):</strong> &gt; 3pm flagship — finale week day 1. Finale Syndicate entries open. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — receipts:</strong> &gt; Day 1 of finale week: [PLACEHOLDER: correct-call count]. Finale Syndicate pool already at [PLACEHOLDER: entry count/size].</p>
+<p><strong>Championship + Season Pool Format Explainer Thread (Education beat, X — at least 48h ahead of Thu 8/27 open):</strong></p>
+<p>1/ Four weeks built to this — here’s how the Championship works.</p>
+<p>2/ Two brackets, side by side, no pressure framing: one free for everyone, one entered with Gold — same real competition, your choice of track.</p>
+<p>3/ Final Grind runs the last few days of the Championship — a season-long earning boost, plays count for more across the board.</p>
+<p>4/ The Season Pool — the number we’ve posted every single Sunday all season — pays out on the season’s final day, Sunday 8/30.</p>
+<p>5/ One day, everything settles: the finale Syndicate goes live at 9am the same Sunday the Championship settles and the Season Pool pays out. That’s the scale of 8/30. Questions on format? AMA #2 is Wednesday 8/26, noon PT.</p>
+<p><strong>Discord/TG (major moment):</strong> &gt; <strong>🐺 FINALE WEEK IS HERE</strong> &gt; Syndicate #3 results + Referral Drive winners pinned above. Finale Syndicate entries open — deepest pool of the season. Full Championship + Season Pool format breakdown pinned above — AMA #2 (Wed 8/26, noon PT) takes reserved questions on it.</p>
+<hr />
+<h2 id="tue-825-countdown">Tue 8/25 — Countdown</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a):</strong> &gt; 9am stream live. 3 days to the Championship. Featured call: [PLACEHOLDER: market].</p>
+<p><strong>Midday — open question:</strong> &gt; State of the season: [PLACEHOLDER: total correct calls / total Syndicate payouts to date]. Which stat surprises you most?</p>
+<p><strong>Afternoon (2:45p):</strong> &gt; 3pm flagship — finale Syndicate entries still open. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — receipts:</strong> &gt; Day 2 receipts: [PLACEHOLDER: correct-call count]. Championship opens Thursday — brackets drop tomorrow.</p>
+<p><strong>Discord/TG:</strong> &gt; Season-so-far stat card pinned above. Championship format drops tomorrow with AMA #2.</p>
+<hr />
+<h2 id="wed-826-last-buy-in-tournament-ama-2">Wed 8/26 — Last Buy-In Tournament + AMA #2</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a):</strong> &gt; Last Buy-In Tournament of the season is today. 9am stream live, featured call: [PLACEHOLDER: market].</p>
+<p><strong>Midday — AMA #2 promo (pre-event):</strong> &gt; 🎙️ Starting soon: AMA #2, 12p PT — “The finale starts tomorrow.” Championship, Season Pool, and what’s next for Season 2. [PLACEHOLDER: link]</p>
+<p><strong>Afternoon (2:45p) — tournament last-call + AMA wrap:</strong> &gt; ⏰ Last Buy-In Tournament — final call, 3pm flagship. AMA #2 clips coming tomorrow. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — tournament results:</strong> &gt; 🏆 Last Buy-In Tournament of Season 1: [PLACEHOLDER: winner + payout]. Championship opens tomorrow.</p>
+<p><strong>Discord/TG (major moment — AMA):</strong> &gt; <strong>🎙️ AMA #2 — LIVE NOW, 12P PT</strong> &gt; “The finale starts tomorrow.” Championship format, Season Pool, Season 2 — Jefe live, Collective questions get priority. Join: [PLACEHOLDER: Discord stage link]</p>
+<p><strong>X — AMA #2 promo (posted since Sunday, 3-day lead):</strong> &gt; Sun 8/23: Mark it — AMA #2 is Wednesday 8/26, 12p PT. The finale starts the next day. Bring your questions. &gt; &gt; Tue 8/25 (day-before): Tomorrow, 12p PT — AMA #2. Championship, Season Pool, what’s next. [PLACEHOLDER: link]</p>
+<hr />
+<h2 id="thu-827-championship-opens">Thu 8/27 — CHAMPIONSHIP OPENS</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live — Championship day 1. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a) — Championship format explainer:</strong> &gt; 🏆 <strong>THE CHAMPIONSHIP IS OPEN.</strong> Two brackets, four days: Free bracket, open to everyone. Gold bracket, entry in Gold Coins, for the bold. Runs through Sunday. Get in now.</p>
+<p><strong>Midday — standings (AM beat, live coverage mode):</strong> &gt; Championship standings — morning check: [PLACEHOLDER: top names, both brackets].</p>
+<p><strong>Afternoon (2:45p):</strong> &gt; 3pm flagship — Championship day 1, live coverage. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — standings (PM beat):</strong> &gt; Championship standings — night check: [PLACEHOLDER: top names, both brackets]. Day 1 done, three to go.</p>
+<p><strong>Discord/TG:</strong> &gt; Championship brackets pinned above — Free + Gold, entry links in #championship.</p>
+<hr />
+<h2 id="fri-828-entries-lock-final-grind">Fri 8/28 — Entries Lock + FINAL GRIND</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a) — Final Grind kickoff:</strong> &gt; ⚡ <strong>FINAL GRIND IS ON.</strong> Everything pays +50% through Sunday. Championship day 2, featured call: [PLACEHOLDER: market].</p>
+<p><strong>Midday — standings (AM beat):</strong> &gt; Championship standings — morning check: [PLACEHOLDER: top names, both brackets]. Final Grind bonus is live on every call.</p>
+<p><strong>Afternoon (2:45p) — entries lock + tournament push:</strong> &gt; ⏰ Finale Syndicate entries LOCK tonight 11:59p. Final Grind (+50%) running all weekend. 3pm flagship live. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — standings (PM beat) + Grind reminder:</strong> &gt; Championship standings — night check: [PLACEHOLDER: top names]. Finale Syndicate locks at midnight — last call. Final Grind continues through Sunday.</p>
+<p><strong>Discord/TG:</strong> &gt; Final Grind is live — +50% on everything through Sunday. Finale Syndicate entries close tonight 11:59p.</p>
+<hr />
+<h2 id="sat-829-championship-day-3-finale-pick-day">Sat 8/29 — Championship Day 3 + Finale Pick Day</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live — Final Grind, day 2. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning (8:15a):</strong> &gt; 9am stream live, +50% Final Grind still on. Featured call: [PLACEHOLDER: market].</p>
+<p><strong>Midday — poll:</strong> &gt; Finale Syndicate pool is set. What’s the play? &gt; 🐂 Favorite &gt; 🐻 Fade &gt; 🤷 Deciding &gt; Vote below — pick gets made today.</p>
+<p><strong>Afternoon (2:45p) — standings + stream:</strong> &gt; Championship standings — afternoon check: [PLACEHOLDER: top names]. 3pm flagship live. [PLACEHOLDER: stream link]</p>
+<p><strong>Evening — standings (PM beat) + finale pick locked:</strong> &gt; Championship standings — night check: [PLACEHOLDER: top names]. Finale Syndicate pick is locked — LIVE tomorrow 9am, the biggest one of the season.</p>
+<p><strong>Discord/TG:</strong> &gt; Finale Syndicate pick locked — going live tomorrow 9am alongside the Championship’s final day.</p>
+<p><strong>Medium (Sat cadence):</strong> &gt; Article 5 — “Season 1: What the Pack Built” is live. [PLACEHOLDER: link]</p>
+<p><strong>X — Medium thread summary:</strong></p>
+<p>1/ New on Medium: “Season 1: What the Pack Built.” The full season, one article, before tomorrow closes it out.</p>
+<p>2/ Every Syndicate payout, every tournament winner, the drive, the Collective, the Championship — the whole month, with real numbers.</p>
+<p>3/ Full piece: [PLACEHOLDER: link]. Tomorrow: finale Syndicate live 9am, Championship settles, Season Pool pays out.</p>
+<hr />
+<h2 id="sun-830-season-finale">Sun 8/30 — SEASON FINALE</h2>
+<p><strong>Early (5:00a):</strong> &gt; India Prime is live — the last stream of Season 1’s regular run. Final Grind still on. [PLACEHOLDER: stream link]</p>
+<p><strong>Morning — finale Syndicate going-live post:</strong> &gt; 🐺 <strong>THE FINALE SYNDICATE IS LIVE — 9AM PT.</strong> Deepest pool of the season, going live on the last day of Season 1. Watch it together. [PLACEHOLDER: stream link]</p>
+<p><strong>Midday — Championship live coverage:</strong> &gt; Championship final day — standings right now: [PLACEHOLDER: top names, both brackets]. Hours left before it settles.</p>
+<p><strong>Afternoon (2:45p) — Championship settling + Season Pool tracker:</strong> &gt; The Championship is settling. [PLACEHOLDER: live leader update]. Season Pool sits at [PLACEHOLDER: running total] — pays out tonight.</p>
+<p><strong>Season-Close Thread (X — replaces evening receipts):</strong></p>
+<p>1/ 🐺 <strong>SEASON 1 — FIRST HOWL — IS IN THE BOOKS.</strong></p>
+<p>2/ The finale Syndicate went live at 9am: [PLACEHOLDER: outcome, pool size, split].</p>
+<p>3/ The Championship settled: [PLACEHOLDER: Free bracket winner, Gold bracket winner, payouts].</p>
+<p>4/ The Season Pool paid out: [PLACEHOLDER: final total / how it’s split / top names]. Every winner, real numbers — that’s the whole point.</p>
+<p>5/ Four weeks, one reset, and a Pack that showed up every single day. Thank you for the hunt.</p>
+<p>6/ Season 2 is coming. Your Skulls and progress carry with you — nothing resets again. First look drops soon — for now, go check your profile, your Legacy badge just got a lot longer. 🐺</p>
+<p><strong>Discord/TG — season close (major moment):</strong> &gt; <strong>🐺 SEASON 1 IS OVER — HERE’S EVERYTHING IT PAID OUT</strong> &gt; Finale Syndicate: [PLACEHOLDER: pool/split]. Championship: [PLACEHOLDER: both bracket winners]. Season Pool: [PLACEHOLDER: final total, named winners]. &gt; Thank you for four weeks of showing up. Season 2 details coming soon — stay in the den. 🐺</p>
+
+</div>
+<div class="toast" id="toast">Copied</div>
+<script>
+document.querySelectorAll('blockquote').forEach(b => {
+  b.title = 'Click to copy';
+  b.addEventListener('click', () => {
+    navigator.clipboard.writeText(b.innerText).then(() => {
+      const t=document.getElementById('toast'); t.style.display='block';
+      setTimeout(()=>t.style.display='none', 1200);
+    });
+  });
+});
+</script>
+</body>
+</html>
