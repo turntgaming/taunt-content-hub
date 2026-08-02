@@ -3457,5 +3457,134 @@
 })();
 </script>
 
+
+<!-- ===================================================================
+     SEASON 1 BRIEF TAB
+     Self-contained module, same injection pattern as the Stream Royale
+     Schedule view: appends a .product-tab to .product-switcher and a view
+     div to .container, then shows/hides by toggling .active. All CSS is
+     scoped under #season1View so nothing leaks into the calendar.
+     Content: Season 1 Launch Plan REV E (29 Jul) + the 31 Jul decisions
+     + live product config. Rebuild with build_tab.py.
+     =================================================================== -->
+<style>
+#season1View{--ink:#0d1117; --muted:#5b6572; --line:#dfe3e8; --bg:#fff;
+    --accent:#00A3C4; --warn:#B45309; --warnbg:#FEF6E7; --okbg:#F1F7F4; --ok:#166534;
+    --redbg:#FDF2F2; --red:#B91C1C;}
+#season1View *{box-sizing:border-box}
+#season1View{margin:0;background:#eef1f4;font:12px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink)}
+#season1View .page{max-width:1120px;margin:16px auto;background:var(--bg);padding:24px 28px 26px;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+#season1View h1{font-size:19px;margin:0 0 2px;letter-spacing:-.2px}
+#season1View .sub{color:var(--muted);font-size:11.5px;margin:0 0 12px}
+#season1View h2{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--accent);margin:14px 0 5px;padding-bottom:3px;border-bottom:1px solid var(--line);font-weight:700}
+#season1View table{width:100%;border-collapse:collapse;margin:0 0 3px}
+#season1View th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);font-weight:600;padding:3px 8px 3px 0;border-bottom:1px solid var(--line);vertical-align:bottom}
+#season1View td{padding:4px 8px 4px 0;border-bottom:1px solid #f1f3f5;vertical-align:top}
+#season1View tr:last-child td{border-bottom:none}
+#season1View td.label{font-weight:600;white-space:nowrap}
+#season1View .grid{display:grid;grid-template-columns:1fr 1fr;gap:0 28px}
+#season1View .date{color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+#season1View .num{font-variant-numeric:tabular-nums;white-space:nowrap}
+#season1View .tag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;padding:1px 5px;border-radius:3px;vertical-align:1px}
+#season1View .t-prop{background:var(--warnbg);color:var(--warn)}
+#season1View .t-lock{background:var(--okbg);color:var(--ok)}
+#season1View .callout{padding:8px 11px;margin:9px 0;font-size:11.5px;line-height:1.5}
+#season1View .callout .h{font-weight:700;display:block;margin-bottom:2px}
+#season1View .c-warn{border-left:3px solid var(--warn);background:var(--warnbg)}
+#season1View .c-red{border-left:3px solid var(--red);background:var(--redbg)}
+#season1View .c-key{border-left:3px solid var(--accent);background:#F0FAFC;font-size:12.5px}
+#season1View ul{margin:3px 0 7px;padding-left:16px}
+#season1View li{margin:2px 0}
+#season1View .cap{font-size:11px;color:var(--muted);margin:2px 0 0}
+#season1View .foot{margin-top:14px;padding-top:9px;border-top:1px solid var(--line);color:var(--muted);font-size:10.5px}
+#season1View{display:none;flex:1;min-height:0;overflow-y:auto;padding:16px 24px 24px;background:#eef1f4}
+#season1View.active{display:block}
+#season1View, #season1View *{color:var(--ink)}
+#season1View .muted-inherit{color:inherit}
+#season1View .page{max-width:1120px;margin:0 auto;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+#season1View .s1-print{display:block;margin:0 auto 12px;max-width:1120px;text-align:right}
+#season1View .s1-print button{background:transparent;border:1px solid #4572FF;color:#4572FF;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer}
+@media print{
+  body > *:not(#app){display:none !important}
+  .container > *:not(#season1View){display:none !important}
+  .header,.stats,.filters{display:none !important}
+  #season1View{padding:0;background:#fff;overflow:visible}
+  #season1View .page{box-shadow:none;max-width:none}
+  #season1View .s1-print{display:none}
+}
+
+</style>
+<script>
+(function () {
+  'use strict';
+  var VIEW_ID = 'season1View';
+  var TAB_KEY = 'season1';
+
+  function injectTab() {
+    var switcher = document.querySelector('.product-switcher');
+    if (!switcher || switcher.querySelector('[data-product="' + TAB_KEY + '"]')) return;
+    var btn = document.createElement('button');
+    btn.className = 'product-tab';
+    btn.setAttribute('data-product', TAB_KEY);
+    btn.innerHTML = '<span class="product-label">Season 1 Brief</span>';
+    btn.addEventListener('click', show);
+    switcher.appendChild(btn);
+    switcher.addEventListener('click', function (e) {
+      var tab = e.target.closest ? e.target.closest('.product-tab') : null;
+      if (!tab || tab.getAttribute('data-product') === TAB_KEY) return;
+      hide();
+    });
+  }
+
+  function injectView() {
+    if (document.getElementById(VIEW_ID)) return;
+    var container = document.querySelector('.container');
+    if (!container) return;
+    var view = document.createElement('div');
+    view.id = VIEW_ID;
+    view.innerHTML =
+      '<div class="s1-print"><button type="button" id="s1PrintBtn">Print / Save as PDF</button></div>' +
+      '<div class="page">\n\n  <h1>Season 1 "First Howl" — Community Manager Reference</h1>\n  <p class="sub">Mon 3 Aug → Sun 30 Aug 2026 · four Mon–Sun weeks · built from the Season 1 Launch Plan REV E (29 Jul), the 31 Jul decisions where they override it, and the values actually configured in the product</p>\n\n  <div class="callout c-warn">\n    <span class="tag t-lock">Locked</span> is confirmed. <span class="tag t-prop">Pending</span> is not approved — hold off publishing it.\n    The Pack is the rewards hub; community Syndicates are the product. Tiers are de-emphasised. The Hunt is not part of Season 1.\n  </div>\n\n  <h2>The season</h2>\n  <table>\n    <tr><th style="width:9%">Week</th><th style="width:13%">Dates</th><th>The shape of the week</th></tr>\n    <tr><td class="label">Head Start</td><td class="date">Sat 1 – Sun 2 Aug</td><td>Earning already live — predictions, onboarding quests, dailies, Casual windows. Same 3-slot stream schedule. "Doors open early. Season 1 officially starts Monday."</td></tr>\n    <tr><td class="label">Week 1</td><td class="date">Mon 3 – Sun 9 Aug</td><td>Season opens. First Syndicate reveal, referral re-credits land, first trophies go live, KGeN wave 1 begins. No Rips prize packs this week — free-play onboarding.</td></tr>\n    <tr><td class="label">Week 2</td><td class="date">Mon 10 – Sun 16 Aug</td><td>Rips prize program launches. Mega Rip ships. First Tuesday Blitz. Lane 3 testing begins, internal only.</td></tr>\n    <tr><td class="label">Week 3</td><td class="date">Mon 17 – Sun 23 Aug</td><td>Second and final Tuesday Blitz. Giveaway Rip wave 2.</td></tr>\n    <tr><td class="label">Week 4</td><td class="date">Mon 24 – Sun 30 Aug</td><td>Finale. Season-finale Syndicate, the deepest pool of the season. Monthly Large Tournament Thu 27 → Sun 30. Season Pool pays at the finale.</td></tr>\n  </table>\n\n  <h2>Streams — three a day, every day</h2>\n  <table>\n    <tr><th style="width:15%">Slot</th><th style="width:22%">Time</th><th>Audience and purpose</th></tr>\n    <tr><td class="label">India Prime</td><td class="date">5:30a PT = 6:00p IST</td><td>India evening prime, built for the KGeN cohort. India-relevant markets — cricket, crypto, global culture.</td></tr>\n    <tr><td class="label">US Morning</td><td class="date">9:00a PT / 12:00p ET</td><td>Coast-to-coast daytime. Lunch break East, morning West. The broadest general slot.</td></tr>\n    <tr><td class="label">US Prime</td><td class="date">3:00p PT / 6:00p ET</td><td>The flagship. Wednesday Skull Buy-In and Friday Gold Coin tournaments both run here, plus the daily recap material.</td></tr>\n  </table>\n\n  <div class="callout c-key">\n    <span class="h">The line to lead with</span>\n    Every winning prediction made live on a stream pays a 1.10× multiplier in the Casual Tournaments.\n    Watching live and calling live is worth more than calling from the lobby — say it often.\n  </div>\n\n  <div class="callout c-red">\n    <span class="h">Each stream anchors one Casual Tournament window — the stream is the window</span>\n    Casual streams show no prize pool and have no entry cost, so never advertise a pool on one.\n    Tournament streams publish entry and pool up front. That difference is a product rule, not a style choice.\n  </div>\n\n  <div class="grid">\n    <div>\n      <h2>Weekly rhythm — all four weeks</h2>\n      <table>\n        <tr><th style="width:22%">Day</th><th>What happens</th></tr>\n        <tr><td class="label">Monday</td><td>New Syndicate week reveals · previous week pays out</td></tr>\n        <tr><td class="label">Wednesday</td><td>Skull Buy-In Tournament, 3p flagship</td></tr>\n        <tr><td class="label">Friday</td><td>Gold Coin Tournament, 3p · Syndicate entries lock 11:59p</td></tr>\n        <tr><td class="label">Saturday</td><td>Syndicate picks lock 11:59p · re-up push for next week</td></tr>\n        <tr><td class="label">Sunday</td><td>Syndicate goes live, 9:00a PT</td></tr>\n        <tr><td class="label">Every day</td><td>Casual Tournaments ×3 on the stream slots · 3 dailies · 4 weeklies</td></tr>\n      </table>\n\n      <h2>Tournaments</h2>\n      <table>\n        <tr><th style="width:26%">Type</th><th style="width:24%">Entry</th><th>Format</th></tr>\n        <tr><td class="label">Casual ×3 daily</td><td>Free — no entry</td><td>The stream window itself. No prize pool shown. Live winning predictions pay 1.10×.</td></tr>\n        <tr><td class="label">Wed Skull Buy-In</td><td>Skulls</td><td>Freezeout. Everyone gets a 5,000-point stack and is ranked by final stack. The pool comes from the entries.</td></tr>\n        <tr><td class="label">Fri Gold Coin</td><td>Gold Coins, earned rather than bought</td><td>How you qualify for the Gold is <span class="tag t-prop">TBD</span>. What is settled: it will not require a purchase. Say that, and don\'t guess the method.</td></tr>\n        <tr><td class="label">Monthly Large Tournament<br><span class="date" style="font-weight:400">Thu 27 – Sun 30 Aug</span></td><td>Free bracket + Gold bracket</td><td>Four days. Settles Sun 30th with the Season Pool. <span class="tag t-prop">Needs sign-off</span></td></tr>\n      </table>\n      <p class="cap">There is no USDC buy-in tournament. If someone asks about USDC, the answer is the Frens and Alphas weekly programs.</p>\n    </div>\n\n    <div>\n      <h2>Prizes, every week</h2>\n      <table>\n        <tr><th style="width:22%">Program</th><th style="width:30%">Weekly prize</th><th>How it grows</th></tr>\n        <tr><td class="label">Frens</td><td class="num">$100 USDC</td><td>Fixed</td></tr>\n        <tr><td class="label">Apes</td><td class="num">100,000 Skulls</td><td>Grows with buy-ins</td></tr>\n        <tr><td class="label">Alphas</td><td class="num">$200 USDC</td><td>Grows with Gold spend</td></tr>\n      </table>\n      <p class="cap" style="margin-bottom:6px">Frens, Degens, Apes and Alphas are the Syndicate groups. Every USDC payout needs Jefe\'s sign-off, every time.</p>\n\n      <h2>Rips prize ladder — three steps, starts week 2</h2>\n      <table>\n        <tr><th style="width:22%">Week</th><th>Prize packs</th></tr>\n        <tr><td class="label">Week 1</td><td>None. Rips exists in the app, the prize-pack program does not run yet.</td></tr>\n        <tr><td class="label">Week 2</td><td>10 packs a week, roughly $10 of predictions per pack. Mega Rip ships.</td></tr>\n        <tr><td class="label">Week 3</td><td>Step-up <span class="tag t-prop">Value pending</span></td></tr>\n        <tr><td class="label">Week 4</td><td>10 packs at $100 per pack.</td></tr>\n      </table>\n      <p class="cap">Giveaway Rips: 50 grants per wave, Wed 12th and Wed 19th, to players with 3 or more calls that week. Each batch needs sign-off. Never imply cash value.</p>\n    </div>\n  </div>\n\n  <h2>Every dated moment</h2>\n  <div class="grid">\n    <div>\n      <table>\n        <tr><td class="label date" style="width:26%">Mon 3</td><td>Season opens · KGeN wave 1 · referral re-credits land · first trophies live</td></tr>\n        <tr><td class="label date">Wed 5</td><td>First Skull Buy-In Tournament</td></tr>\n        <tr><td class="label date">Fri 7</td><td>Syndicate week-1 entries lock, 11:59p</td></tr>\n        <tr><td class="label date">Sun 9</td><td>Syndicate week 1 goes live, 9:00a PT · week-1 recap and winners post</td></tr>\n        <tr><td class="label date">Mon 10</td><td>First Syndicate payout · Rips prize program launches · Mega Rip · Lane 3 testing begins</td></tr>\n        <tr><td class="label date">Tue 11</td><td>Tuesday Blitz #1 — two windows, 2× on themed markets</td></tr>\n        <tr><td class="label date">Wed 12</td><td>Buy-In #2 · Giveaway Rip wave 1</td></tr>\n      </table>\n    </div>\n    <div>\n      <table>\n        <tr><td class="label date" style="width:26%">Tue 18</td><td>Tuesday Blitz #2, the last one</td></tr>\n        <tr><td class="label date">Wed 19</td><td>Buy-In #3 · Giveaway Rip wave 2</td></tr>\n        <tr><td class="label date">Mon 24</td><td>Season-finale Syndicate reveals</td></tr>\n        <tr><td class="label date">Wed 26</td><td>Last Skull Buy-In Tournament, #4</td></tr>\n        <tr><td class="label date">Thu 27</td><td>Monthly Large Tournament opens — day 1 of 4</td></tr>\n        <tr><td class="label date">Sun 30</td><td>Season finale — the large tournament settles, Season Pool pays, seasonal trophy awarded</td></tr>\n      </table>\n      <p class="cap" style="margin-top:4px">Tuesday Blitz is the only special event planned. Everything else on the grid is the standing rhythm — three streams, three Casual windows, Wednesday buy-in, Friday Gold and Syndicate payout.</p>\n    </div>\n  </div>\n\n\n  <div class="grid">\n    <div>\n      <h2>What players earn</h2>\n      <table>\n        <tr><th style="width:46%">Quests</th><th>Skulls</th></tr>\n        <tr><td class="label">Dailies — 4 of them</td><td class="num">100 / day</td></tr>\n        <tr><td class="label">Onboarding — 6, one-time</td><td class="num">700 total</td></tr>\n        <tr><td class="label">Weeklies — 6</td><td class="num">400 / week</td></tr>\n      </table>\n      <table style="margin-top:6px">\n        <tr><th style="width:46%">Trophy unlocked</th><th>Skulls</th></tr>\n        <tr><td class="label">Bronze</td><td class="num">50</td></tr>\n        <tr><td class="label">Silver</td><td class="num">150</td></tr>\n        <tr><td class="label">Gold</td><td class="num">500</td></tr>\n        <tr><td class="label">Platinum</td><td class="num">1,000</td></tr>\n      </table>\n      <p class="cap">Referrals pay 250 to you and 100 to your friend, with no cap, credited on their first prediction.</p>\n    </div>\n    <div>\n      <h2>Your standing asks</h2>\n      <ul>\n        <li>Two Collective missions a day — one AM, one PM.</li>\n        <li>Always your own words. The calendar gives you the ask, never a script. This is a permanent X-compliance rule.</li>\n        <li>AM: quote-post the day\'s call with your own take, reply into the pinned thread, welcome every new member.</li>\n        <li>PM: amplify the results post and warm tomorrow\'s beat.</li>\n        <li>Push the live 1.10× — it\'s the single best reason to be on the stream instead of the lobby.</li>\n        <li>Grassroots sprint 3–14 Aug, targeting 15+ ambassadors by the 17th.</li>\n      </ul>\n\n      <h2>Things to remember</h2>\n      <ul>\n        <li>Referrals are 250 / 100. The public /refer page may still show the old 500 — go with 250 / 100.</li>\n        <li>Casual streams have no prize pool and no entry cost.</li>\n        <li>Gold is earned, not bought, and the exact route is still being decided.</li>\n        <li>The Hunt is a separate thing, not part of Season 1.</li>\n        <li>Lane 3 and the computer-vision work are internal testing — keep them off social.</li>\n        <li>If a reward isn\'t on this page, check before promising it. No skins, no invented badges.</li>\n      </ul>\n    </div>\n  </div>\n\n  <h2>Open — waiting on Jefe</h2>\n  <table>\n    <tr><td class="label" style="width:30%">Gold Coin qualification</td><td>Settled that it won\'t require a purchase. The actual earning route is still open — needed before Fri 7 Aug.</td></tr>\n    <tr><td class="label">Week 3 Rip step-up value</td><td>Sits between roughly $10 and $100. Needed before Mon 17 Aug.</td></tr>\n    <tr><td class="label">Monthly Large Tournament</td><td>Dates set in the plan, still needs sign-off, and nothing is configured.</td></tr>\n    <tr><td class="label">Season name</td><td>"First Howl" is used throughout the plan and is the live week label. The Store still hardcodes "Season 1 · The Circuit".</td></tr>\n    <tr><td class="label">Collective daily quest rewards</td><td>50 / 75 suggested, not approved.</td></tr>\n  </table>\n\n  <p class="foot">\n    Sources: Season 1 Launch Plan REV E, 29 Jul (status: draft for review) · S1 Decisions, 31 Jul, which override REV E where they disagree · live configuration read from the product, 2 Aug.\n    Where the product contradicts this page, the product is right — flag it, don\'t post around it.\n  </p>\n\n</div>';
+    container.appendChild(view);
+    var b = document.getElementById('s1PrintBtn');
+    if (b) b.addEventListener('click', function () { window.print(); });
+  }
+
+  function show() {
+    document.querySelectorAll('.product-tab').forEach(function (t) { t.classList.remove('active'); });
+    var me = document.querySelector('.product-tab[data-product="' + TAB_KEY + '"]');
+    if (me) me.classList.add('active');
+    var sv = document.getElementById('streamsView');
+    if (sv) sv.classList.remove('active');
+    var container = document.querySelector('.container');
+    if (container) {
+      Array.prototype.forEach.call(container.children, function (c) {
+        c.style.display = (c.id === VIEW_ID) ? '' : 'none';
+      });
+    }
+    document.getElementById(VIEW_ID).classList.add('active');
+  }
+
+  function hide() {
+    var v = document.getElementById(VIEW_ID);
+    if (!v) return;
+    v.classList.remove('active');
+    v.style.display = 'none';
+    var me = document.querySelector('.product-tab[data-product="' + TAB_KEY + '"]');
+    if (me) me.classList.remove('active');
+    var container = document.querySelector('.container');
+    if (container) {
+      Array.prototype.forEach.call(container.children, function (c) {
+        if (c.id !== VIEW_ID && c.id !== 'streamsView') c.style.display = '';
+      });
+    }
+  }
+
+  function boot() { injectTab(); injectView(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+
 </body>
 </html>
